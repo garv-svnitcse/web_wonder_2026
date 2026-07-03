@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 # pyrefly: ignore [missing-import]
 from pymongo import MongoClient
 # pyrefly: ignore [missing-import]
@@ -12,4 +8,5 @@ db = client[DATABASE_NAME]
 
 user_collection = db['user']
 
-print("MongoDB connected successfully", flush=True)
+print("MongoDB connected successfully")
+dinosaur_collection = db['dinosaur']
