@@ -1,0 +1,6 @@
+backend/
+.DS_Store
+.gemini/
+venv/
+.agents/
+.vscode/
