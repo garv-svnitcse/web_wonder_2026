@@ -1,1 +1,2 @@
-# web_wonder_2026
+# TO RUN
+> python -m http.server 5174
