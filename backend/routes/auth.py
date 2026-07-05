@@ -1,7 +1,6 @@
 from fastapi import HTTPException, status
 from fastapi import APIRouter
 from schemas import auth
-from dependencies.auth import get_current_user, admin_required
 from core.security import hash_password, verify_password, create_access_token
 from db.database import user_collection
 

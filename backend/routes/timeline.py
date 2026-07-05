@@ -4,21 +4,6 @@ from db.database import dinosaur_collection
 
 router = APIRouter()
 
-@router.get("/preview")
-def preview_timeline():
-    data = dinosaur_collection.find().sort("million_years_ago", 1).limit(8)
-    dinosaurs = list(data)
-    dinosaurs_list = []
-    for i in dinosaurs:
-        dinosaurs_list.append({
-            "id": str(i.get('_id', '')),
-            "name": str(i.get("name", "")),
-            "slug": str(i.get('slug', '')),
-            "million_years_ago": str(i.get('million_years_ago', '')),
-            "icon": str(i.get('icon_url', i.get('icon', '')))
-        })
-    return dinosaurs_list
-
 @router.get("")
 def full_timeline():
     data = dinosaur_collection.find().sort('million_years_ago', 1)

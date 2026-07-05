@@ -9,5 +9,3 @@ db = client[DATABASE_NAME]
 user_collection = db['user']
 dinosaur_collection = db['dinosaur']
 research_collection = db['research']
-
-print("MongoDB connected successfully")
