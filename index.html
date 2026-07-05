@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Gallery Room - Monument</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="overlay">
+        <div id="instructions">
+            <h2>Explore the Gallery</h2>
+            <div class="icon-row">
+                <!-- movement keys -->
+                <span class="key">W</span>
+                <span class="key">A</span>
+                <span class="key">S</span>
+                <span class="key">D</span>
+                <span style="margin-left:8px;">to move</span>
+            </div>
+            <div class="icon-row">
+                <span>Mouse</span> <span>to look around</span>
+            </div>
+            <p class="hint">Click here or anywhere to start &bull; Press <span class="key">ESC</span> to release cursor</p>
+        </div>
+    </div>
+
+    <div id="crosshair"></div>
+    <div id="model-status">Loading dinosaur model...</div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="module.js"></script>
+
+</body>
+
+</html>
