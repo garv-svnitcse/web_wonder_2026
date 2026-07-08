@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* 
   Jurassic Time - Global CSS Design System
   Earthy greens, glowing amber, deep volcanic slate, bone white.
