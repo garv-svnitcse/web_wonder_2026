@@ -10,27 +10,26 @@ def preview_timeline():
     dinosaurs = list(data)
     dinosaurs_list = []
     for i in dinosaurs:
+        stats = i.get("physical_stats", {})
+        length_m = stats.get("length_m", 0)
+        weight_tons = stats.get("weight_tons", 0)
+        speed_kmph = stats.get("speed_kmph", 0)
+        
+        # Format weight dynamically
+        if weight_tons and weight_tons < 1.0:
+            weight_str = f"{int(weight_tons * 1000)} kg"
+        else:
+            weight_str = f"{weight_tons} Tons" if weight_tons else "N/A"
+            
         dinosaurs_list.append({
-            "id": str(i.get('_id', '')),
-            "name": str(i.get("name", "")),
-            "slug": str(i.get('slug', '')),
-            "scientific_name": str(i.get('scientific_name', '')),
-            "nickname": str(i.get('nickname', '')),
-            "description": str(i.get('description', '')),
-            "image": str(i.get('image', '')),
-            "era": str(i.get('era', '')),
-            "period": str(i.get('period', '')),
-            "million_years_ago": i.get('million_years_ago', 0),
-            "diet": str(i.get('diet', '')),
-            "habitat": str(i.get('habitat', '')),
-            "continent": str(i.get('continent', '')),
-            "physical_stats": i.get('physical_stats', {}),
-            "classification": i.get('classification', {}),
-            "fossil_evidence": i.get('fossil_evidence', {}),
-            "dna_insights": i.get('dna_insights', {}),
-            "behaviour": i.get('behaviour', {}),
-            "fun_facts": i.get('fun_facts', []),
-            "conservation": i.get('conservation', {})
+            "name": str(i.get("name", "")).upper(),
+            "era": str(i.get("period", i.get("era", ""))),
+            "image": str(i.get("image", "")),
+            "length": f"{length_m} m" if length_m else "N/A",
+            "weight": weight_str,
+            "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
+            "diet": str(i.get("diet", "")),
+            "slug": str(i.get("slug", ""))
         })
     return dinosaurs_list
 
