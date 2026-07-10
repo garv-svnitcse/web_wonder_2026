@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from schemas import research
 from db.database import research_collection, dinosaur_collection
+from datetime import datetime
 from dependencies import auth
 # pyrefly: ignore [missing-import]
 from bson import ObjectId
@@ -13,6 +14,7 @@ def submit_research(research_paper: research.ResearchPaper, current_user = Depen
     data['researcher_id'] = str(current_user['_id'])
     data['researcher_name'] = current_user['name']
     data['status'] = 'pending'
+    data['createdAt'] = datetime.utcnow()
     result = research_collection.insert_one(data)
     #todo,email service,notification
     return {

@@ -10,7 +10,7 @@ def preview_timeline():
     dinosaurs = list(data)
     dinosaurs_list = []
     for i in dinosaurs:
-        stats = i.get("physical_stats", {})
+        stats = i.get("physical_stats") or {}
         length_m = stats.get("length_m", 0)
         weight_tons = stats.get("weight_tons", 0)
         speed_kmph = stats.get("speed_kmph", 0)
