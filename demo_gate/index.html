@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prehistoric Museum - Ancient Temple Gate</title>
+  <!-- Google Fonts for rugged, cinematic titles and clean body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Inter:wght@300;400;600&family=Metamorphous&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #0c0e10;
+      --text-color: #ccd0d4;
+      --stone-color: #4b5054;
+      --stone-shadow: #2a2c2e;
+      --stone-highlight: #686e74;
+      --iron-color: #2b2927;
+      --iron-highlight: #464340;
+      --primary-color: #e65c00;
+      --accent-color: #88c0d0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Cinematic background with desaturated ancient mist */
+    .viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1400px;
+      background: radial-gradient(circle, rgba(14, 20, 24, 0.5) 0%, rgba(8, 10, 12, 1) 100%);
+    }
+
+    .background-forest {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('prehistoric_jungle_bg.png');
+      background-size: cover;
+      background-position: center;
+      /* Desaturated, mossy green-gray ancient jungle filter matching the reference image */
+      filter: brightness(0.45) contrast(0.85) saturate(0.48) sepia(0.08);
+      z-index: 1;
+      transition: transform 8s cubic-bezier(0.25, 0.1, 0.25, 1), filter 8s ease;
+    }
+
+    /* Atmospheric desaturated low-lying ground mist */
+    .ground-mist-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 250px;
+      z-index: 7;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .mist-layer {
+      position: absolute;
+      bottom: -20px;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(160, 168, 172, 0.18) 0%, rgba(160, 168, 172, 0.08) 50%, transparent 80%);
+      filter: blur(15px);
+      animation: drift-slow 35s linear infinite;
+    }
+
+    .mist-layer.secondary {
+      bottom: -40px;
+      animation: drift-slower 45s linear infinite reverse;
+      opacity: 0.7;
+    }
+
+    @keyframes drift-slow {
+      0% { transform: translateX(0) scaleY(1); }
+      50% { transform: translateX(15%) scaleY(1.15) translateY(-5px); }
+      100% { transform: translateX(0) scaleY(1); }
+    }
+
+    @keyframes drift-slower {
+      0% { transform: translateX(0) scaleY(1.1); }
+      50% { transform: translateX(-15%) scaleY(0.95) translateY(-10px); }
+      100% { transform: translateX(0) scaleY(1.1); }
+    }
+
+    .vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, transparent 25%, rgba(0,0,0,0.85) 100%);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* 3D Gate Scene */
+    .scene-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      z-index: 5;
+      transition: transform 6.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 4s ease;
+    }
+
+    /* The Gate Archway with flanking walls */
+    .gate-arch {
+      position: relative;
+      width: 780px;
+      height: 580px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      transform-style: preserve-3d;
+    }
+
+    /* Desaturated Stone Flanking Walls */
+    .stone-wall {
+      position: absolute;
+      bottom: 0;
+      width: 120px;
+      height: 380px;
+      background: linear-gradient(180deg, var(--stone-color) 0%, #3a3e42 100%);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), -5px 10px 20px rgba(0,0,0,0.5);
+      border-radius: 2px;
+      z-index: 8;
+      transform: translateZ(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 20px 0;
+      border: 4px solid var(--stone-shadow);
+    }
+
+    .stone-wall.left {
+      left: 0;
+      border-right: none;
+    }
+
+    .stone-wall.right {
+      right: 0;
+      border-left: none;
+    }
+
+    .wall-brick {
+      width: 90%;
+      height: 45px;
+      margin: 0 auto;
+      border-bottom: 3px solid var(--stone-shadow);
+      border-right: 2px solid var(--stone-shadow);
+      opacity: 0.6;
+      box-shadow: inset 1px 1px 3px rgba(255,255,255,0.05);
+    }
+
+    /* Decorative ancient relief stone pillars */
+    .pillar {
+      position: absolute;
+      width: 120px;
+      height: 490px;
+      background: linear-gradient(90deg, #373b3e 0%, var(--stone-color) 25%, #3d4144 75%, #2a2d2f 100%);
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.9), 0 10px 30px rgba(0,0,0,0.7);
+      border: 5px solid var(--stone-shadow);
+      border-radius: 4px;
+      z-index: 10;
+      bottom: 0;
+      transform-style: preserve-3d;
+    }
+
+    .pillar.left {
+      left: 105px;
+      transform: translateZ(25px);
+    }
+
+    .pillar.right {
+      right: 105px;
+      transform: translateZ(25px);
+    }
+
+    /* Ancient relief carving panels in stone */
+    .carved-panel {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+      width: calc(100% - 20px);
+      height: 380px;
+      background: #2f3336;
+      box-shadow: inset 3px 3px 10px rgba(0,0,0,0.8), inset -3px -3px 10px rgba(255,255,255,0.03);
+      border: 3px solid var(--stone-shadow);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0.95;
+    }
+
+    /* Celtic/Maya desaturated carving overlay style */
+    .carved-pattern {
+      width: 100%;
+      height: 100%;
+      stroke: var(--stone-shadow);
+      stroke-width: 2.5;
+      fill: none;
+      opacity: 0.7;
+    }
+
+    .pillar-joint {
+      position: absolute;
+      width: 100%;
+      height: 6px;
+      background-color: var(--stone-shadow);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .pillar-joint.j1 { top: 120px; }
+    .pillar-joint.j2 { top: 260px; }
+    .pillar-joint.j3 { top: 380px; }
+
+    /* Pillar capitals holding wide fire bowls */
+    .pillar-capital {
+      position: absolute;
+      top: -20px;
+      left: -10px;
+      width: 140px;
+      height: 25px;
+      background: #373b3e;
+      border: 4px solid var(--stone-shadow);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+      border-radius: 4px;
+    }
+
+    /* Wide Bronze/Stone Fire Bowls on top of pillars */
+    .fire-bowl {
+      position: absolute;
+      top: -55px;
+      left: 10px;
+      width: 100px;
+      height: 40px;
+      background: linear-gradient(180deg, #302d2b 0%, #1e1b1a 100%);
+      border: 4px solid #141312;
+      border-radius: 50% 50% 15% 15% / 35% 35% 15% 15%;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.05);
+      transform: translateZ(10px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      z-index: 15;
+    }
+
+    /* Mystic glowing crystal cluster */
+    .crystal-cluster {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 42px;
+      height: 65px;
+      z-index: 12;
+      filter: drop-shadow(0 0 8px rgba(136, 192, 208, 0.7));
+      transition: filter 3s ease;
+    }
+
+    .crystal-shard {
+      fill: #88c0d0;
+      opacity: 0.85;
+      transition: fill 3.5s ease, opacity 3.5s ease;
+    }
+
+    /* Runic ambient crystal glow */
+    .crystal-glow {
+      position: absolute;
+      top: -65px;
+      left: -25px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(136, 192, 208, 0.35) 0%, rgba(136, 192, 208, 0.06) 50%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: pulse-glow 3s infinite alternate ease-in-out;
+      transition: background 4.5s ease, transform 4.5s ease;
+    }
+
+    @keyframes pulse-glow {
+      0% { opacity: 0.7; transform: scale(0.92); }
+      100% { opacity: 1; transform: scale(1.08); }
+    }
+
+    @keyframes pulse-glow-fast {
+      0% { opacity: 0.85; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.15); }
+    }
+
+    /* 3D Semi-Transparent Iron Gate Doors */
+    .gate-doors {
+      position: absolute;
+      bottom: 0;
+      left: 220px;
+      width: 340px;
+      height: 460px;
+      display: flex;
+      transform-style: preserve-3d;
+      z-index: 8;
+    }
+
+    .door {
+      width: 170px;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 6.5s cubic-bezier(0.3, 0.05, 0.2, 1);
+    }
+
+    .door.left {
+      transform-origin: left center;
+    }
+
+    .door.right {
+      transform-origin: right center;
+    }
+
+    /* Hanging desaturated vines overlaying gates and walls */
+    .hanging-vines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9;
+      opacity: 0.65;
+    }
+
+    .vines-svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #334032; /* desaturated mossy green */
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .vines-leaves {
+      fill: #445442;
+    }
+
+    /* Dynamic Golden Light Leak/Lens Flare behind gates */
+    .light-leak {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.1);
+      width: 10px;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, rgba(136, 192, 208, 0.8) 0%, rgba(136, 192, 208, 0.3) 45%, rgba(136, 192, 208, 0) 80%);
+      mix-blend-mode: screen;
+      z-index: 4;
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(20px);
+      transition: opacity 5.5s ease, transform 6s cubic-bezier(0.25, 0.1, 0.25, 1), width 5.5s ease, background 5.5s ease;
+    }
+
+    /* Active opening state triggers */
+    .gate-opened-active .light-leak {
+      opacity: 0.85;
+      width: 600px;
+      transform: translate(-50%, -50%) scale(3.5);
+      background: radial-gradient(ellipse at center, rgba(163, 190, 140, 0.85) 0%, rgba(163, 190, 140, 0.35) 45%, rgba(163, 190, 140, 0) 80%);
+    }
+
+    /* Active gate opening: crystals surge with green runic light */
+    .gate-opened-active .crystal-glow {
+      background: radial-gradient(circle, rgba(163, 190, 140, 0.8) 0%, rgba(163, 190, 140, 0.3) 45%, transparent 75%);
+      transform: scale(2.3);
+      animation: pulse-glow-fast 1s infinite alternate ease-in-out;
+    }
+
+    .gate-opened-active .crystal-cluster {
+      filter: drop-shadow(0 0 16px rgba(163, 190, 140, 0.95));
+    }
+
+    .gate-opened-active .crystal-shard {
+      fill: #a3be8c; /* turns green to match runic activation */
+      opacity: 1;
+    }
+
+    .gate-opened-active .ember {
+      animation-duration: 3s !important;
+      width: 6px !important;
+      height: 6px !important;
+      background: #a3be8c !important; /* particles burst as green magic sparks */
+      box-shadow: 0 0 10px rgba(163, 190, 140, 0.9);
+    }
+
+    .gate-opened .door.left {
+      transform: rotateY(-110deg);
+    }
+
+    .gate-opened .door.right {
+      transform: rotateY(110deg);
+    }
+
+    .zoom-in .scene-container {
+      transform: scale(2.4) translateZ(350px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .zoom-in .background-forest {
+      transform: scale(1.15);
+      filter: brightness(0.6) contrast(0.95) saturate(0.8);
+    }
+
+    /* Ambient smoke / embers floating in background */
+    .embers-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+      overflow: hidden;
+    }
+
+    .ember {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #88c0d0; /* cyan sparks to match idle crystal */
+      box-shadow: 0 0 6px rgba(136, 192, 208, 0.7);
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: floatUp 8s infinite ease-in;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) translateX(0) scale(1); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-5vh) translateX(50px) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport" id="viewport">
+    <!-- Cinematic Prehistoric Background -->
+    <div class="background-forest" id="bg-forest"></div>
+    
+    <!-- Deep desaturated ground mist layers -->
+    <div class="ground-mist-container">
+      <div class="mist-layer"></div>
+      <div class="mist-layer secondary"></div>
+    </div>
+    
+    <div class="vignette"></div>
+    
+    <!-- Golden Light Leak/Lens Flare behind gates -->
+    <div class="light-leak"></div>
+
+    <!-- Floating Embers -->
+    <div class="embers-container" id="embers"></div>
+
+    <!-- 3D Scene container containing the Gate -->
+    <div class="scene-container" id="scene-container">
+      <div class="gate-arch" id="gate-arch">
+        
+        <!-- Left Flanking Stone Wall -->
+        <div class="stone-wall left">
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+        </div>
+
+        <!-- Left Stone Pillar -->
+        <div class="pillar left">
+          <div class="pillar-joint j1"></div>
+          <div class="pillar-joint j2"></div>
+          <div class="pillar-joint j3"></div>
+          
+          <!-- Intricate Celtic Relief Carvings Panel -->
+          <div class="carved-panel">
+            <svg class="carved-pattern" viewBox="0 0 100 380">
+              <!-- Geometric relief pattern lines -->
+              <rect x="10" y="10" width="80" height="360" rx="5" />
+              <path d="M 50,10 L 50,370 M 10,50 L 90,50 M 10,100 L 90,100 M 10,150 L 90,150 M 10,200 L 90,200 M 10,250 L 90,250 M 10,300 L 90,300 M 10,330 L 90,330" />
+              <circle cx="50" cy="75" r="20" />
+              <circle cx="50" cy="175" r="20" />
+              <circle cx="50" cy="275" r="20" />
+              <path d="M 30,75 L 70,75 M 50,55 L 50,95 M 30,175 L 70,175 M 50,155 L 50,195 M 30,275 L 70,275 M 50,255 L 50,295" />
+            </svg>
+          </div>
+          
+          <div class="pillar-capital"></div>
+          
+          <!-- Capital Wide Relic Bowl with Glowing Crystals -->
+          <div class="fire-bowl">
+            <svg class="crystal-cluster" viewBox="0 0 60 100">
+              <!-- Center crystal -->
+              <polygon class="crystal-shard" points="30,10 45,45 30,90 15,45" />
+              <!-- Left crystal -->
+              <polygon class="crystal-shard" points="15,30 28,55 18,85 5,55" style="opacity: 0.7; transform: rotate(-15deg); transform-origin: 15px 85px;" />
+              <!-- Right crystal -->
+              <polygon class="crystal-shard" points="45,35 55,60 42,85 32,55" style="opacity: 0.7; transform: rotate(15deg); transform-origin: 42px 85px;" />
+            </svg>
+            <div class="crystal-glow"></div>
+          </div>
+        </div>
+
+        <!-- Left and Right gate doors (Decorative Wrought Iron) -->
+        <div class="gate-doors">
+          <div class="door left">
+            <!-- Left Gate Wrought Iron SVG -->
+            <svg viewBox="0 0 170 460" width="100%" height="100%" style="overflow: visible;">
+              <!-- Outer Frame -->
+              <path d="M 5,460 L 5,80 Q 80,40 168,15 L 168,460 Z" fill="none" stroke="#252321" stroke-width="8"/>
+              
+              <!-- Horizontal Bars -->
+              <line x1="5" y1="440" x2="168" y2="440" stroke="#252321" stroke-width="6" />
+              <line x1="5" y1="360" x2="168" y2="360" stroke="#252321" stroke-width="6" />
+              <line x1="5" y1="120" x2="168" y2="120" stroke="#252321" stroke-width="6" />
+              <line x1="5" y1="95" x2="168" y2="95" stroke="#252321" stroke-width="6" />
+
+              <!-- Vertical bars inside rails with arrow spikes -->
+              <path d="
+                M 30,440 L 30,110 M 30,95 L 30,68 
+                M 55,440 L 55,110 M 55,95 L 55,60 
+                M 80,440 L 80,110 M 80,95 L 80,50 
+                M 105,440 L 105,110 M 105,95 L 105,42 
+                M 130,440 L 130,110 M 130,95 L 130,32 
+                M 155,440 L 155,110 M 155,95 L 155,22
+              " fill="none" stroke="#252321" stroke-width="4" />
+
+              <!-- Spike Heads -->
+              <path d="
+                M 25,68 L 30,58 L 35,68 Z
+                M 50,60 L 55,50 L 60,60 Z
+                M 75,50 L 80,40 L 85,50 Z
+                M 100,42 L 105,32 L 110,42 Z
+                M 125,32 L 130,22 L 135,32 Z
+                M 150,22 L 155,12 L 160,22 Z
+              " fill="#1b1a19" />
+
+              <!-- Circular patterns at the top band -->
+              <circle cx="30" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="55" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="80" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="105" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="130" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="155" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+
+              <!-- Diagonal Cross Braces -->
+              <line x1="5" y1="360" x2="168" y2="120" stroke="#252321" stroke-width="4.5" />
+              <line x1="5" y1="120" x2="168" y2="360" stroke="#252321" stroke-width="4.5" />
+
+              <!-- Center lock seal half circle -->
+              <path d="M 168,200 A 40 40 0 0 0 168,280 Z" fill="#2d2b29" stroke="#1c1a19" stroke-width="4" />
+              <circle cx="150" cy="240" r="10" fill="none" stroke="#131211" stroke-width="2" />
+            </svg>
+            <!-- Overlay Vines hanging down the left gate -->
+            <div class="hanging-vines">
+              <svg class="vines-svg" viewBox="0 0 170 460">
+                <path d="M 20,0 Q 30,120 15,250 T 40,380" />
+                <path d="M 100,0 Q 80,150 110,290" />
+                <path d="M 150,0 Q 140,90 148,190" />
+                <circle class="vines-leaves" cx="23" cy="60" r="6" />
+                <circle class="vines-leaves" cx="28" cy="120" r="7" />
+                <circle class="vines-leaves" cx="16" cy="180" r="6" />
+                <circle class="vines-leaves" cx="22" cy="250" r="8" />
+                <circle class="vines-leaves" cx="95" cy="80" r="7" />
+                <circle class="vines-leaves" cx="84" cy="160" r="6" />
+                <circle class="vines-leaves" cx="102" cy="230" r="8" />
+                <circle class="vines-leaves" cx="143" cy="90" r="6" />
+                <circle class="vines-leaves" cx="146" cy="140" r="7" />
+              </svg>
+            </div>
+          </div>
+          
+          <div class="door right">
+            <!-- Right Gate Wrought Iron SVG (Mirror) -->
+            <svg viewBox="0 0 170 460" width="100%" height="100%" style="overflow: visible;">
+              <!-- Outer Frame -->
+              <path d="M 165,460 L 165,80 Q 90,40 2,15 L 2,460 Z" fill="none" stroke="#252321" stroke-width="8"/>
+              
+              <!-- Horizontal Bars -->
+              <line x1="165" y1="440" x2="2" y2="440" stroke="#252321" stroke-width="6" />
+              <line x1="165" y1="360" x2="2" y2="360" stroke="#252321" stroke-width="6" />
+              <line x1="165" y1="120" x2="2" y2="120" stroke="#252321" stroke-width="6" />
+              <line x1="165" y1="95" x2="2" y2="95" stroke="#252321" stroke-width="6" />
+
+              <!-- Vertical bars inside rails with arrow spikes -->
+              <path d="
+                M 140,440 L 140,110 M 140,95 L 140,68 
+                M 115,440 L 115,110 M 115,95 L 115,60 
+                M 90,440 L 90,110 M 90,95 L 90,50 
+                M 65,440 L 65,110 M 65,95 L 65,42 
+                M 40,440 L 40,110 M 40,95 L 40,32 
+                M 15,440 L 15,110 M 15,95 L 15,22
+              " fill="none" stroke="#252321" stroke-width="4" />
+
+              <!-- Spike Heads -->
+              <path d="
+                M 145,68 L 140,58 L 135,68 Z
+                M 120,60 L 115,50 L 110,60 Z
+                M 95,50 L 90,40 L 85,50 Z
+                M 70,42 L 65,32 L 60,42 Z
+                M 45,32 L 40,22 L 35,32 Z
+                M 20,22 L 15,12 L 10,22 Z
+              " fill="#1b1a19" />
+
+              <!-- Circular patterns at the top band -->
+              <circle cx="140" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="115" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="90" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="65" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="40" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+              <circle cx="15" cy="107.5" r="7" fill="none" stroke="#252321" stroke-width="2" />
+
+              <!-- Diagonal Cross Braces -->
+              <line x1="165" y1="360" x2="2" y2="120" stroke="#252321" stroke-width="4.5" />
+              <line x1="165" y1="120" x2="2" y2="360" stroke="#252321" stroke-width="4.5" />
+
+              <!-- Center lock seal half circle -->
+              <path d="M 2,200 A 40 40 0 0 1 2,280 Z" fill="#2d2b29" stroke="#1c1a19" stroke-width="4" />
+              <circle cx="20" cy="240" r="10" fill="none" stroke="#131211" stroke-width="2" />
+            </svg>
+            <!-- Overlay Vines hanging down the right gate -->
+            <div class="hanging-vines">
+              <svg class="vines-svg" viewBox="0 0 170 460">
+                <path d="M 150,0 Q 140,130 155,270 T 130,400" />
+                <path d="M 70,0 Q 90,140 65,300" />
+                <path d="M 20,0 Q 30,100 22,210" />
+                <circle class="vines-leaves" cx="147" cy="60" r="6" />
+                <circle class="vines-leaves" cx="142" cy="120" r="7" />
+                <circle class="vines-leaves" cx="154" cy="180" r="6" />
+                <circle class="vines-leaves" cx="148" cy="250" r="8" />
+                <circle class="vines-leaves" cx="75" cy="85" r="7" />
+                <circle class="vines-leaves" cx="86" cy="155" r="6" />
+                <circle class="vines-leaves" cx="68" cy="240" r="8" />
+                <circle class="vines-leaves" cx="27" cy="90" r="6" />
+                <circle class="vines-leaves" cx="24" cy="150" r="7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Stone Pillar -->
+        <div class="pillar right">
+          <div class="pillar-joint j1"></div>
+          <div class="pillar-joint j2"></div>
+          <div class="pillar-joint j3"></div>
+          
+          <!-- Intricate Celtic Relief Carvings Panel -->
+          <div class="carved-panel">
+            <svg class="carved-pattern" viewBox="0 0 100 380">
+              <!-- Geometric relief pattern lines -->
+              <rect x="10" y="10" width="80" height="360" rx="5" />
+              <path d="M 50,10 L 50,370 M 10,50 L 90,50 M 10,100 L 90,100 M 10,150 L 90,150 M 10,200 L 90,200 M 10,250 L 90,250 M 10,300 L 90,300 M 10,330 L 90,330" />
+              <circle cx="50" cy="75" r="20" />
+              <circle cx="50" cy="175" r="20" />
+              <circle cx="50" cy="275" r="20" />
+              <path d="M 30,75 L 70,75 M 50,55 L 50,95 M 30,175 L 70,175 M 50,155 L 50,195 M 30,275 L 70,275 M 50,255 L 50,295" />
+            </svg>
+          </div>
+          
+          <div class="pillar-capital"></div>
+          
+          <!-- Capital Wide Relic Bowl with Glowing Crystals -->
+          <div class="fire-bowl">
+            <svg class="crystal-cluster" viewBox="0 0 60 100">
+              <!-- Center crystal -->
+              <polygon class="crystal-shard" points="30,10 45,45 30,90 15,45" />
+              <!-- Left crystal -->
+              <polygon class="crystal-shard" points="15,30 28,55 18,85 5,55" style="opacity: 0.7; transform: rotate(-15deg); transform-origin: 15px 85px;" />
+              <!-- Right crystal -->
+              <polygon class="crystal-shard" points="45,35 55,60 42,85 32,55" style="opacity: 0.7; transform: rotate(15deg); transform-origin: 42px 85px;" />
+            </svg>
+            <div class="crystal-glow"></div>
+          </div>
+        </div>
+
+        <!-- Right Flanking Stone Wall -->
+        <div class="stone-wall right">
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+          <div class="wall-brick"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- (Post-Entrance Homepage preview container removed) -->
+  </div>
+
+  <script>
+    // Create animated background embers/particles
+    const embersContainer = document.getElementById('embers');
+    const emberCount = 35;
+    
+    for (let i = 0; i < emberCount; i++) {
+      const ember = document.createElement('div');
+      ember.classList.add('ember');
+      ember.style.left = `${Math.random() * 100}vw`;
+      ember.style.width = `${Math.random() * 5 + 2}px`;
+      ember.style.height = ember.style.width;
+      
+      // Randomize animation delays and durations for natural float effect
+      ember.style.animationDuration = `${Math.random() * 6 + 5}s`;
+      ember.style.animationDelay = `${Math.random() * 8}s`;
+      embersContainer.appendChild(ember);
+    }
+
+    // Gate opening mechanism
+    const viewport = document.getElementById('viewport');
+
+    let opened = false;
+
+    function triggerGateOpen() {
+      if (opened) return;
+      opened = true;
+
+      // 1. Flare torches, burst embers, and leak golden light leak
+      viewport.classList.add('gate-opened-active');
+      
+      // 2. Open the gates slowly (rotateY class)
+      setTimeout(() => {
+        viewport.classList.add('gate-opened');
+      }, 500);
+
+      // 3. Zoom the camera in slowly - starts at 3.5 seconds
+      setTimeout(() => {
+        viewport.classList.add('zoom-in');
+      }, 3500);
+    }
+
+    // Auto-trigger gate opening after 1.5 seconds
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(triggerGateOpen, 1500);
+    });
+  </script>
+</body>
+</html>
