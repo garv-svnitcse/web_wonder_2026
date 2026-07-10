@@ -44,7 +44,7 @@ export default function Featured() {
     const [dinosaurs, setDinosaurs] = useState(STATIC_DINOSAURS);
 
     useEffect(() => {
-        fetch("/timeline/preview?t=" + Date.now())
+        fetch("http://localhost:8000/timeline/preview")
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("HTTP error " + res.status);

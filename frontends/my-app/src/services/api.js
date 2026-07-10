@@ -5,7 +5,7 @@ const apiFetch = async (url, options = {}) => {
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
-  const response = await fetch(`/api${url}`, {
+  const response = await fetch(`http://localhost:8000${url}`, {
     ...options,
     headers,
   });
