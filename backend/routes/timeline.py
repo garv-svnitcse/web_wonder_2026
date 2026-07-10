@@ -6,14 +6,32 @@ router = APIRouter()
 
 @router.get("/preview")
 def preview_timeline():
-    data = dinosaur_collection.find().sort("million_years_ago", 1).limit(8)
+    data = dinosaur_collection.find().sort("million_years_ago", 1).limit(3)
     dinosaurs = list(data)
     dinosaurs_list = []
     for i in dinosaurs:
+        stats = i.get("physical_stats", {})
+        length_m = stats.get("length_m", 0)
+        weight_tons = stats.get("weight_tons", 0)
+        speed_kmph = stats.get("speed_kmph", 0)
+        
+        # Format weight dynamically
+        if weight_tons and weight_tons < 1.0:
+            weight_str = f"{int(weight_tons * 1000)} kg"
+        else:
+            weight_str = f"{weight_tons} Tons" if weight_tons else "N/A"
+            
         dinosaurs_list.append({
             "id": str(i.get('_id', '')),
-            "name": str(i.get("name", "")),
+            "name": str(i.get("name", "")).upper(),
             "slug": str(i.get('slug', '')),
+            "era": str(i.get('period', i.get('era', ''))),
+            "image": str(i.get('image', f"/images/{i.get('slug')}.webp")),
+            "video": f"/videos/{i.get('slug')}.mp4",
+            "length": f"{length_m} m" if length_m else "N/A",
+            "weight": weight_str,
+            "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
+            "diet": str(i.get('diet', 'N/A')),
             "million_years_ago": str(i.get('million_years_ago', '')),
             "icon": str(i.get('icon_url', i.get('icon', '')))
         })
