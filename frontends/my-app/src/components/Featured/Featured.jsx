@@ -44,7 +44,7 @@ export default function Featured() {
     const [dinosaurs, setDinosaurs] = useState(STATIC_DINOSAURS);
 
     useEffect(() => {
-        fetch("/api/timeline/preview")
+        fetch("/timeline/preview?t=" + Date.now())
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("HTTP error " + res.status);
@@ -91,10 +91,10 @@ export default function Featured() {
 
                 {
                     dinosaurs.map((dinosaur, index) => {
-                        const nameKey = dinosaur.slug === 'tyrannosaurus-rex' ? 'trex' : 
-                                        dinosaur.slug === 'spinosaurus' ? 'spino' : 
-                                        dinosaur.slug === 'velociraptor' ? 'raptor' : 
-                                        dinosaur.slug || '';
+                        const nameKey = dinosaur.slug === 'tyrannosaurus-rex' ? 'trex' :
+                            dinosaur.slug === 'spinosaurus' ? 'spino' :
+                                dinosaur.slug === 'velociraptor' ? 'raptor' :
+                                    dinosaur.slug || '';
                         const videoSrc = `/videos/${nameKey}.mp4`;
 
                         return (
@@ -130,106 +130,106 @@ export default function Featured() {
                                     />
                                 </video>
 
-                            <div className="featuredOverlay"></div>
+                                <div className="featuredOverlay"></div>
 
-                            <div className="featuredContent">
+                                <div className="featuredContent">
 
-                                <span>
+                                    <span>
 
-                                    {dinosaur.era}
+                                        {dinosaur.era}
 
-                                </span>
+                                    </span>
 
-                                <h2>
+                                    <h2>
 
-                                    {dinosaur.name}
+                                        {dinosaur.name}
 
-                                </h2>
-                                <div className="featuredStats">
+                                    </h2>
+                                    <div className="featuredStats">
 
-                                    <div className="statBox">
+                                        <div className="statBox">
 
-                                        <h4>
+                                            <h4>
 
-                                            LENGTH
+                                                LENGTH
 
-                                        </h4>
+                                            </h4>
 
-                                        <p>
+                                            <p>
 
-                                            {dinosaur.length}
+                                                {dinosaur.length}
 
-                                        </p>
+                                            </p>
+
+                                        </div>
+
+                                        <div className="statBox">
+
+                                            <h4>
+
+                                                WEIGHT
+
+                                            </h4>
+
+                                            <p>
+
+                                                {dinosaur.weight}
+
+                                            </p>
+
+                                        </div>
+
+                                        <div className="statBox">
+
+                                            <h4>
+
+                                                SPEED
+
+                                            </h4>
+
+                                            <p>
+
+                                                {dinosaur.speed}
+
+                                            </p>
+
+                                        </div>
+
+                                        <div className="statBox">
+
+                                            <h4>
+
+                                                DIET
+
+                                            </h4>
+
+                                            <p>
+
+                                                {dinosaur.diet}
+
+                                            </p>
+
+                                        </div>
 
                                     </div>
 
-                                    <div className="statBox">
+                                    <button
 
-                                        <h4>
+                                        className="featuredButton"
 
-                                            WEIGHT
+                                    >
 
-                                        </h4>
+                                        VIEW DOSSIER
 
-                                        <p>
+                                        <FaArrowRight />
 
-                                            {dinosaur.weight}
-
-                                        </p>
-
-                                    </div>
-
-                                    <div className="statBox">
-
-                                        <h4>
-
-                                            SPEED
-
-                                        </h4>
-
-                                        <p>
-
-                                            {dinosaur.speed}
-
-                                        </p>
-
-                                    </div>
-
-                                    <div className="statBox">
-
-                                        <h4>
-
-                                            DIET
-
-                                        </h4>
-
-                                        <p>
-
-                                            {dinosaur.diet}
-
-                                        </p>
-
-                                    </div>
+                                    </button>
 
                                 </div>
 
-                                <button
-
-                                    className="featuredButton"
-
-                                >
-
-                                    VIEW DOSSIER
-
-                                    <FaArrowRight />
-
-                                </button>
-
-                            </div>
-
-                        </motion.div>
-                    );
-                })
+                            </motion.div>
+                        );
+                    })
                 }
 
             </div>
