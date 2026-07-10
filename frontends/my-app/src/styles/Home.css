@@ -1,0 +1,92 @@
+.home{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:#08110B;
+
+    overflow-x:hidden;
+
+}
+
+*{
+
+    box-sizing:border-box;
+
+    margin:0;
+
+    padding:0;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    background:#08110B;
+
+    color:#ECE4D8;
+
+    font-family:"Inter",sans-serif;
+
+    overflow-x:hidden;
+
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#08110B;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#D6A14B;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#b8842e;
+
+}
+
+section{
+
+    position:relative;
+
+}
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+button{
+
+    font-family:inherit;
+
+}
+
+input,
+select{
+
+    font-family:inherit;
+
+}

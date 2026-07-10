@@ -1,0 +1,513 @@
+/* ===========================================================
+   FEATURED SECTION
+=========================================================== */
+
+.featured {
+
+    position: relative;
+
+    padding: 140px 0;
+
+    background: #08110B;
+
+    overflow: hidden;
+
+}
+
+/* ===========================================================
+   HEADING
+=========================================================== */
+
+.featuredHeading {
+
+    width: min(900px, 90%);
+
+    margin: 0 auto 90px;
+
+    text-align: center;
+
+}
+
+.featuredHeading span {
+
+    color: #D6A14B;
+
+    letter-spacing: 8px;
+
+    font-size: 13px;
+
+    display: block;
+
+    margin-bottom: 18px;
+
+}
+
+.featuredHeading h2 {
+
+    font-family: "Cinzel", serif;
+
+    color: #ECE4D8;
+
+    font-size: clamp(44px, 6vw, 74px);
+
+    margin-bottom: 24px;
+
+}
+
+.featuredHeading p {
+
+    color: #BDBDBD;
+
+    line-height: 2;
+
+    max-width: 720px;
+
+    margin: auto;
+
+    font-size: 18px;
+
+}
+
+/* ===========================================================
+   WRAPPER
+=========================================================== */
+
+.featuredWrapper {
+
+    width: min(1550px, 92%);
+
+    margin: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 50px;
+
+}
+
+/* ===========================================================
+   CARD
+=========================================================== */
+
+.featuredCard {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 34px;
+
+    height: 620px;
+
+    background: #111;
+
+    border: 1px solid rgba(214, 161, 75, .08);
+
+    transition: .45s;
+
+}
+
+.featuredCard:hover {
+
+    border-color: rgba(214, 161, 75, .35);
+
+    box-shadow:
+
+        0 30px 70px rgba(0, 0, 0, .5),
+
+        0 0 35px rgba(214, 161, 75, .08);
+
+}
+
+/* ===========================================================
+   VIDEO
+=========================================================== */
+
+.featuredVideo {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 1.2s;
+
+}
+
+.featuredCard:hover .featuredVideo {
+
+    transform: scale(1.08);
+
+}
+
+/* ===========================================================
+   OVERLAY
+=========================================================== */
+
+.featuredOverlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(to right,
+
+            rgba(8, 17, 11, .95),
+
+            rgba(8, 17, 11, .55),
+
+            rgba(8, 17, 11, .15));
+
+}
+
+/* ===========================================================
+   CONTENT
+=========================================================== */
+
+.featuredContent {
+
+    position: absolute;
+
+    left: 70px;
+
+    bottom: 70px;
+
+    max-width: 700px;
+
+    z-index: 10;
+
+}
+
+.featuredContent span {
+
+    color: #D6A14B;
+
+    letter-spacing: 6px;
+
+    font-size: 12px;
+
+    display: block;
+
+    margin-bottom: 18px;
+
+}
+
+.featuredContent h2 {
+
+    font-family: "Cinzel", serif;
+
+    font-size: 68px;
+
+    color: white;
+
+    margin-bottom: 26px;
+
+    line-height: 1;
+
+}
+
+/* ===========================================================
+   STATS
+=========================================================== */
+
+.featuredStats {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 36px;
+
+}
+
+.statBox {
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, .05);
+
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    transition: .35s;
+
+}
+
+.statBox:hover {
+
+    transform: translateY(-6px);
+
+    border-color: rgba(214, 161, 75, .35);
+
+    background: rgba(214, 161, 75, .08);
+
+}
+
+.statBox h4 {
+
+    margin: 0 0 10px;
+
+    color: #D6A14B;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    font-weight: 600;
+
+}
+
+.statBox p {
+
+    margin: 0;
+
+    color: #ECE4D8;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+}
+
+/* ===========================================================
+   BUTTON
+=========================================================== */
+
+.featuredButton {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px 34px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    background: linear-gradient(135deg,
+
+            #D6A14B,
+
+            #B98531);
+
+    color: #111;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    transition: .35s;
+
+}
+
+.featuredButton:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+
+        0 20px 40px rgba(214, 161, 75, .35);
+
+}
+
+.featuredButton svg {
+
+    transition: .35s;
+
+}
+
+.featuredButton:hover svg {
+
+    transform: translateX(6px);
+
+}
+
+/* ===========================================================
+   HOVER EFFECT
+=========================================================== */
+
+.featuredCard::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0;
+
+    transition: .5s;
+
+    background:
+
+        radial-gradient(circle at center,
+
+            rgba(214, 161, 75, .15),
+
+            transparent 70%);
+
+    pointer-events: none;
+
+}
+
+.featuredCard:hover::after {
+
+    opacity: 1;
+
+}
+
+.featuredCard:hover .featuredContent {
+
+    transform: translateY(-10px);
+
+}
+
+.featuredContent {
+
+    transition: .45s;
+
+}
+
+/* ===========================================================
+   RESPONSIVE
+=========================================================== */
+
+@media(max-width:1200px) {
+
+    .featuredCard {
+
+        height: 560px;
+
+    }
+
+    .featuredContent {
+
+        left: 45px;
+
+        bottom: 45px;
+
+    }
+
+    .featuredContent h2 {
+
+        font-size: 52px;
+
+    }
+
+    .featuredStats {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .featured {
+
+        padding: 100px 0;
+
+    }
+
+    .featuredCard {
+
+        height: 500px;
+
+        border-radius: 24px;
+
+    }
+
+    .featuredContent {
+
+        left: 24px;
+
+        right: 24px;
+
+        bottom: 24px;
+
+        max-width: none;
+
+    }
+
+    .featuredContent h2 {
+
+        font-size: 38px;
+
+    }
+
+    .featuredStats {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 12px;
+
+    }
+
+    .statBox {
+
+        padding: 16px;
+
+    }
+
+    .featuredButton {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
+}
+
+@media(max-width:500px) {
+
+    .featuredHeading h2 {
+
+        font-size: 42px;
+
+    }
+
+    .featuredHeading p {
+
+        font-size: 15px;
+
+    }
+
+    .featuredCard {
+
+        height: 460px;
+
+    }
+
+    .featuredStats {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .featuredContent h2 {
+
+        font-size: 30px;
+
+    }
+
+}
