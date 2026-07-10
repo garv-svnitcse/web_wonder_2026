@@ -97,6 +97,20 @@ export default function Featured() {
                                         dinosaur.slug || '';
                         const videoSrc = `/videos/${nameKey}.mp4`;
 
+                        const eraText = dinosaur.period || dinosaur.era || 'N/A';
+                        const nameText = dinosaur.name?.toUpperCase();
+                        const lengthText = dinosaur.length || (dinosaur.physical_stats?.length_m ? `${dinosaur.physical_stats.length_m} m` : "N/A");
+                        
+                        let weightText = "N/A";
+                        if (dinosaur.weight) {
+                            weightText = dinosaur.weight;
+                        } else if (dinosaur.physical_stats?.weight_tons) {
+                            const tons = dinosaur.physical_stats.weight_tons;
+                            weightText = tons < 1 ? `${Math.round(tons * 1000)} kg` : `${tons} Tons`;
+                        }
+                        
+                        const speedText = dinosaur.speed || (dinosaur.physical_stats?.speed_kmph ? `${dinosaur.physical_stats.speed_kmph} km/h` : "N/A");
+
                         return (
                             <motion.div
                                 className="featuredCard"
@@ -136,13 +150,13 @@ export default function Featured() {
 
                                 <span>
 
-                                    {dinosaur.era}
+                                    {eraText}
 
                                 </span>
 
                                 <h2>
 
-                                    {dinosaur.name}
+                                    {nameText}
 
                                 </h2>
                                 <div className="featuredStats">
@@ -157,7 +171,7 @@ export default function Featured() {
 
                                         <p>
 
-                                            {dinosaur.length}
+                                            {lengthText}
 
                                         </p>
 
@@ -173,7 +187,7 @@ export default function Featured() {
 
                                         <p>
 
-                                            {dinosaur.weight}
+                                            {weightText}
 
                                         </p>
 
@@ -189,7 +203,7 @@ export default function Featured() {
 
                                         <p>
 
-                                            {dinosaur.speed}
+                                            {speedText}
 
                                         </p>
 
