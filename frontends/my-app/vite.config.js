@@ -7,10 +7,29 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
+      '/timeline': {
         target: 'http://localhost:8000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        changeOrigin: true
+      },
+      '/auth': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/research': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/quiz': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/community': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/contact': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
       }
     }
   }
