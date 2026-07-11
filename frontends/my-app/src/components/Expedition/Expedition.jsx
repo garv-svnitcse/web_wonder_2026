@@ -35,7 +35,7 @@ const cards = [
         video: "/videos/research.mp4",
         description:
             "Browse fossils, species reports and classified prehistoric discoveries.",
-        link: "/research",
+        link: "/community",
     },
 ];
 
