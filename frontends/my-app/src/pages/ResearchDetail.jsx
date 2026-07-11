@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { researchAPI } from '../services/api';
+
+const researchAPI = {
+  getBySlug: async (slug) => null
+};
+
 import { Compass, Radio, ChevronDown, Lightbulb, Shield, Dna, Hourglass, Flame, Ruler, ArrowUp, Scale, Gauge } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import jungleBg from '../assets/prehistoric_jungle_bg.png';

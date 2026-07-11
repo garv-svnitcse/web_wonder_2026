@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../services/api';
+
+const authAPI = {
+  getMe: async () => null,
+  login: async () => ({ token: 'mock-token', user: { name: 'Explorer', role: 'user' } }),
+  register: async () => ({ token: 'mock-token', user: { name: 'Explorer', role: 'user' } })
+};
 
 const AuthContext = createContext(null);
 
