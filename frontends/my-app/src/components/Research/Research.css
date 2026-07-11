@@ -140,7 +140,7 @@
 
     display: grid;
 
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 
     gap: 35px;
 
@@ -161,6 +161,10 @@
     border: 1px solid rgba(214, 161, 75, .08);
 
     transition: .4s;
+
+    max-width: 480px;
+
+    width: 100%;
 
 }
 
