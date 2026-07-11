@@ -90,9 +90,9 @@ export default function Research() {
                 {
                     filtered.map((dinosaur, index) => (
                         <motion.div
-                            key={index}
+                            key={dinosaur.slug}
                             className="researchCard"
-                            initial={{
+                            initial={search ? false : {
                                 opacity: 0,
                                 y: 60
                             }}
@@ -103,7 +103,7 @@ export default function Research() {
                             viewport={{
                                 once: true
                             }}
-                            transition={{
+                            transition={search ? { duration: 0 } : {
                                 duration: .7,
                                 delay: index * .1
                             }}
