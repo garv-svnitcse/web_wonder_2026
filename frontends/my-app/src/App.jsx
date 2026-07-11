@@ -14,6 +14,56 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
+                
+                <Route path="/research" element={
+                    <>
+                        <Navbar />
+                        <main style={{ paddingTop: "120px" }}>
+                            <Research />
+                        </main>
+                        <Footer />
+                    </>
+                } />
+                
+                <Route path="/timeline" element={
+                    <>
+                        <Navbar />
+                        <main style={{ paddingTop: "120px" }}>
+                            <Timeline />
+                        </main>
+                        <Footer />
+                    </>
+                } />
+                
+                <Route path="/dna" element={
+                    <>
+                        <Navbar />
+                        <main style={{ paddingTop: "120px" }}>
+                            <DNALab />
+                        </main>
+                        <Footer />
+                    </>
+                } />
+                
+                <Route path="/quiz" element={
+                    <>
+                        <Navbar />
+                        <main style={{ paddingTop: "120px" }}>
+                            <Quiz />
+                        </main>
+                        <Footer />
+                    </>
+                } />
+                
+                <Route path="/community" element={
+                    <>
+                        <Navbar />
+                        <main style={{ paddingTop: "120px" }}>
+                            <Community />
+                        </main>
+                        <Footer />
+                    </>
+                } />
             </Routes>
         </BrowserRouter>
     );
