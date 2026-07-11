@@ -344,7 +344,7 @@ export default function Hero() {
 
                         <img
 
-                            src="https://drive.google.com/file/d/1uj1mK3w49HfUngjBUlvSw48xq5wgBJ16/view?usp=share_link"
+                            src="https://drive.google.com/thumbnail?id=1uj1mK3w49HfUngjBUlvSw48xq5wgBJ16&sz=w1000"
 
                             alt="Tyrannosaurus Rex"
 
