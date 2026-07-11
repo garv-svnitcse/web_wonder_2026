@@ -14,7 +14,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Carnivore",
         threat: "Extreme",
-        image: "https://drive.google.com/thumbnail?id=1bQQS3i2u3Y80cUHXp6LomVr1H3bdclKp&sz=w1000",
+        image: "https://drive.google.com/file/d/1bQQS3i2u3Y80cUHXp6LomVr1H3bdclKp/view?usp=sharing",
         slug: "tyrannosaurus-rex"
     },
     {
@@ -22,7 +22,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Piscivore",
         threat: "Extreme",
-        image: "https://drive.google.com/thumbnail?id=1Szlqa0S_vwA-1JESTsVHlQvjVTBVurKV&sz=w1000",
+        image: "https://drive.google.com/file/d/1Szlqa0S_vwA-1JESTsVHlQvjVTBVurKV/view?usp=sharing",
         slug: "spinosaurus-aegyptiacus"
     },
     {
@@ -30,7 +30,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Carnivore",
         threat: "High",
-        image: "https://drive.google.com/thumbnail?id=1XJ_RZRZuyB5swHla3PxZfpg6Ebh8Ojri&sz=w1000",
+        image: "https://drive.google.com/file/d/1XJ_RZRZuyB5swHla3PxZfpg6Ebh8Ojri/view?usp=sharing",
         slug: "velociraptor-mongoliensis"
     },
     {
@@ -38,10 +38,21 @@ const database = [
         era: "Late Cretaceous",
         diet: "Herbivore",
         threat: "Medium",
-        image: "https://drive.google.com/thumbnail?id=1WRSzIvYLGCm1SVcOjobylpVIDL0avd2w&sz=w1000",
+        image: "https://drive.google.com/file/d/1WRSzIvYLGCm1SVcOjobylpVIDL0avd2w/view?usp=sharing",
         slug: "triceratops-horridus"
     }
 ];
+const getDirectDriveLink = (url) => {
+    if (!url) return "";
+    if (url.includes("drive.google.com/file/d/")) {
+        const parts = url.split("drive.google.com/file/d/");
+        if (parts.length > 1) {
+            const id = parts[1].split("/")[0];
+            return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+        }
+    }
+    return url;
+};
 
 export default function Research() {
     const [search, setSearch] = useState("");
@@ -98,7 +109,7 @@ export default function Research() {
                             }}
                         >
                             <img
-                                src={dinosaur.image}
+                                src={getDirectDriveLink(dinosaur.image)}
                                 alt={dinosaur.name}
                             />
                             <div className="researchContent">

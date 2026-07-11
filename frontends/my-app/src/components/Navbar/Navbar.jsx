@@ -48,7 +48,7 @@ const navItems = [
     {
         title: "Research",
         icon: <FaFlask />,
-        path: "/research"
+        path: "/community"
     },
 
     {
