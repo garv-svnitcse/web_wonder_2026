@@ -344,7 +344,7 @@ export default function Hero() {
 
                         <img
 
-                            src="src\images\trex-silhouette.png"
+                            src="https://drive.google.com/file/d/1uj1mK3w49HfUngjBUlvSw48xq5wgBJ16/view?usp=share_link"
 
                             alt="Tyrannosaurus Rex"
 
