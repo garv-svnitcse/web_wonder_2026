@@ -14,7 +14,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Carnivore",
         threat: "Extreme",
-        image: "https://docs.google.com/uc?id=1bQQS3i2u3Y80cUHXp6LomVr1H3bdclKp",
+        image: "https://drive.google.com/thumbnail?id=1bQQS3i2u3Y80cUHXp6LomVr1H3bdclKp&sz=w1000",
         slug: "tyrannosaurus-rex"
     },
     {
@@ -22,7 +22,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Piscivore",
         threat: "Extreme",
-        image: "https://docs.google.com/uc?id=1Szlqa0S_vwA-1JESTsVHlQvjVTBVurKV",
+        image: "https://drive.google.com/thumbnail?id=1Szlqa0S_vwA-1JESTsVHlQvjVTBVurKV&sz=w1000",
         slug: "spinosaurus-aegyptiacus"
     },
     {
@@ -30,7 +30,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Carnivore",
         threat: "High",
-        image: "https://docs.google.com/uc?id=1XJ_RZRZuyB5swHla3PxZfpg6Ebh8Ojri",
+        image: "https://drive.google.com/thumbnail?id=1XJ_RZRZuyB5swHla3PxZfpg6Ebh8Ojri&sz=w1000",
         slug: "velociraptor-mongoliensis"
     },
     {
@@ -38,7 +38,7 @@ const database = [
         era: "Late Cretaceous",
         diet: "Herbivore",
         threat: "Medium",
-        image: "https://docs.google.com/uc?id=1WRSzIvYLGCm1SVcOjobylpVIDL0avd2w",
+        image: "https://drive.google.com/thumbnail?id=1WRSzIvYLGCm1SVcOjobylpVIDL0avd2w&sz=w1000",
         slug: "triceratops-horridus"
     }
 ];
