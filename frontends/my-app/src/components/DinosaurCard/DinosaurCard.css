@@ -1,0 +1,179 @@
+.dinosaurCard{
+
+    position:relative;
+
+    height:540px;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    cursor:pointer;
+
+    background:#101814;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    transition:.45s;
+
+}
+
+.dinosaurCard:hover{
+
+    transform:translateY(-10px);
+
+    border-color:rgba(214,161,75,.35);
+
+    box-shadow:
+
+        0 30px 60px rgba(0,0,0,.45);
+
+}
+
+.dinosaurCard img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:1.2s;
+
+}
+
+.dinosaurCard:hover img{
+
+    transform:scale(1.12);
+
+}
+
+/* ======================================== */
+
+.cardOverlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    padding:30px;
+
+    background:
+
+    linear-gradient(
+
+        transparent 15%,
+
+        rgba(0,0,0,.25) 40%,
+
+        rgba(0,0,0,.96)
+
+    );
+
+}
+
+/* ======================================== */
+
+.cardBadges{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:20px;
+
+}
+
+.badge{
+
+    padding:8px 14px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
+
+.badge.era{
+
+    background:rgba(214,161,75,.18);
+
+    color:#D6A14B;
+
+}
+
+.badge.diet{
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+}
+
+.badge.danger{
+
+    background:#7B1E1E;
+
+    color:white;
+
+}
+
+/* ======================================== */
+
+.cardOverlay h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:36px;
+
+    line-height:1.1;
+
+    color:white;
+
+    margin-bottom:10px;
+
+}
+
+.cardOverlay h4{
+
+    color:#D6A14B;
+
+    font-size:16px;
+
+    font-weight:500;
+
+    margin-bottom:20px;
+
+}
+
+.cardDescription{
+
+    color:#d0d0d0;
+
+    line-height:1.8;
+
+    margin-bottom:30px;
+
+    display:-webkit-box;
+
+    -webkit-line-clamp:3;
+
+    -webkit-box-orient:vertical;
+
+    overflow:hidden;
+
+}

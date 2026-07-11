@@ -1,28 +1,55 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
+import ResearchDatabase from "./pages/ResearchDatabase";
+import Dinosaur from "./pages/Dinosaur";
+// import Viewer from "./pages/Viewer";   // your 3D page
 
-function App(){
+function App() {
 
-return(
+    return (
 
-<BrowserRouter>
+        <BrowserRouter>
 
-<Routes>
+            <Routes>
 
-<Route
+                <Route
 
-path="/"
+                    path="/"
 
-element={<Home/>}
+                    element={<Home />}
 
-/>
+                />
 
-</Routes>
+                <Route
 
-</BrowserRouter>
+                    path="/research"
 
-)
+                    element={<ResearchDatabase />}
+
+                />
+
+                <Route
+
+                    path="/dinosaur/:slug"
+
+                    element={<Dinosaur />}
+
+                />
+
+                {/* <Route
+
+                    path="/viewer/:slug"
+
+                    element={<Viewer />}
+
+                /> */}
+
+            </Routes>
+
+        </BrowserRouter>
+
+    );
 
 }
 
