@@ -2,11 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
-// Components
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute';
-
 // Pages
 import Home from './pages/Home';
 import Auth from './pages/Auth';
@@ -24,7 +19,6 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="app-container">
-          <Navbar />
           <main className="main-content">
             <Routes>
               {/* Public Routes */}
@@ -38,20 +32,12 @@ function App() {
               <Route path="/contact" element={<Contact />} />
 
               {/* Gated Protected Admin Routes */}
-              <Route 
-                path="/admin" 
-                element={
-                  <PrivateRoute adminOnly={true}>
-                    <Admin />
-                  </PrivateRoute>
-                } 
-              />
+              <Route path="/admin" element={<Admin />} />
 
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <Footer />
         </div>
       </AuthProvider>
     </Router>

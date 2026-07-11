@@ -1,11 +1,9 @@
 import Hero from "../components/Hero";
-import Expedition from "../components/Expedition";
-import FeaturedDinosaur from "../components/FeaturedDinosaur";
+import Featured from "../components/Featured";
 import TimelinePreview from "../components/TimelinePreview";
 import ResearchPreview from "../components/ResearchPreview";
 import QuizCTA from "../components/QuizCTA";
 import CommunityCTA from "../components/CommunityCTA";
-import Footer from "../components/Footer";
 
 import "../styles/Home.css";
 
@@ -17,9 +15,7 @@ export default function Home(){
 
             <Hero/>
 
-            <Expedition/>
-
-            <FeaturedDinosaur/>
+            <Featured/>
 
             <TimelinePreview/>
 
@@ -28,8 +24,6 @@ export default function Home(){
             <QuizCTA/>
 
             <CommunityCTA/>
-
-            <Footer/>
 
         </main>
 
