@@ -41,13 +41,17 @@ export default function ResearchDatabase() {
 
             const response = await fetch(
 
-                `http://localhost:5000/api/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
+                `http://127.0.0.1:5000/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
 
             );
 
             const data = await response.json();
-
-            setDinosaurs(data);
+            if (Array.isArray(data)) {
+                setDinosaurs(data);
+            } else {
+                console.warn("Invalid data received from API:", data);
+                setDinosaurs([]);
+            }
 
         }
 
@@ -263,133 +267,33 @@ export default function ResearchDatabase() {
             {/* ================= RESULTS ================= */}
 
             <section className="resultsSection">
-                                {
+                {
 
                     loading ?
 
-                    (
+                        (
 
-                        <div className="loadingGrid">
-
-                            {
-
-                                [...Array(8)].map((_,index)=>(
-
-                                    <div
-
-                                        key={index}
-
-                                        className="skeletonCard"
-
-                                    >
-
-                                        <div className="skeletonImage"></div>
-
-                                        <div className="skeletonText"></div>
-
-                                        <div className="skeletonText short"></div>
-
-                                    </div>
-
-                                ))
-
-                            }
-
-                        </div>
-
-                    )
-
-                    :
-
-                    dinosaurs.length===0 ?
-
-                    (
-
-                        <div className="noResults">
-
-                            <h2>
-
-                                No Dinosaurs Found
-
-                            </h2>
-
-                            <p>
-
-                                Try changing your search keyword or filters.
-
-                            </p>
-
-                        </div>
-
-                    )
-
-                    :
-
-                    (
-
-                        <>
-
-                            <div className="resultsHeader">
-
-                                <h3>
-
-                                    {
-
-                                        dinosaurs.length
-
-                                    } Species Found
-
-                                </h3>
-
-                            </div>
-
-                            <div className="databaseGrid">
+                            <div className="loadingGrid">
 
                                 {
 
-                                    dinosaurs.map((dinosaur)=>(
+                                    [...Array(8)].map((_, index) => (
 
-                                        <motion.div
+                                        <div
 
-                                            key={dinosaur._id}
+                                            key={index}
 
-                                            initial={{
-
-                                                opacity:0,
-
-                                                y:40
-
-                                            }}
-
-                                            whileInView={{
-
-                                                opacity:1,
-
-                                                y:0
-
-                                            }}
-
-                                            viewport={{
-
-                                                once:true
-
-                                            }}
-
-                                            transition={{
-
-                                                duration:.5
-
-                                            }}
+                                            className="skeletonCard"
 
                                         >
 
-                                            <DinosaurCard
+                                            <div className="skeletonImage"></div>
 
-                                                dinosaur={dinosaur}
+                                            <div className="skeletonText"></div>
 
-                                            />
+                                            <div className="skeletonText short"></div>
 
-                                        </motion.div>
+                                        </div>
 
                                     ))
 
@@ -397,9 +301,109 @@ export default function ResearchDatabase() {
 
                             </div>
 
-                        </>
+                        )
 
-                    )
+                        :
+
+                        dinosaurs.length === 0 ?
+
+                            (
+
+                                <div className="noResults">
+
+                                    <h2>
+
+                                        No Dinosaurs Found
+
+                                    </h2>
+
+                                    <p>
+
+                                        Try changing your search keyword or filters.
+
+                                    </p>
+
+                                </div>
+
+                            )
+
+                            :
+
+                            (
+
+                                <>
+
+                                    <div className="resultsHeader">
+
+                                        <h3>
+
+                                            {
+
+                                                dinosaurs.length
+
+                                            } Species Found
+
+                                        </h3>
+
+                                    </div>
+
+                                    <div className="databaseGrid">
+
+                                        {
+
+                                            dinosaurs.map((dinosaur) => (
+
+                                                <motion.div
+
+                                                    key={dinosaur.id || dinosaur._id}
+
+                                                    initial={{
+
+                                                        opacity: 0,
+
+                                                        y: 40
+
+                                                    }}
+
+                                                    whileInView={{
+
+                                                        opacity: 1,
+
+                                                        y: 0
+
+                                                    }}
+
+                                                    viewport={{
+
+                                                        once: true
+
+                                                    }}
+
+                                                    transition={{
+
+                                                        duration: .5
+
+                                                    }}
+
+                                                >
+
+                                                    <DinosaurCard
+
+                                                        dinosaur={dinosaur}
+
+                                                    />
+
+                                                </motion.div>
+
+                                            ))
+
+                                        }
+
+                                    </div>
+
+                                </>
+
+                            )
 
                 }
 
@@ -413,23 +417,23 @@ export default function ResearchDatabase() {
 
                     initial={{
 
-                        opacity:0,
+                        opacity: 0,
 
-                        y:40
+                        y: 40
 
                     }}
 
                     whileInView={{
 
-                        opacity:1,
+                        opacity: 1,
 
-                        y:0
+                        y: 0
 
                     }}
 
                     viewport={{
 
-                        once:true
+                        once: true
 
                     }}
 

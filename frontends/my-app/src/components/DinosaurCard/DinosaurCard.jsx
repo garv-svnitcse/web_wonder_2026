@@ -58,7 +58,7 @@ export default function DinosaurCard({ dinosaur }) {
 
                     <span className="badge danger">
 
-                        {dinosaur.danger}
+                        {dinosaur.threat}
 
                     </span>
 

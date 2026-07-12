@@ -4,6 +4,15 @@ from db.database import dinosaur_collection
 
 router = APIRouter()
 
+def get_thumbnail_url(url: str) -> str:
+    if url and "drive.google.com/file/d/" in url:
+        try:
+            file_id = url.split("/file/d/")[1].split("/")[0]
+            return f"https://drive.google.com/thumbnail?id={file_id}&sz=w600"
+        except Exception:
+            pass
+    return url
+
 @router.get("/preview")
 def preview_timeline():
     data = dinosaur_collection.find().sort("million_years_ago", 1).limit(3)
@@ -24,7 +33,7 @@ def preview_timeline():
         dinosaurs_list.append({
             "name": str(i.get("name", "")).upper(),
             "era": str(i.get("period", i.get("era", ""))),
-            "image": str(i.get("image", "")),
+            "image": get_thumbnail_url(str(i.get("image", ""))),
             "length": f"{length_m} m" if length_m else "N/A",
             "weight": weight_str,
             "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
