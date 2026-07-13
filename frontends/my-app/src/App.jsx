@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import ResearchDatabase from "./pages/ResearchDatabase";
 import Dinosaur from "./pages/Dinosaur";
 import Viewer from "./pages/Viewer";
+import QuizPage from "./pages/QuizPage";
 
 function App() {
 
@@ -42,6 +43,14 @@ function App() {
                     path="/viewer/:slug"
 
                     element={<Viewer />}
+
+                />
+
+                <Route
+
+                    path="/quiz"
+
+                    element={<QuizPage />}
 
                 />
 
