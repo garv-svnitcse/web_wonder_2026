@@ -2,6 +2,33 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./DinosaurCard.css";
 
+const LOCAL_IMAGES = {
+    "tyrannosaurus-rex": "/src/assets/Dinosaurs_Images/Tyrannosaurus rex.png",
+    "triceratops-horridus": "/src/assets/Dinosaurs_Images/Triceratops.png",
+    "velociraptor-mongoliensis": "/src/assets/Dinosaurs_Images/Velociraptor.png",
+    "spinosaurus-aegyptiacus": "/src/assets/Dinosaurs_Images/Spinosaurus.png",
+    "brachiosaurus-altithorax": "/src/assets/Dinosaurs_Images/Brachiosaurus.png",
+    "stegosaurus-stenops": "/src/assets/Dinosaurs_Images/Stegosaurus.png",
+    "diplodocus-carnegii": "/src/assets/Dinosaurs_Images/Diplodocus.png",
+    "ankylosaurus-magniventris": "/src/assets/Dinosaurs_Images/Ankylosaurus.png",
+    "allosaurus-fragilis": "/src/assets/Dinosaurs_Images/Allosaurus.png",
+    "parasaurolophus-walkeri": "/src/assets/Dinosaurs_Images/Parasaurolophus.png"
+};
+
+const getCardImageUrl = (dino) => {
+    if (!dino) return "";
+    const slug = dino.slug || "";
+    if (LOCAL_IMAGES[slug]) {
+        return LOCAL_IMAGES[slug];
+    }
+    for (const key of Object.keys(LOCAL_IMAGES)) {
+        if (slug.includes(key) || key.includes(slug)) {
+            return LOCAL_IMAGES[key];
+        }
+    }
+    return dino.thumbnail || dino.image || "/images/trex.webp";
+};
+
 export default function DinosaurCard({ dinosaur }) {
 
     const navigate = useNavigate();
@@ -34,7 +61,7 @@ export default function DinosaurCard({ dinosaur }) {
 
             <img
 
-                src={dinosaur.thumbnail}
+                src={getCardImageUrl(dinosaur)}
 
                 alt={dinosaur.name}
 

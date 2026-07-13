@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import ResearchDatabase from "./pages/ResearchDatabase";
 import Dinosaur from "./pages/Dinosaur";
-// import Viewer from "./pages/Viewer";   // your 3D page
+import Viewer from "./pages/Viewer";
 
 function App() {
 
@@ -37,13 +37,13 @@ function App() {
 
                 />
 
-                {/* <Route
+                <Route
 
                     path="/viewer/:slug"
 
                     element={<Viewer />}
 
-                /> */}
+                />
 
             </Routes>
 

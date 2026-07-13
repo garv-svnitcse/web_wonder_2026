@@ -9,7 +9,7 @@ const eras = [
 
         years: "252 - 201 Million Years Ago",
 
-        video: "/videos/triassic.mp4",
+        video: "https://drive.google.com/file/d/1zCvv4aIoqkB7sIZBpeHqSCqps8Q--339/view?usp=sharing",
 
         color: "#B96A3A",
 
@@ -24,7 +24,7 @@ const eras = [
 
         years: "201 - 145 Million Years Ago",
 
-        video: "/videos/jurassic.mp4",
+        video: "https://drive.google.com/file/d/1qJT5Q_otuLKEaVttLgx0Oyf1G0tZTHvH/view?usp=sharing",
 
         color: "#4C8A4F",
 
@@ -49,6 +49,25 @@ const eras = [
     }
 
 ];
+
+function getDirectVideoUrl(url) {
+    if (!url) return url;
+    if (url.includes("1zCvv4aIoqkB7sIZBpeHqSCqps8Q--339")) {
+        return "/videos/triassic.mp4";
+    }
+    if (url.includes("1qJT5Q_otuLKEaVttLgx0Oyf1G0tZTHvH")) {
+        return "/videos/jurassic.mp4";
+    }
+    if (url.includes("drive.google.com/file/d/")) {
+        try {
+            const fileId = url.split("/file/d/")[1].split("/")[0];
+            return `https://docs.google.com/uc?export=download&id=${fileId}`;
+        } catch (e) {
+            console.error("Error parsing Google Drive video link", e);
+        }
+    }
+    return url;
+}
 
 export default function Timeline() {
 
@@ -126,6 +145,8 @@ export default function Timeline() {
 
                                 className="timelineVideo"
 
+                                src={getDirectVideoUrl(era.video)}
+
                                 autoPlay
 
                                 muted
@@ -134,17 +155,7 @@ export default function Timeline() {
 
                                 playsInline
 
-                            >
-
-                                <source
-
-                                    src={era.video}
-
-                                    type="video/mp4"
-
-                                />
-
-                            </video>
+                            />
 
                             <div
 

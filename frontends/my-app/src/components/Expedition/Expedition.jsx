@@ -8,7 +8,7 @@ const cards = [
     {
         title: "DINOSAURS",
         subtitle: "Meet The Giants",
-        video: "/videos/trex.mp4",
+        video: "https://drive.google.com/file/d/1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h/view?usp=sharing",
         description:
             "Encounter the most iconic predators and herbivores that once ruled the Earth.",
         link: "/research",
@@ -16,7 +16,7 @@ const cards = [
     {
         title: "TIMELINE",
         subtitle: "Journey Through Time",
-        video: "/videos/timeline.mp4",
+        video: "https://drive.google.com/file/d/1GVmN9hgUHKk-b7QUEVv4eCg10omSfqm3/view?usp=sharing",
         description:
             "Travel across the Triassic, Jurassic and Cretaceous periods.",
         link: "/timeline",
@@ -32,12 +32,34 @@ const cards = [
     {
         title: "RESEARCH",
         subtitle: "Scientific Archives",
-        video: "/videos/research.mp4",
+        video: "https://drive.google.com/file/d/1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr/view?usp=sharing",
         description:
             "Browse fossils, species reports and classified prehistoric discoveries.",
         link: "/community",
     },
 ];
+
+function getDirectVideoUrl(url) {
+    if (!url) return url;
+    if (url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
+        return "/videos/trex.mp4";
+    }
+    if (url.includes("1GVmN9hgUHKk-b7QUEVv4eCg10omSfqm3")) {
+        return "/videos/timeline.mp4";
+    }
+    if (url.includes("1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr")) {
+        return "/videos/research.mp4";
+    }
+    if (url.includes("drive.google.com/file/d/")) {
+        try {
+            const fileId = url.split("/file/d/")[1].split("/")[0];
+            return `https://docs.google.com/uc?export=download&id=${fileId}`;
+        } catch (e) {
+            console.error("Error parsing Google Drive video link", e);
+        }
+    }
+    return url;
+}
 
 export default function Expedition() {
     return (
@@ -85,16 +107,12 @@ export default function Expedition() {
 
                         <video
                             className="cardVideo"
+                            src={getDirectVideoUrl(card.video)}
                             autoPlay
                             muted
                             loop
                             playsInline
-                        >
-                            <source
-                                src={card.video}
-                                type="video/mp4"
-                            />
-                        </video>
+                        />
 
                         <div className="cardOverlay"></div>
 
