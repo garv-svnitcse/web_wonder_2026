@@ -33,12 +33,12 @@ def preview_timeline():
         dinosaurs_list.append({
             "name": str(i.get("name", "")).upper(),
             "era": str(i.get("period", i.get("era", ""))),
-            "image": get_thumbnail_url(str(i.get("image", ""))),
             "length": f"{length_m} m" if length_m else "N/A",
             "weight": weight_str,
             "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
             "diet": str(i.get("diet", "")),
-            "slug": str(i.get("slug", ""))
+            "slug": str(i.get("slug", "")),
+            "video" : get_thumbnail_url(str(i.get("video","")))
         })
     return dinosaurs_list
 
@@ -94,4 +94,6 @@ def dinosaur(slug : str) :
     if dinosaur_detail is None :
         raise HTTPException(status_code=404,detail='Dinosaur Not Found')
     dinosaur_detail["id"] = str(dinosaur_detail.pop("_id"))
+    if "3d_model_url" not in dinosaur_detail or not dinosaur_detail["3d_model_url"]:
+        dinosaur_detail["3d_model_url"] = f"/models/{slug.split('-')[0]}.glb"
     return dinosaur_detail

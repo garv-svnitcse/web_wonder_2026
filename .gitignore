@@ -3,3 +3,5 @@
 venv/
 .agents/
 .vscode/
+__pycache__/
+*.pyc

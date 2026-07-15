@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./Featured.css";
 
@@ -40,7 +41,44 @@ const STATIC_DINOSAURS = [
     }
 ];
 
+function getDirectVideoUrl(url, slug) {
+    if (url) {
+        if (url.includes("1wKL-X0mRTPOl2KpwLwZtIqs8MCpb9piw") || url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
+            return "/videos/trex_featured.mp4";
+        }
+        if (url.includes("1qOqYwyZIyjOFbyez0BeO6YgBwJ94d1Fg")) {
+            return "/videos/triceratops.mp4";
+        }
+        if (url.includes("1WBkdBiooeQjnyrHgKR_YH4letQBKM-GV")) {
+            return "/videos/velociraptor.mp4";
+        }
+        if (url.includes("1GVmN9hgUHKk-b7QUEVv4eCg10omSfqm3")) {
+            return "/videos/timeline.mp4";
+        }
+        if (url.includes("1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr")) {
+            return "/videos/research.mp4";
+        }
+    }
+
+    const nameKey = slug === 'tyrannosaurus-rex' ? 'trex_featured' :
+        slug === 'triceratops' || slug === 'triceratops-horridus' ? 'triceratops' :
+            slug === 'velociraptor' || slug === 'velociraptor-mongoliensis' ? 'velociraptor' :
+                slug === 'spinosaurus' || slug === 'spinosaurus-aegyptiacus' ? 'spino' :
+                    slug || '';
+
+    if (['trex_featured', 'triceratops', 'velociraptor'].includes(nameKey)) {
+        return `/videos/${nameKey}.mp4`;
+    }
+
+    if (url && (url.startsWith("http") || url.startsWith("/"))) {
+        return url;
+    }
+
+    return `/videos/${nameKey}.mp4`;
+}
+
 export default function Featured() {
+    const navigate = useNavigate();
     const [dinosaurs, setDinosaurs] = useState(STATIC_DINOSAURS);
 
     useEffect(() => {
@@ -85,17 +123,13 @@ export default function Featured() {
 
                 </p>
 
-            </div>
+                </div>
 
             <div className="featuredWrapper">
 
                 {
                     dinosaurs.map((dinosaur, index) => {
-                        const nameKey = dinosaur.slug === 'tyrannosaurus-rex' ? 'trex' :
-                            dinosaur.slug === 'spinosaurus' ? 'spino' :
-                                dinosaur.slug === 'velociraptor' ? 'raptor' :
-                                    dinosaur.slug || '';
-                        const videoSrc = `/videos/${nameKey}.mp4`;
+                        const videoSrc = getDirectVideoUrl(dinosaur.video, dinosaur.slug);
 
                         return (
                             <motion.div
@@ -119,16 +153,12 @@ export default function Featured() {
                             >
                                 <video
                                     className="featuredVideo"
+                                    src={videoSrc}
                                     autoPlay
                                     muted
                                     loop
                                     playsInline
-                                >
-                                    <source
-                                        src={videoSrc}
-                                        type="video/mp4"
-                                    />
-                                </video>
+                                />
 
                                 <div className="featuredOverlay"></div>
 
@@ -216,6 +246,7 @@ export default function Featured() {
                                     <button
 
                                         className="featuredButton"
+                                        onClick={() => navigate(`/dinosaur/${dinosaur.slug}`)}
 
                                     >
 
