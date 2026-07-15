@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -73,15 +73,29 @@ export default function Navbar() {
 
     const [scrolled, setScrolled] = useState(false);
 
+    const [visible, setVisible] = useState(true);
+
     useEffect(() => {
 
         const handleScroll = () => {
 
-            setScrolled(window.scrollY > 20);
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > 50) {
+
+                setVisible(false);
+
+            } else {
+
+                setVisible(true);
+
+            }
+
+            setScrolled(currentScrollY > 20);
 
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => window.removeEventListener("scroll", handleScroll);
 
@@ -114,7 +128,7 @@ export default function Navbar() {
 
                 }}
 
-                className={`navbar ${scrolled ? "navbarScrolled" : ""}`}
+                className={`navbar ${scrolled ? "navbarScrolled" : ""} ${visible ? "" : "navbar-hidden"}`}
 
             >
 
@@ -434,6 +448,22 @@ export default function Navbar() {
                 </div>
 
             </motion.header>
+
+            <AnimatePresence>
+                {!visible && (
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.8, x: 50 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, x: 50 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                        className="navbar-toggle-btn"
+                        onClick={() => setVisible(true)}
+                        title="Show Menu"
+                    >
+                        <FaBars />
+                    </motion.button>
+                )}
+            </AnimatePresence>
 
         </>
 

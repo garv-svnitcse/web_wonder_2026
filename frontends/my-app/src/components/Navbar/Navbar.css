@@ -651,21 +651,64 @@
 
 @media(max-width:1350px){
 
+    .logoSection {
+        min-width: 200px;
+        gap: 10px;
+    }
+
+    .logoCircle {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 22px !important;
+    }
+
+    .logoText h1 {
+        font-size: 20px !important;
+    }
+
+    .logoText h2 {
+        font-size: 9px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .logoText p {
+        display: none !important;
+    }
+
     .desktopNavigation{
-
-        gap:2px;
-
+        gap: 4px;
     }
 
     .desktopNavigation a{
+        width: 76px;
+        height: 60px;
+        font-size: 11px;
+        gap: 4px;
+    }
 
-        width:78px;
+    .navIcon {
+        font-size: 16px;
+    }
 
+    .expeditionButton {
+        height: 44px;
+        padding: 0 18px;
+        font-size: 11px;
+    }
+
+    .circleButton {
+        width: 44px;
+        height: 44px;
+    }
+
+    .navbarGlass {
+        height: 74px;
+        padding: 0 16px;
     }
 
 }
 
-@media(max-width:1180px){
+@media(max-width:1250px){
 
     .desktopNavigation{
 
@@ -797,4 +840,54 @@
 
     }
 
+}
+
+/* ===========================================================
+   SCROLL HIDE TO THE RIGHT
+=========================================================== */
+
+.navbar.navbar-hidden {
+    transform: translate(calc(-50% + 100vw), 0) !important;
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+.navbar-toggle-btn {
+    position: fixed;
+    top: 25px;
+    right: 2.5%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid rgba(214,161,75,.18);
+    outline: none;
+    cursor: pointer;
+    color: #D6A14B;
+    background: rgba(12,18,14,.55);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 15px 45px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    z-index: 9999;
+    transition: all 0.35s ease;
+}
+
+.navbar-toggle-btn:hover {
+    background: #D6A14B;
+    color: #111;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(214,161,75,.35);
+}
+
+@media(max-width:768px){
+    .navbar-toggle-btn {
+        top: 12px;
+        right: 4%;
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
 }
