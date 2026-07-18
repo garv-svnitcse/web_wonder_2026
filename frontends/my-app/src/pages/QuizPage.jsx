@@ -91,7 +91,7 @@ import React, { useState, useEffect } from 'react';
 export default function QuizPage() {
     // Teammate note: Set/get auth token from localStorage after authentication is implemented
     const [token, setToken] = useState(localStorage.getItem('access_token') || '');
-    
+
     // UI state management
     const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'active-quiz' | 'leaderboard'
     const [loading, setLoading] = useState(false);
@@ -226,203 +226,1118 @@ export default function QuizPage() {
     };
 
     return (
-        <div style={{ padding: '24px', fontFamily: 'monospace', color: '#e2e8f0', backgroundColor: '#0f172a', minHeight: '100vh' }}>
-            <h1 style={{ color: '#38bdf8' }}>MESOZOIC QUIZ CONTROLLER (BACKEND INTEGRATION BASE)</h1>
-            <p style={{ color: '#94a3b8' }}>Teammate: Replace this basic template with UI components and styling. LocalStorage access key: <strong>access_token</strong>.</p>
-            
-            {/* Token config helper (Temporary testing harness) */}
-            <div style={{ background: '#1e293b', padding: '16px', borderRadius: '4px', margin: '20px 0', border: '1px solid #334155' }}>
-                <h3>🔑 Auth Token Configuration</h3>
-                <p style={{ fontSize: '12px' }}>Enter token returned from login endpoint to test authenticated requests.</p>
-                <form onSubmit={handleSaveToken} style={{ display: 'flex', gap: '8px' }}>
-                    <input 
-                        type="text" 
-                        name="tokenInput"
-                        placeholder="Bearer token string..."
-                        defaultValue={token}
-                        style={{ flexGrow: 1, padding: '8px', background: '#0f172a', border: '1px solid #475569', color: '#fff' }}
-                    />
-                    <button type="submit" style={{ padding: '8px 16px', background: '#38bdf8', color: '#000', border: 'none', cursor: 'pointer' }}>
-                        Save Token
-                    </button>
-                </form>
-                {token ? (
-                    <p style={{ color: '#4ade80', fontSize: '11px', marginTop: '8px' }}>Active token is configured.</p>
-                ) : (
-                    <p style={{ color: '#f87171', fontSize: '11px', marginTop: '8px' }}>No active token set! Request headers will fail.</p>
-                )}
-            </div>
+        <div
+            style={{
+                minHeight: "100vh",
+                background: "#07100B",
+                color: "#ECE4D8",
+                padding: "120px 0 80px",
+                position: "relative",
+                overflow: "hidden",
+                fontFamily: "'Poppins', sans-serif"
+            }}
+        >
 
-            {/* Error alerts */}
-            {error && (
-                <div style={{ padding: '12px', background: '#7f1d1d', border: '1px solid #b91c1c', borderRadius: '4px', margin: '16px 0', color: '#fca5a5' }}>
-                    ❌ {error}
+            {/* subtle glow */}
+
+            <div
+                style={{
+                    position: "absolute",
+                    width: "600px",
+                    height: "600px",
+                    borderRadius: "50%",
+                    background:
+                        "radial-gradient(circle, rgba(214,161,75,.08), transparent 70%)",
+                    top: "-250px",
+                    right: "-200px",
+                    pointerEvents: "none"
+                }}
+            />
+
+            <div
+                style={{
+                    width: "min(1300px,92%)",
+                    margin: "auto"
+                }}
+            >
+
+                {/* Heading */}
+
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginBottom: "80px"
+                    }}
+                >
+
+                    <span
+                        style={{
+                            display: "block",
+                            color: "#D6A14B",
+                            letterSpacing: "8px",
+                            fontSize: "13px",
+                            marginBottom: "18px",
+                            textTransform: "uppercase"
+                        }}
+                    >
+                        Jurassic Journey
+                    </span>
+
+                    <h1
+                        style={{
+                            fontFamily: "'Cinzel', serif",
+                            fontSize: "clamp(52px,6vw,78px)",
+                            color: "#ECE4D8",
+                            marginBottom: "24px",
+                            lineHeight: 1.2
+                        }}
+                    >
+                        Mesozoic Quiz
+                    </h1>
+
+                    <p
+                        style={{
+                            maxWidth: "760px",
+                            margin: "auto",
+                            color: "#BDBDBD",
+                            lineHeight: "2",
+                            fontSize: "18px"
+                        }}
+                    >
+                        Challenge yourself with adaptive dinosaur quizzes, monitor your
+                        expedition history, climb the explorer rankings and prove your
+                        knowledge of the prehistoric world.
+                    </p>
+
                 </div>
-            )}
 
-            {/* Loading Indicator */}
-            {loading && <p style={{ color: '#fbbf24', animatePulse: 'true' }}>⚡ Contacting Prehistoric Archives database...</p>}
+                {/* Token Card */}
 
-            {/* Tab navigation links */}
-            <div style={{ display: 'flex', gap: '12px', margin: '24px 0', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>
-                <button 
-                    onClick={() => { setActiveTab('dashboard'); fetchDashboard(); }}
-                    style={{ background: activeTab === 'dashboard' ? '#38bdf8' : '#1e293b', color: activeTab === 'dashboard' ? '#000' : '#fff', padding: '8px 16px', border: 'none', cursor: 'pointer' }}
+                <div
+                    style={{
+                        maxWidth: "900px",
+                        margin: "0 auto 40px",
+                        padding: "45px",
+                        borderRadius: "30px",
+                        background: "rgba(13,23,17,.92)",
+                        backdropFilter: "blur(20px)",
+                        border: "1px solid rgba(214,161,75,.08)",
+                        boxShadow:
+                            "0 25px 70px rgba(0,0,0,.45)"
+                    }}
                 >
-                    Dashboard Stats
-                </button>
-                <button 
-                    onClick={() => { setActiveTab('leaderboard'); fetchLeaderboard(); }}
-                    style={{ background: activeTab === 'leaderboard' ? '#38bdf8' : '#1e293b', color: activeTab === 'leaderboard' ? '#000' : '#fff', padding: '8px 16px', border: 'none', cursor: 'pointer' }}
-                >
-                    Leaderboard
-                </button>
-                <button 
-                    onClick={startNewQuiz}
-                    style={{ background: '#e2e8f0', color: '#000', padding: '8px 16px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                    Start Adaptive Quiz 🚀
-                </button>
-            </div>
 
-            {/* ================================================================= */}
-            {/* VIEW TAB 1: DASHBOARD STATS */}
-            {/* ================================================================= */}
-            {activeTab === 'dashboard' && (
-                <div>
-                    <h2>👤 Explorer Dashboard</h2>
-                    {dashboardData ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <pre style={{ background: '#1e293b', padding: '16px', borderRadius: '4px', overflowX: 'auto', border: '1px solid #334155' }}>
-                                {JSON.stringify(dashboardData, null, 2)}
-                            </pre>
-                            <h3>Recent Attempts History:</h3>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                                <thead>
-                                    <tr style={{ borderBottom: '1px solid #475569' }}>
-                                        <th>Difficulty</th>
-                                        <th>Score</th>
-                                        <th>Accuracy</th>
-                                        <th>Resulting Level</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dashboardData.history?.map((attempt, i) => (
-                                        <tr key={i} style={{ borderBottom: '1px solid #334155' }}>
-                                            <td>{attempt.difficulty}</td>
-                                            <td>{attempt.score} / {attempt.total_questions}</td>
-                                            <td>{attempt.accuracy}%</td>
-                                            <td>{attempt.level}</td>
-                                        </tr>
+                    <h2
+                        style={{
+                            fontFamily: "'Cinzel', serif",
+                            fontSize: "34px",
+                            color: "#ECE4D8",
+                            marginBottom: "10px"
+                        }}
+                    >
+                        Authentication
+                    </h2>
+
+                    <p
+                        style={{
+                            color: "#BDBDBD",
+                            lineHeight: "1.8",
+                            marginBottom: "30px"
+                        }}
+                    >
+                        Enter your access token to connect with the prehistoric archive.
+                    </p>
+
+                    <form
+                        onSubmit={handleSaveToken}
+                        style={{
+                            display: "flex",
+                            gap: "18px",
+                            flexWrap: "wrap"
+                        }}
+                    >
+
+                        <input
+                            type="text"
+                            name="tokenInput"
+                            defaultValue={token}
+                            placeholder="Bearer Token..."
+                            style={{
+                                flex: 1,
+                                minWidth: "250px",
+                                height: "62px",
+                                padding: "0 24px",
+                                borderRadius: "18px",
+                                border: "1px solid rgba(255,255,255,.08)",
+                                background: "rgba(255,255,255,.03)",
+                                color: "#ECE4D8",
+                                outline: "none",
+                                fontSize: "15px"
+                            }}
+                        />
+
+                        <button
+                            type="submit"
+                            style={{
+                                height: "62px",
+                                padding: "0 34px",
+                                border: "none",
+                                borderRadius: "50px",
+                                cursor: "pointer",
+                                background:
+                                    "linear-gradient(135deg,#D6A14B,#AF7B28)",
+                                color: "#111",
+                                fontWeight: 700,
+                                letterSpacing: "2px",
+                                transition: ".35s",
+                                boxShadow:
+                                    "0 15px 35px rgba(214,161,75,.22)"
+                            }}
+                        >
+                            SAVE TOKEN
+                        </button>
+
+                    </form>
+
+                    <div
+                        style={{
+                            marginTop: "22px",
+                            color: token ? "#7FD98B" : "#D66A6A",
+                            letterSpacing: "1px"
+                        }}
+                    >
+                        {token
+                            ? "✓ Authentication token configured."
+                            : "No authentication token configured."}
+                    </div>
+
+                </div>
+                {/* ============================================================
+    DASHBOARD
+============================================================ */}
+
+                {activeTab === "dashboard" && (
+
+                    <div>
+
+                        {dashboardData ? (
+
+                            <>
+
+                                {/* ================= Stats ================= */}
+
+                                <div
+                                    style={{
+                                        display: "grid",
+                                        gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+                                        gap: "26px",
+                                        marginBottom: "55px"
+                                    }}
+                                >
+
+                                    {[
+                                        {
+                                            title: "Highest Score",
+                                            value: dashboardData.highest_score
+                                        },
+                                        {
+                                            title: "Accuracy",
+                                            value: dashboardData.average_accuracy + "%"
+                                        },
+                                        {
+                                            title: "Current Level",
+                                            value: dashboardData.level
+                                        },
+                                        {
+                                            title: "Explorer Rank",
+                                            value: "#" + dashboardData.rank
+                                        }
+
+                                    ].map((item, index) => (
+
+                                        <div
+                                            key={index}
+                                            style={{
+                                                padding: "34px",
+                                                borderRadius: "28px",
+                                                background: "rgba(13,23,17,.92)",
+                                                border: "1px solid rgba(214,161,75,.08)",
+                                                backdropFilter: "blur(20px)",
+                                                boxShadow: "0 20px 60px rgba(0,0,0,.35)"
+                                            }}
+                                        >
+
+                                            <p
+                                                style={{
+                                                    color: "#8C8C8C",
+                                                    letterSpacing: "4px",
+                                                    textTransform: "uppercase",
+                                                    fontSize: "12px",
+                                                    marginBottom: "18px"
+                                                }}
+                                            >
+                                                {item.title}
+                                            </p>
+
+                                            <h2
+                                                style={{
+                                                    fontFamily: "Cinzel",
+                                                    color: "#ECE4D8",
+                                                    fontSize: "42px",
+                                                    fontWeight: 500
+                                                }}
+                                            >
+                                                {item.value}
+                                            </h2>
+
+                                        </div>
+
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p>No dashboard statistics retrieved. Verify auth token and attempt history.</p>
-                    )}
-                </div>
-            )}
 
-            {/* ================================================================= */}
-            {/* VIEW TAB 2: ACTIVE QUIZ QUESTIONS */}
-            {/* ================================================================= */}
-            {activeTab === 'active-quiz' && (
-                <div>
-                    {currentQuiz ? (
-                        <div style={{ background: '#1e293b', padding: '24px', borderRadius: '4px', border: '1px solid #334155' }}>
-                            <h2>📝 Quiz: {currentQuiz.title}</h2>
-                            <p style={{ color: '#38bdf8' }}>Difficulty: {currentQuiz.difficulty}</p>
-                            <p style={{ fontSize: '11px', color: '#94a3b8' }}>Quiz ID: {currentQuiz.quiz_id}</p>
+                                </div>
 
-                            <div style={{ marginTop: '20px' }}>
-                                {currentQuiz.questions?.map((q, qIndex) => (
-                                    <div key={q.question_id} style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #334155' }}>
-                                        <h4 style={{ color: '#f1f5f9' }}>{qIndex + 1}. {q.question}</h4>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', margin: '12px 0' }}>
-                                            {q.options?.map((opt, oIndex) => {
-                                                const isSelected = selectedAnswers[q.question_id] === opt;
-                                                return (
-                                                    <button
-                                                        key={oIndex}
-                                                        onClick={() => setSelectedAnswers(prev => ({ ...prev, [q.question_id]: opt }))}
+                                {/* ================= Explorer ================= */}
+
+                                <div
+                                    style={{
+                                        padding: "45px",
+                                        marginBottom: "55px",
+                                        borderRadius: "30px",
+                                        background: "rgba(13,23,17,.92)",
+                                        border: "1px solid rgba(214,161,75,.08)",
+                                        backdropFilter: "blur(20px)"
+                                    }}
+                                >
+
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            letterSpacing: "6px",
+                                            fontSize: "12px",
+                                            display: "block",
+                                            marginBottom: "18px"
+                                        }}
+                                    >
+                                        EXPLORER PROFILE
+                                    </span>
+
+                                    <h2
+                                        style={{
+                                            fontFamily: "Cinzel",
+                                            color: "#ECE4D8",
+                                            fontSize: "42px",
+                                            marginBottom: "35px"
+                                        }}
+                                    >
+                                        {dashboardData.name}
+                                    </h2>
+
+                                    <div
+                                        style={{
+                                            display: "grid",
+                                            gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+                                            gap: "30px"
+                                        }}
+                                    >
+
+                                        <div>
+
+                                            <p
+                                                style={{
+                                                    color: "#777",
+                                                    letterSpacing: "3px",
+                                                    marginBottom: "8px"
+                                                }}
+                                            >
+                                                EMAIL
+                                            </p>
+
+                                            <h4
+                                                style={{
+                                                    color: "#ECE4D8",
+                                                    fontWeight: 400
+                                                }}
+                                            >
+                                                {dashboardData.email}
+                                            </h4>
+
+                                        </div>
+
+                                        <div>
+
+                                            <p
+                                                style={{
+                                                    color: "#777",
+                                                    letterSpacing: "3px",
+                                                    marginBottom: "8px"
+                                                }}
+                                            >
+                                                ATTEMPTS
+                                            </p>
+
+                                            <h4
+                                                style={{
+                                                    color: "#ECE4D8",
+                                                    fontWeight: 400
+                                                }}
+                                            >
+                                                {dashboardData.total_attempts}
+                                            </h4>
+
+                                        </div>
+
+                                        <div>
+
+                                            <p
+                                                style={{
+                                                    color: "#777",
+                                                    letterSpacing: "3px",
+                                                    marginBottom: "8px"
+                                                }}
+                                            >
+                                                AVERAGE SCORE
+                                            </p>
+
+                                            <h4
+                                                style={{
+                                                    color: "#ECE4D8",
+                                                    fontWeight: 400
+                                                }}
+                                            >
+                                                {dashboardData.average_score}
+                                            </h4>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                {/* ================= History ================= */}
+
+                                <div
+                                    style={{
+                                        padding: "45px",
+                                        borderRadius: "30px",
+                                        background: "rgba(13,23,17,.92)",
+                                        border: "1px solid rgba(214,161,75,.08)",
+                                        backdropFilter: "blur(20px)"
+                                    }}
+                                >
+
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            letterSpacing: "6px",
+                                            fontSize: "12px",
+                                            display: "block",
+                                            marginBottom: "18px"
+                                        }}
+                                    >
+                                        EXPEDITION HISTORY
+                                    </span>
+
+                                    <h2
+                                        style={{
+                                            fontFamily: "Cinzel",
+                                            color: "#ECE4D8",
+                                            marginBottom: "40px",
+                                            fontSize: "40px"
+                                        }}
+                                    >
+                                        Previous Attempts
+                                    </h2>
+
+                                    <table
+                                        style={{
+                                            width: "100%",
+                                            borderCollapse: "collapse"
+                                        }}
+                                    >
+
+                                        <thead>
+
+                                            <tr>
+
+                                                {["Difficulty", "Score", "Accuracy", "Level"].map((item) => (
+
+                                                    <th
+                                                        key={item}
                                                         style={{
-                                                            padding: '10px',
-                                                            textAlign: 'left',
-                                                            background: isSelected ? '#38bdf8' : '#0f172a',
-                                                            color: isSelected ? '#000' : '#fff',
-                                                            border: '1px solid #475569',
-                                                            cursor: 'pointer'
+                                                            textAlign: "left",
+                                                            padding: "20px",
+                                                            color: "#D6A14B",
+                                                            fontWeight: 500,
+                                                            letterSpacing: "3px",
+                                                            borderBottom: "1px solid rgba(214,161,75,.15)"
                                                         }}
                                                     >
-                                                        {opt}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                ))}
+                                                        {item}
+                                                    </th>
+
+                                                ))}
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            {dashboardData.history?.map((attempt, i) => (
+
+                                                <tr
+                                                    key={i}
+                                                >
+
+                                                    <td
+                                                        style={{
+                                                            padding: "24px 20px",
+                                                            color: "#ECE4D8",
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)"
+                                                        }}
+                                                    >
+                                                        {attempt.difficulty}
+                                                    </td>
+
+                                                    <td
+                                                        style={{
+                                                            padding: "24px 20px",
+                                                            color: "#ECE4D8",
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)"
+                                                        }}
+                                                    >
+                                                        {attempt.score} / {attempt.total_questions}
+                                                    </td>
+
+                                                    <td
+                                                        style={{
+                                                            padding: "24px 20px",
+                                                            color: "#ECE4D8",
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)"
+                                                        }}
+                                                    >
+                                                        {attempt.accuracy}%
+                                                    </td>
+
+                                                    <td
+                                                        style={{
+                                                            padding: "24px 20px",
+                                                            color: "#D6A14B",
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)"
+                                                        }}
+                                                    >
+                                                        {attempt.level}
+                                                    </td>
+
+                                                </tr>
+
+                                            ))}
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </>
+
+                        ) : (
+
+                            <div
+                                style={{
+                                    padding: "80px",
+                                    textAlign: "center",
+                                    borderRadius: "30px",
+                                    background: "rgba(13,23,17,.92)",
+                                    border: "1px solid rgba(214,161,75,.08)",
+                                    color: "#A9A9A9"
+                                }}
+                            >
+                                No dashboard statistics retrieved.
                             </div>
 
-                            <button 
-                                onClick={submitQuizAnswers}
-                                style={{ padding: '12px 24px', background: '#10b981', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', width: '100%', marginTop: '16px' }}
-                            >
-                                Submit Answers (POST /quiz/submit)
-                            </button>
-                        </div>
-                    ) : (
-                        <div>
-                            {submitResult ? (
-                                <div style={{ background: '#064e3b', border: '1px solid #059669', padding: '24px', borderRadius: '4px', color: '#a7f3d0' }}>
-                                    <h2>🎉 Quiz Submitted Successfully!</h2>
-                                    <pre style={{ background: '#022c22', padding: '16px', border: '1px solid #047857', color: '#a7f3d0' }}>
-                                        {JSON.stringify(submitResult, null, 2)}
-                                    </pre>
-                                    <button onClick={startNewQuiz} style={{ padding: '8px 16px', background: '#38bdf8', color: '#000', border: 'none', cursor: 'pointer', marginTop: '12px' }}>
-                                        Attempt Another Quiz
-                                    </button>
-                                </div>
-                            ) : (
-                                <p>No active quiz loaded. Click "Start Adaptive Quiz" above to initiate a session.</p>
-                            )}
-                        </div>
-                    )}
-                </div>
-            )}
+                        )}
 
-            {/* ================================================================= */}
-            {/* VIEW TAB 3: LEADERBOARD LIST */}
-            {/* ================================================================= */}
-            {activeTab === 'leaderboard' && (
-                <div>
-                    <h2>🏆 Leaderboard (Top Explorers)</h2>
-                    {leaderboardData && leaderboardData.length > 0 ? (
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', marginTop: '16px' }}>
-                            <thead>
-                                <tr style={{ borderBottom: '1px solid #475569' }}>
-                                    <th>Rank</th>
-                                    <th>Name</th>
-                                    <th>Highest Score</th>
-                                    <th>Level</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    </div>
+
+                )}
+                {/* ============================================================
+    ACTIVE QUIZ
+============================================================ */}
+
+                {activeTab === "active-quiz" && (
+
+                    <div>
+
+                        {currentQuiz ? (
+
+                            <div
+                                style={{
+                                    width: "min(900px,100%)",
+                                    margin: "auto",
+                                    padding: "50px",
+                                    borderRadius: "30px",
+                                    background: "rgba(13,23,17,.92)",
+                                    backdropFilter: "blur(20px)",
+                                    border: "1px solid rgba(214,161,75,.08)",
+                                    boxShadow: "0 25px 70px rgba(0,0,0,.45)"
+                                }}
+                            >
+
+                                {/* Top */}
+
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        flexWrap: "wrap",
+                                        gap: "20px",
+                                        marginBottom: "40px"
+                                    }}
+                                >
+
+                                    <div>
+
+                                        <span
+                                            style={{
+                                                color: "#D6A14B",
+                                                letterSpacing: "6px",
+                                                fontSize: "12px",
+                                                display: "block",
+                                                marginBottom: "10px"
+                                            }}
+                                        >
+                                            {currentQuiz.difficulty.toUpperCase()} DIFFICULTY
+                                        </span>
+
+                                        <h2
+                                            style={{
+                                                color: "#ECE4D8",
+                                                fontFamily: "Cinzel",
+                                                fontSize: "40px"
+                                            }}
+                                        >
+                                            {currentQuiz.title}
+                                        </h2>
+
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            color: "#888",
+                                            fontSize: "13px",
+                                            letterSpacing: "2px"
+                                        }}
+                                    >
+                                        QUIZ ID : {currentQuiz.quiz_id}
+                                    </div>
+
+                                </div>
+
+                                {/* Questions */}
+
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "40px"
+                                    }}
+                                >
+
+                                    {currentQuiz.questions?.map((q, qIndex) => (
+
+                                        <div key={q.question_id}>
+
+                                            <div
+                                                style={{
+                                                    marginBottom: "25px"
+                                                }}
+                                            >
+
+                                                <span
+                                                    style={{
+                                                        color: "#D6A14B",
+                                                        letterSpacing: "5px",
+                                                        fontSize: "12px"
+                                                    }}
+                                                >
+                                                    QUESTION {qIndex + 1}
+                                                </span>
+
+                                                <h3
+                                                    style={{
+                                                        color: "#ECE4D8",
+                                                        marginTop: "15px",
+                                                        fontFamily: "Cinzel",
+                                                        fontSize: "34px",
+                                                        lineHeight: "1.6"
+                                                    }}
+                                                >
+                                                    {q.question}
+                                                </h3>
+
+                                            </div>
+
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    gap: "18px"
+                                                }}
+                                            >
+
+                                                {q.options?.map((opt, oIndex) => {
+
+                                                    const isSelected =
+                                                        selectedAnswers[q.question_id] === opt;
+
+                                                    return (
+
+                                                        <button
+                                                            key={oIndex}
+                                                            onClick={() =>
+                                                                setSelectedAnswers(prev => ({
+                                                                    ...prev,
+                                                                    [q.question_id]: opt
+                                                                }))
+                                                            }
+                                                            style={{
+                                                                width: "100%",
+                                                                minHeight: "72px",
+                                                                padding: "0 28px",
+                                                                borderRadius: "18px",
+                                                                cursor: "pointer",
+                                                                textAlign: "left",
+                                                                display: "flex",
+                                                                justifyContent: "space-between",
+                                                                alignItems: "center",
+                                                                transition: ".35s",
+                                                                fontSize: "16px",
+
+                                                                background: isSelected
+                                                                    ? "rgba(214,161,75,.12)"
+                                                                    : "rgba(255,255,255,.04)",
+
+                                                                border: isSelected
+                                                                    ? "1px solid rgba(214,161,75,.45)"
+                                                                    : "1px solid rgba(255,255,255,.08)",
+
+                                                                color: "#ECE4D8"
+                                                            }}
+                                                        >
+
+                                                            <span>{opt}</span>
+
+                                                            <div
+                                                                style={{
+                                                                    width: "18px",
+                                                                    height: "18px",
+                                                                    borderRadius: "50%",
+                                                                    border: isSelected
+                                                                        ? "6px solid #D6A14B"
+                                                                        : "2px solid rgba(255,255,255,.35)",
+                                                                    transition: ".3s"
+                                                                }}
+                                                            />
+
+                                                        </button>
+
+                                                    );
+
+                                                })}
+
+                                            </div>
+
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+                                <button
+                                    onClick={submitQuizAnswers}
+                                    style={{
+                                        marginTop: "55px",
+                                        width: "100%",
+                                        height: "68px",
+                                        border: "none",
+                                        borderRadius: "50px",
+                                        cursor: "pointer",
+                                        background:
+                                            "linear-gradient(135deg,#D6A14B,#AF7B28)",
+                                        color: "#111",
+                                        fontWeight: 700,
+                                        letterSpacing: "2px",
+                                        fontSize: "15px",
+                                        boxShadow:
+                                            "0 20px 40px rgba(214,161,75,.22)"
+                                    }}
+                                >
+                                    SUBMIT EXPEDITION
+                                </button>
+
+                            </div>
+
+                        ) : (
+
+                            <div>
+
+                                {submitResult ? (
+
+                                    <div
+                                        style={{
+                                            width: "min(850px,100%)",
+                                            margin: "auto",
+                                            padding: "70px 50px",
+                                            borderRadius: "30px",
+                                            textAlign: "center",
+                                            background: "rgba(13,23,17,.92)",
+                                            border: "1px solid rgba(214,161,75,.08)",
+                                            backdropFilter: "blur(20px)"
+                                        }}
+                                    >
+
+                                        <p
+                                            style={{
+                                                color: "#D6A14B",
+                                                letterSpacing: "6px",
+                                                marginBottom: "18px"
+                                            }}
+                                        >
+                                            EXPEDITION COMPLETE
+                                        </p>
+
+                                        <h2
+                                            style={{
+                                                color: "#ECE4D8",
+                                                fontFamily: "Cinzel",
+                                                fontSize: "52px",
+                                                marginBottom: "18px"
+                                            }}
+                                        >
+                                            Congratulations
+                                        </h2>
+
+                                        <h1
+                                            style={{
+                                                fontSize: "90px",
+                                                color: "#D6A14B",
+                                                fontFamily: "Cinzel",
+                                                marginBottom: "30px"
+                                            }}
+                                        >
+                                            {submitResult.score}/{submitResult.total_questions}
+                                        </h1>
+
+                                        <p
+                                            style={{
+                                                color: "#BDBDBD",
+                                                marginBottom: "10px"
+                                            }}
+                                        >
+                                            Accuracy : {submitResult.accuracy}%
+                                        </p>
+
+                                        <p
+                                            style={{
+                                                color: "#BDBDBD",
+                                                marginBottom: "40px"
+                                            }}
+                                        >
+                                            New Level : {submitResult.level}
+                                        </p>
+
+                                        <button
+                                            onClick={startNewQuiz}
+                                            style={{
+                                                padding: "18px 36px",
+                                                border: "none",
+                                                borderRadius: "50px",
+                                                cursor: "pointer",
+                                                background:
+                                                    "linear-gradient(135deg,#D6A14B,#AF7B28)",
+                                                color: "#111",
+                                                fontWeight: 700,
+                                                letterSpacing: "2px"
+                                            }}
+                                        >
+                                            START ANOTHER EXPEDITION
+                                        </button>
+
+                                    </div>
+
+                                ) : (
+
+                                    <div
+                                        style={{
+                                            textAlign: "center",
+                                            padding: "90px",
+                                            background: "rgba(13,23,17,.92)",
+                                            borderRadius: "30px",
+                                            border: "1px solid rgba(214,161,75,.08)",
+                                            color: "#BDBDBD"
+                                        }}
+                                    >
+                                        No active expedition.
+                                    </div>
+
+                                )}
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                )}
+                {/* ============================================================
+    LEADERBOARD
+============================================================ */}
+
+                {activeTab === "leaderboard" && (
+
+                    <div>
+
+                        <div
+                            style={{
+                                textAlign: "center",
+                                marginBottom: "70px"
+                            }}
+                        >
+
+                            <span
+                                style={{
+                                    display: "block",
+                                    color: "#D6A14B",
+                                    letterSpacing: "8px",
+                                    fontSize: "13px",
+                                    marginBottom: "18px"
+                                }}
+                            >
+                                GLOBAL RANKINGS
+                            </span>
+
+                            <h2
+                                style={{
+                                    fontFamily: "Cinzel",
+                                    color: "#ECE4D8",
+                                    fontSize: "clamp(46px,6vw,70px)",
+                                    marginBottom: "18px"
+                                }}
+                            >
+                                Explorer Leaderboard
+                            </h2>
+
+                            <p
+                                style={{
+                                    maxWidth: "700px",
+                                    margin: "auto",
+                                    color: "#BDBDBD",
+                                    lineHeight: "2"
+                                }}
+                            >
+                                The finest paleontologists and explorers who have mastered the
+                                prehistoric world.
+                            </p>
+
+                        </div>
+
+                        {leaderboardData && leaderboardData.length > 0 ? (
+
+                            <div
+                                style={{
+                                    width: "min(950px,100%)",
+                                    margin: "auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "22px"
+                                }}
+                            >
+
                                 {leaderboardData.map((user, idx) => (
-                                    <tr key={idx} style={{ borderBottom: '1px solid #334155' }}>
-                                        <td>{user.rank}</td>
-                                        <td>{user.name}</td>
-                                        <td>{user.score}</td>
-                                        <td style={{ color: '#38bdf8' }}>{user.level}</td>
-                                    </tr>
+
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            flexWrap: "wrap",
+                                            gap: "25px",
+
+                                            padding: "28px 34px",
+
+                                            background: "rgba(13,23,17,.92)",
+
+                                            border: idx === 0
+                                                ? "1px solid rgba(214,161,75,.35)"
+                                                : "1px solid rgba(214,161,75,.08)",
+
+                                            borderRadius: "26px",
+
+                                            backdropFilter: "blur(20px)",
+
+                                            boxShadow:
+                                                idx === 0
+                                                    ? "0 20px 60px rgba(214,161,75,.08)"
+                                                    : "0 18px 45px rgba(0,0,0,.35)"
+                                        }}
+                                    >
+
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "25px"
+                                            }}
+                                        >
+
+                                            <div
+                                                style={{
+                                                    width: "74px",
+                                                    height: "74px",
+
+                                                    borderRadius: "50%",
+
+                                                    background:
+                                                        idx === 0
+                                                            ? "linear-gradient(135deg,#D6A14B,#AF7B28)"
+                                                            : "rgba(255,255,255,.04)",
+
+                                                    border:
+                                                        idx === 0
+                                                            ? "none"
+                                                            : "1px solid rgba(214,161,75,.10)",
+
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+
+                                                    fontSize: "28px",
+
+                                                    fontFamily: "Cinzel",
+
+                                                    color:
+                                                        idx === 0
+                                                            ? "#111"
+                                                            : "#ECE4D8"
+                                                }}
+                                            >
+
+                                                {user.rank}
+
+                                            </div>
+
+                                            <div>
+
+                                                <h3
+                                                    style={{
+                                                        fontFamily: "Cinzel",
+                                                        fontSize: "30px",
+                                                        color: "#ECE4D8",
+                                                        marginBottom: "8px"
+                                                    }}
+                                                >
+                                                    {user.name}
+                                                </h3>
+
+                                                <span
+                                                    style={{
+                                                        color: "#D6A14B",
+                                                        letterSpacing: "4px",
+                                                        fontSize: "12px"
+                                                    }}
+                                                >
+                                                    {user.level.toUpperCase()} EXPLORER
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            style={{
+                                                textAlign: "right"
+                                            }}
+                                        >
+
+                                            <p
+                                                style={{
+                                                    color: "#777",
+                                                    letterSpacing: "4px",
+                                                    marginBottom: "8px",
+                                                    fontSize: "12px"
+                                                }}
+                                            >
+                                                SCORE
+                                            </p>
+
+                                            <h2
+                                                style={{
+                                                    color: "#ECE4D8",
+                                                    fontFamily: "Cinzel",
+                                                    fontSize: "40px"
+                                                }}
+                                            >
+                                                {user.score}
+                                            </h2>
+
+                                        </div>
+
+                                    </div>
+
                                 ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p>No leaderboard records found.</p>
-                    )}
-                </div>
-            )}
+
+                            </div>
+
+                        ) : (
+
+                            <div
+                                style={{
+                                    width: "min(850px,100%)",
+                                    margin: "auto",
+                                    padding: "70px",
+                                    textAlign: "center",
+
+                                    borderRadius: "30px",
+
+                                    background: "rgba(13,23,17,.92)",
+
+                                    border: "1px solid rgba(214,161,75,.08)"
+                                }}
+                            >
+
+                                <h3
+                                    style={{
+                                        color: "#ECE4D8",
+                                        fontFamily: "Cinzel",
+                                        fontSize: "36px",
+                                        marginBottom: "18px"
+                                    }}
+                                >
+                                    No Rankings Available
+                                </h3>
+
+                                <p
+                                    style={{
+                                        color: "#BDBDBD",
+                                        lineHeight: "2"
+                                    }}
+                                >
+                                    Complete your first expedition to appear on the global
+                                    leaderboard.
+                                </p>
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                )}
+            </div>
         </div>
-    );
+    )
 }
+
