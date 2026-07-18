@@ -21,7 +21,7 @@
     "react-intersection-observer": "^10.0.3",
     "react-parallax-tilt": "^1.7.333",
     "react-router-dom": "^7.18.1",
-    "three": "^0.160.0"
+    "three": "^0.160.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

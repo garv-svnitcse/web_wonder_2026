@@ -5,61 +5,29 @@ import ResearchDatabase from "./pages/ResearchDatabase";
 import Dinosaur from "./pages/Dinosaur";
 import Viewer from "./pages/Viewer";
 import QuizPage from "./pages/QuizPage";
+import Research from "./pages/RESEARCH_PAGE/Research";
+import ResearchDossier from "./pages/RESEARCH_PAGE/ResearchDossier";
 
 function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
 
-    return (
+        <Route path="/research" element={<Research />} />
 
-        <BrowserRouter>
+        <Route path="/research-database" element={<ResearchDatabase />} />
 
-            <Routes>
+        <Route path="/research/:slug" element={<ResearchDossier />} />
 
-                <Route
+        <Route path="/dinosaur/:slug" element={<Dinosaur />} />
 
-                    path="/"
+        <Route path="/viewer/:slug" element={<Viewer />} />
 
-                    element={<Home />}
-
-                />
-
-                <Route
-
-                    path="/research"
-
-                    element={<ResearchDatabase />}
-
-                />
-
-                <Route
-
-                    path="/dinosaur/:slug"
-
-                    element={<Dinosaur />}
-
-                />
-
-                <Route
-
-                    path="/viewer/:slug"
-
-                    element={<Viewer />}
-
-                />
-
-                <Route
-
-                    path="/quiz"
-
-                    element={<QuizPage />}
-
-                />
-
-            </Routes>
-
-        </BrowserRouter>
-
-    );
-
+        <Route path="/quiz" element={<QuizPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
