@@ -27,3 +27,9 @@ class ResearchPaper(BaseModel):
     abstract: str
     proposedChange: Optional[ProposedChange] = None
     new_dinosaur: Optional[NewDinosaur] = None
+
+class CommentCreate(BaseModel):
+    title: str
+    author: str
+    text: str
+

@@ -11,7 +11,7 @@ const cards = [
         video: "https://drive.google.com/file/d/1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h/view?usp=sharing",
         description:
             "Encounter the most iconic predators and herbivores that once ruled the Earth.",
-        link: "/research",
+        link: "/research-database",
     },
     {
         title: "TIMELINE",
@@ -35,7 +35,7 @@ const cards = [
         video: "https://drive.google.com/file/d/1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr/view?usp=sharing",
         description:
             "Browse fossils, species reports and classified prehistoric discoveries.",
-        link: "/community",
+        link: "/research",
     },
 ];
 

@@ -246,7 +246,7 @@ export default function Dinosaur() {
         <Radio size={48} color="#e11d48" className="mb-6 opacity-80" />
         <h2 className="text-2xl font-serif text-white tracking-wide">Specimen Dossier Lost</h2>
         <p className="my-4 text-sm text-[#94a3b8]">This classification has not yet been logged in the archives.</p>
-        <Link to="/research" className="inline-block px-8 py-3 bg-[#121815] border border-[#c5a880]/40 text-[#c5a880] text-sm uppercase tracking-wider font-semibold rounded-sm transition duration-300 hover:bg-[#c5a880] hover:text-black">
+        <Link to="/research-database" className="inline-block px-8 py-3 bg-[#121815] border border-[#c5a880]/40 text-[#c5a880] text-sm uppercase tracking-wider font-semibold rounded-sm transition duration-300 hover:bg-[#c5a880] hover:text-black">
           Return to Catalog
         </Link>
       </div>
@@ -284,7 +284,7 @@ export default function Dinosaur() {
         
         {/* Back Navigation Link */}
         <div className="w-full flex justify-between items-center">
-          <Link to="/research" className="text-xs uppercase tracking-[0.25em] text-[#c5a880] hover:text-white transition duration-300 flex items-center gap-2 font-semibold font-mono">
+          <Link to="/research-database" className="text-xs uppercase tracking-[0.25em] text-[#c5a880] hover:text-white transition duration-300 flex items-center gap-2 font-semibold font-mono">
             ← Back to Expedition
           </Link>
           {usingFallback && (

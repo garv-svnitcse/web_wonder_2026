@@ -11,5 +11,7 @@ dinosaur_collection = db['dinosaur']
 research_collection = db['research']
 quiz_collection = db['quiz']
 quiz_attempt_collection = db['quiz_attempt']
+researcher_detail = db['researcher_detail']
+comment_collection = db['comment']
 
 print("MongoDB connected successfully")

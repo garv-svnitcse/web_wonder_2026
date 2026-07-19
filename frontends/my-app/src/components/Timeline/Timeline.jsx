@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./Timeline.css";
 
 const eras = [
@@ -70,6 +71,8 @@ function getDirectVideoUrl(url) {
 }
 
 export default function Timeline() {
+
+    const navigate = useNavigate();
 
     return (
 
@@ -254,6 +257,7 @@ export default function Timeline() {
                                 <button
 
                                     className="timelineButton"
+                                    onClick={() => navigate(`/research-database?era=${era.period.toLowerCase()}`)}
 
                                 >
 

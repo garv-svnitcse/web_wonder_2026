@@ -9,8 +9,8 @@ import ActivityTicker from "./ActivityTicker";
 import ResearchTimeline from "./ResearchTimeline";
 import TrendingTags from "./TrendingTags";
 import ContributorLeaderboard from "./ContributorLeaderboard";
-import ResearchFooter from "./ResearchFooter";
-import { useState } from "react";
+import Footer from "../../components/Footer/Footer";
+import { useState, useEffect } from "react";
 import { database } from "./researchData";
 
 import "./Research.css";
@@ -21,13 +21,47 @@ export default function Research() {
   const [era, setEra] = useState("");
   const [sortBy, setSortBy] = useState("latest");
   const [visibleCount, setVisibleCount] = useState(3);
+  const [researchData, setResearchData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = database.filter((item) => {
+  useEffect(() => {
+    let active = true;
+    async function loadPreview() {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/research/preview?limit=${visibleCount}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (active && Array.isArray(data) && data.length > 0) {
+            setResearchData(data);
+          } else {
+            setResearchData(database);
+          }
+        } else {
+          setResearchData(database);
+        }
+      } catch (err) {
+        console.warn("Failed to fetch research preview, using fallback database:", err);
+        setResearchData(database);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPreview();
+    return () => {
+      active = false;
+    };
+  }, [visibleCount]);
+
+  const filtered = researchData.filter((item) => {
     const matchesSearch = item.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesStatus = status ? item.status === status : true;
-    const matchesEra = era ? item.era.includes(era) : true;
+    const matchesStatus = status
+      ? item.status?.toLowerCase() === status.toLowerCase()
+      : true;
+    const matchesEra = era
+      ? item.era?.toLowerCase().includes(era.toLowerCase())
+      : true;
     return matchesSearch && matchesStatus && matchesEra;
   });
 
@@ -72,11 +106,11 @@ export default function Research() {
 
           <div className="researchGrid">
             {visibleItems.map((item) => (
-              <ResearchCard key={item.slug} item={item} />
+              <ResearchCard key={item.title || item.slug} item={item} />
             ))}
           </div>
 
-          {visibleCount < filtered.length && (
+          {filtered.length >= visibleCount && (
             <div className="rhLoadMoreWrap">
               <button
                 className="rhLoadMoreBtn"
@@ -90,7 +124,7 @@ export default function Research() {
           <SubmitResearchForm />
         </div>
       </section>
-      <ResearchFooter />
+      <Footer />
     </>
   );
 }

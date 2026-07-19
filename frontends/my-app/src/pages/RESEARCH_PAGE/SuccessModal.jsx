@@ -1,6 +1,6 @@
 import { FaCheckCircle, FaTimes } from "react-icons/fa";
 
-export default function SuccessModal({ show, onClose }) {
+export default function SuccessModal({ show, onClose, title, message }) {
   if (!show) return null;
 
   return (
@@ -15,10 +15,9 @@ export default function SuccessModal({ show, onClose }) {
           <FaCheckCircle className="successIcon" />
         </div>
 
-        <h2>Research Submitted!</h2>
+        <h2>{title || "Research Submitted!"}</h2>
         <p>
-          Your research has been sent for review. Our team will verify your
-          findings and notify you once approved.
+          {message || "Your research has been sent for review. Our team will verify your findings and notify you once approved."}
         </p>
 
         <button className="successModalBtn" onClick={onClose}>

@@ -1,6 +1,7 @@
 import { FaTrophy, FaMedal } from "react-icons/fa";
+import { useState, useEffect } from "react";
 
-const contributors = [
+const fallbackContributors = [
   {
     rank: 1,
     name: "Dr. Amelia Hart",
@@ -45,6 +46,29 @@ const rankColors = {
 };
 
 export default function ContributorLeaderboard() {
+  const [contributors, setContributors] = useState(fallbackContributors);
+
+  useEffect(() => {
+    let active = true;
+    async function fetchLeaderboard() {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/research/leaderboard");
+        if (response.ok) {
+          const data = await response.json();
+          if (active && Array.isArray(data) && data.length > 0) {
+            setContributors(data);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to fetch research leaderboard, using fallback data:", err);
+      }
+    }
+    fetchLeaderboard();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div className="leaderboardWidget">
       <div className="lbHeading">
@@ -57,7 +81,7 @@ export default function ContributorLeaderboard() {
 
       <div className="lbList">
         {contributors.map((c) => (
-          <div className="lbItem" key={c.rank}>
+          <div className="lbItem" key={c.rank || c._id}>
             <div
               className="lbRank"
               style={{ color: rankColors[c.rank] || "#5dffa0" }}
