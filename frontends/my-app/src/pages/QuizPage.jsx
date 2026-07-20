@@ -24,7 +24,7 @@ import React, { useState, useEffect } from 'react';
  *          "quiz_id": "quiz_id_string",
  *          "difficulty": "easy",
  *          "score": 4,
- *          "wrong_answers": 1,
+ *          "wrong_selectedAnswers": 1,
  *          "total_questions": 5,
  *          "accuracy": 80.0,
  *          "level": "medium"            // Level assigned after this attempt
@@ -39,7 +39,7 @@ import React, { useState, useEffect } from 'react';
  *      "quiz_id": "quiz_id_string",     // Use this ID to submit the quiz later
  *      "title": "Easy Mesozoic Basics", // Title of the quiz
  *      "difficulty": "easy",            // Quiz difficulty
- *      "questions": [                   // Array of questions (answers are omitted for integrity)
+ *      "questions": [                   // Array of questions (selectedAnswers are omitted for integrity)
  *        {
  *          "question_id": "q1",
  *          "question": "Which dinosaur period is the oldest?",
@@ -1333,7 +1333,7 @@ export default function QuizPage() {
 
                         )}
 
-                    </div>
+                        </div>
 
                 )}
             </div>
