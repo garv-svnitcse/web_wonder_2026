@@ -372,8 +372,8 @@ def research_create(
     
     import urllib.parse
     encoded_title = urllib.parse.quote(researchData.title)
-    approve_url = f"http://127.0.0.1:5002/research/approve/{encoded_title}"
-    reject_url = f"http://127.0.0.1:5002/research/reject/{encoded_title}"
+    approve_url = f"http://127.0.0.1:5001/research/approve/{encoded_title}"
+    reject_url = f"http://127.0.0.1:5001/research/reject/{encoded_title}"
 
     try:
         resend.Emails.send({

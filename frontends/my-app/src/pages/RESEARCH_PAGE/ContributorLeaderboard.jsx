@@ -52,7 +52,7 @@ export default function ContributorLeaderboard() {
     let active = true;
     async function fetchLeaderboard() {
       try {
-        const response = await fetch("http://localhost:5002/research/leaderboard");
+        const response = await fetch("http://localhost:5001/research/leaderboard");
         if (response.ok) {
           const data = await response.json();
           if (active && Array.isArray(data) && data.length > 0) {

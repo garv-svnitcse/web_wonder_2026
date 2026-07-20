@@ -21,7 +21,7 @@ export default function FeaturedResearcher() {
     let active = true;
     async function fetchLeading() {
       try {
-        const response = await fetch("http://localhost:5002/research/leading");
+        const response = await fetch("http://localhost:5001/research/leading");
         if (response.ok) {
           const data = await response.json();
           if (active) {

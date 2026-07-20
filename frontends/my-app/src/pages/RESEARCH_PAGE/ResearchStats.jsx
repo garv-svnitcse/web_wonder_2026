@@ -12,7 +12,7 @@ export default function ResearchStats() {
   const [data, setData] = useState(DEFAULT_STATS);
 
   useEffect(() => {
-    fetch("http://localhost:5002/research/stats")
+    fetch("http://localhost:5001/research/stats")
       .then((res) => {
         if (!res.ok) {
           throw new Error("HTTP error " + res.status);

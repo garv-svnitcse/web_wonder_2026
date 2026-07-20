@@ -16,7 +16,7 @@ export default function Viewer() {
     // Fetch dinosaur details to get the 3D model URL
     useEffect(() => {
         let isMounted = true;
-        fetch(`http://127.0.0.1:5002/dinosaurs/${slug}`)
+        fetch(`http://127.0.0.1:5001/dinosaurs/${slug}`)
             .then(res => {
                 if (!res.ok) throw new Error("HTTP error " + res.status);
                 return res.json();

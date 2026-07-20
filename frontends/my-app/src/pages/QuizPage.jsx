@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
  * BACKEND API DATA SCHEMAS & DOCUMENTATION
  * =========================================================================
  * 
- * 1. QUIZ DASHBOARD (GET http://127.0.0.1:5002/quiz/dashboard)
+ * 1. QUIZ DASHBOARD (GET http://127.0.0.1:5001/quiz/dashboard)
  *    Headers: Authorization: Bearer <token>
  *    Response JSON Schema:
  *    {
@@ -32,7 +32,7 @@ import React, { useState, useEffect } from 'react';
  *      ]
  *    }
  * 
- * 2. START QUIZ (POST http://127.0.0.1:5002/quiz/start)
+ * 2. START QUIZ (POST http://127.0.0.1:5001/quiz/start)
  *    Headers: Authorization: Bearer <token>
  *    Response JSON Schema:
  *    {
@@ -48,7 +48,7 @@ import React, { useState, useEffect } from 'react';
  *      ]
  *    }
  * 
- * 3. SUBMIT QUIZ (POST http://127.0.0.1:5002/quiz/submit)
+ * 3. SUBMIT QUIZ (POST http://127.0.0.1:5001/quiz/submit)
  *    Headers: Authorization: Bearer <token>
  *    Request JSON Schema:
  *    {
@@ -69,7 +69,7 @@ import React, { useState, useEffect } from 'react';
  *      "level": "medium"                // New adaptive progression level assigned to user
  *    }
  * 
- * 4. LEADERBOARD (GET http://127.0.0.1:5002/quiz/leaderboard)
+ * 4. LEADERBOARD (GET http://127.0.0.1:5001/quiz/leaderboard)
  *    Headers: Authorization: Bearer <token>
  *    Response JSON Schema:
  *    [
@@ -113,7 +113,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://127.0.0.1:5002/quiz/dashboard', {
+            const res = await fetch('http://127.0.0.1:5001/quiz/dashboard', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -134,7 +134,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://127.0.0.1:5002/quiz/leaderboard', {
+            const res = await fetch('http://127.0.0.1:5001/quiz/leaderboard', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -157,7 +157,7 @@ export default function QuizPage() {
         setSubmitResult(null);
         setSelectedAnswers({});
         try {
-            const res = await fetch('http://127.0.0.1:5002/quiz/start', {
+            const res = await fetch('http://127.0.0.1:5001/quiz/start', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -192,7 +192,7 @@ export default function QuizPage() {
         };
 
         try {
-            const res = await fetch('http://127.0.0.1:5002/quiz/submit', {
+            const res = await fetch('http://127.0.0.1:5001/quiz/submit', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
