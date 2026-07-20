@@ -46,7 +46,7 @@ export default function ResearchDatabase() {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:5000/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
+                    `http://127.0.0.1:5002/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
                 );
                 const data = await response.json();
                 if (active) {
@@ -257,7 +257,7 @@ export default function ResearchDatabase() {
 
 //         "name":"Tyrannosaurus Rex",
 
-//         "thumbnail":"http://localhost:5000/uploads/trex.jpg",
+//         "thumbnail":"http://localhost:5002/uploads/trex.jpg",
 
 //         "era":"Late Cretaceous",
 

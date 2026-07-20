@@ -28,7 +28,7 @@ export default function Research() {
     let active = true;
     async function loadPreview() {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/research/preview?limit=${visibleCount}`);
+        const response = await fetch(`http://localhost:5002/research/preview?limit=${visibleCount}`);
         if (response.ok) {
           const data = await response.json();
           if (active && Array.isArray(data) && data.length > 0) {

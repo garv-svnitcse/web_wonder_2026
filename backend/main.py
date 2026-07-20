@@ -1,8 +1,25 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from routes import contact, auth, timeline, research, quiz, dinosaur
 
 app = FastAPI()
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    print("RAW VALIDATION ERRORS:", exc.errors())
+    error_messages = []
+    for error in exc.errors():
+        field = " -> ".join([str(loc) for loc in error.get("loc", []) if loc != "body"])
+        msg = error.get("msg", "Validation error")
+        error_messages.append(f"{field}: {msg}")
+    
+    joined_errors = "; ".join(error_messages)
+    return JSONResponse(
+        status_code=422,
+        content={"detail": f"Validation failed: {joined_errors}"}
+    )
 
 app.add_middleware(
     CORSMiddleware,

@@ -16,19 +16,17 @@ export default function SubmitResearchForm() {
   });
 
   const [fileName, setFileName] = useState("");
+  const [evidenceFile, setEvidenceFile] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [researcherData, setResearcherData] = useState({
     name: "",
     email: "",
     specialization: "",
-    quote: "",
-    publishedStudies: "",
     awardsWon: "",
-    citations: "",
   });
   const [avatarName, setAvatarName] = useState("");
-  const [showResearcherSuccess, setShowResearcherSuccess] = useState(false);
+  const [avatarFile, setAvatarFile] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,39 +39,100 @@ export default function SubmitResearchForm() {
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
       setFileName(e.target.files[0].name);
+      setEvidenceFile(e.target.files[0]);
     }
   };
 
   const handleAvatarChange = (e) => {
     if (e.target.files.length > 0) {
       setAvatarName(e.target.files[0].name);
+      setAvatarFile(e.target.files[0]);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleUnifiedSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted Research:", formData, fileName);
-    setShowSuccess(true);
-  };
+    if (!evidenceFile) {
+      alert("Please upload an evidence document.");
+      return;
+    }
 
-  const handleResearcherSubmit = (e) => {
-    e.preventDefault();
-    console.log("Researcher Submitted:", researcherData, avatarName);
-    setShowResearcherSuccess(true);
+    const submitData = new FormData();
+    submitData.append("title", formData.title);
+    submitData.append("co_researchers", formData.coResearchers);
+    submitData.append("species", formData.species);
+    submitData.append("era", formData.era);
+    submitData.append("key_findings", formData.keyFindings);
+    submitData.append("abstract", formData.abstract);
+    submitData.append("references", formData.references);
+    submitData.append("notes", formData.notes);
+
+    submitData.append("researcher_name", researcherData.name);
+    submitData.append("researcher_email", researcherData.email);
+    submitData.append("researcher_specialization", researcherData.specialization);
+    submitData.append("researcher_awards", researcherData.awardsWon);
+
+    submitData.append("evidence_document", evidenceFile);
+    if (avatarFile) {
+      submitData.append("researcher_avatar", avatarFile);
+    }
+
+    try {
+      const response = await fetch("http://localhost:5002/research/research", {
+        method: "POST",
+        body: submitData,
+      });
+
+      if (response.ok) {
+        setShowSuccess(true);
+        // Reset state
+        setFormData({
+          title: "",
+          coResearchers: "",
+          species: "",
+          category: "",
+          era: "",
+          keyFindings: "",
+          abstract: "",
+          references: "",
+          notes: "",
+        });
+        setResearcherData({
+          name: "",
+          email: "",
+          specialization: "",
+          awardsWon: "",
+        });
+        setFileName("");
+        setAvatarName("");
+        setEvidenceFile(null);
+        setAvatarFile(null);
+      } else {
+        try {
+          const err = await response.json();
+          alert(err.detail || "Failed to submit research.");
+        } catch (e) {
+          alert(`Submission failed (Status ${response.status}): ${response.statusText}`);
+        }
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
     <div className="submitResearchSection">
-      <div className="srfFormsContainer">
-        
-        {/* Left Column: Submit Research Details */}
-        <div className="submitResearchColumn">
-          <div className="submitResearchHeading" style={{ textAlign: "left" }}>
-            <h2>Submit Research</h2>
-            <p>Share your discoveries with the global paleontology community.</p>
-          </div>
+      <form className="submitResearchForm unifiedForm" onSubmit={handleUnifiedSubmit}>
+        <div className="srfFormsContainer">
 
-          <form className="submitResearchForm" onSubmit={handleSubmit}>
+          {/* Left Column: Submit Research Details */}
+          <div className="submitResearchColumn">
+            <div className="submitResearchHeading" style={{ textAlign: "left" }}>
+              <h2>Submit Research</h2>
+              <p>Share your discoveries with the global paleontology community.</p>
+            </div>
+
             <div className="srfGrid">
               <div className="srfField srfSpan2">
                 <label>Research Title *</label>
@@ -215,21 +274,15 @@ export default function SubmitResearchForm() {
                 />
               </div>
             </div>
-
-            <button type="submit" className="srfSubmitBtn">
-              Submit Research <FaPaperPlane />
-            </button>
-          </form>
-        </div>
-
-        {/* Right Column: Researcher Details */}
-        <div className="submitResearcherColumn">
-          <div className="submitResearchHeading" style={{ textAlign: "left" }}>
-            <h2>Researcher Profile</h2>
-            <p>Register your credentials in the explorer archives based on your studies.</p>
           </div>
 
-          <form className="submitResearchForm" onSubmit={handleResearcherSubmit}>
+          {/* Right Column: Researcher Details */}
+          <div className="submitResearcherColumn">
+            <div className="submitResearchHeading" style={{ textAlign: "left" }}>
+              <h2>Researcher Profile</h2>
+              <p>Register your credentials in the explorer archives based on your studies.</p>
+            </div>
+
             <div className="srfGrid">
               <div className="srfField srfSpan2">
                 <label>Full Name *</label>
@@ -273,48 +326,12 @@ export default function SubmitResearchForm() {
               </div>
 
               <div className="srfField srfSpan2">
-                <label>Featured Quote *</label>
-                <textarea
-                  name="quote"
-                  placeholder='e.g. "Every fossil tells a story..."'
-                  value={researcherData.quote}
-                  onChange={handleResearcherChange}
-                  rows={3}
-                  required
-                />
-              </div>
-
-              <div className="srfField">
-                <label>Published Studies *</label>
-                <input
-                  type="number"
-                  name="publishedStudies"
-                  placeholder="e.g. 42"
-                  value={researcherData.publishedStudies}
-                  onChange={handleResearcherChange}
-                  required
-                />
-              </div>
-
-              <div className="srfField">
                 <label>Awards Won *</label>
                 <input
                   type="number"
                   name="awardsWon"
                   placeholder="e.g. 8"
                   value={researcherData.awardsWon}
-                  onChange={handleResearcherChange}
-                  required
-                />
-              </div>
-
-              <div className="srfField srfSpan2">
-                <label>Citations Count *</label>
-                <input
-                  type="number"
-                  name="citations"
-                  placeholder="e.g. 1200"
-                  value={researcherData.citations}
                   onChange={handleResearcherChange}
                   required
                 />
@@ -331,28 +348,36 @@ export default function SubmitResearchForm() {
                   required
                 />
               </div>
-            </div>
 
-            <button type="submit" className="srfSubmitBtn">
-              Save Profile <FaPaperPlane />
-            </button>
-          </form>
+              <div className="srfField srfSpan2">
+                <label>Featured Quote / Motto *</label>
+                <input
+                  type="text"
+                  name="quote"
+                  placeholder="e.g. Seeking secrets in the bones of time."
+                  value={researcherData.quote}
+                  onChange={handleResearcherChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      </div>
+        {/* Centered Unified Submit Button */}
+        <div className="srfUnifiedSubmitRow" style={{ display: "flex", justifyContent: "center", marginTop: "30px", width: "100%" }}>
+          <button type="submit" className="srfSubmitBtn" style={{ minWidth: "250px", padding: "14px 30px" }}>
+            Submit Research & Profile <FaPaperPlane style={{ marginLeft: "8px" }} />
+          </button>
+        </div>
+      </form>
 
       <SuccessModal
         show={showSuccess}
         onClose={() => setShowSuccess(false)}
         title="Research Submitted!"
-        message="Your research has been sent for review. Our team will verify your findings and notify you once approved."
-      />
-
-      <SuccessModal
-        show={showResearcherSuccess}
-        onClose={() => setShowResearcherSuccess(false)}
-        title="Profile Registered!"
-        message="Your researcher credentials have been logged in the explorer database. You can now contribute findings."
+        message="Your research findings and profile credentials have been successfully submitted for validation."
       />
     </div>
   );

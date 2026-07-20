@@ -2,13 +2,9 @@ from fastapi import APIRouter
 from schemas import contact
 # pyrefly: ignore [missing-import]
 import resend
-import os
-from dotenv import load_dotenv
+from core.config import RESEND_API_KEY, RECEIVER_EMAIL
 
-load_dotenv()
-
-resend.api_key= os.getenv("RESEND_API_KEY")
-RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
+resend.api_key = RESEND_API_KEY
 
 router = APIRouter()
 

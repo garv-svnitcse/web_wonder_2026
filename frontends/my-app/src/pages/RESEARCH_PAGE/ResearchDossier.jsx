@@ -25,7 +25,7 @@ export default function ResearchDossier() {
     async function loadDossier() {
       setLoading(true);
       try {
-        const response = await fetch(`http://127.0.0.1:5000/research/${encodeURIComponent(slug)}`);
+        const response = await fetch(`http://localhost:5002/research/${encodeURIComponent(slug)}`);
         if (response.ok) {
           const data = await response.json();
           if (active) {
@@ -35,14 +35,14 @@ export default function ResearchDossier() {
             }
           }
         } else {
-          const fallback = database.find((d) => d.slug === slug);
+          const fallback = database.find((d) => d.slug === slug || d.title === slug);
           if (active) {
             setItem(fallback);
           }
         }
       } catch (err) {
         console.warn("Failed to load dossier from backend:", err);
-        const fallback = database.find((d) => d.slug === slug);
+        const fallback = database.find((d) => d.slug === slug || d.title === slug);
         if (active) {
           setItem(fallback);
         }
@@ -63,7 +63,7 @@ export default function ResearchDossier() {
     if (!item?.title || !author.trim() || !commentText.trim()) return;
     setSubmitting(true);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/research/${encodeURIComponent(item.title)}`, {
+      const response = await fetch(`http://localhost:5002/research/${encodeURIComponent(item.title)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export default function ResearchDossier() {
       });
       if (response.ok) {
         setCommentText("");
-        const res = await fetch(`http://127.0.0.1:5000/research/${encodeURIComponent(slug)}`);
+        const res = await fetch(`http://localhost:5002/research/${encodeURIComponent(slug)}`);
         if (res.ok) {
           const data = await res.json();
           if (data.comments) {
@@ -254,36 +254,44 @@ export default function ResearchDossier() {
                 )}
               </div>
 
-              <form onSubmit={handleCommentSubmit} className="addCommentForm">
-                <h4>Record Observation</h4>
-                <div className="formGroup">
-                  <label htmlFor="author-input">Scientist Name / Explorer Name</label>
-                  <input
-                    id="author-input"
-                    type="text"
-                    required
-                    className="formInput"
-                    placeholder="Enter your name..."
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                  />
+              {item.status?.toLowerCase() === "approved" ? (
+                <form onSubmit={handleCommentSubmit} className="addCommentForm">
+                  <h4>Record Observation</h4>
+                  <div className="formGroup">
+                    <label htmlFor="author-input">Scientist Name / Explorer Name</label>
+                    <input
+                      id="author-input"
+                      type="text"
+                      required
+                      className="formInput"
+                      placeholder="Enter your name..."
+                      value={author}
+                      onChange={(e) => setAuthor(e.target.value)}
+                    />
+                  </div>
+                  <div className="formGroup">
+                    <label htmlFor="comment-text-input">Observations & Notes</label>
+                    <textarea
+                      id="comment-text-input"
+                      rows={4}
+                      required
+                      className="formTextarea"
+                      placeholder="Write your research notes, observations, or feedback here..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                    />
+                  </div>
+                  <button type="submit" disabled={submitting} className="submitCommentBtn">
+                    {submitting ? "Publishing Note..." : "Publish Observation"}
+                  </button>
+                </form>
+              ) : (
+                <div className="commentLockedMessage" style={{ padding: '20px', background: 'rgba(236, 228, 216, 0.05)', borderRadius: '8px', border: '1px dashed rgba(236, 228, 216, 0.2)', textAlign: 'center', marginTop: '20px' }}>
+                  <p style={{ color: '#ECE4D8', opacity: 0.7, fontSize: '0.95rem', margin: 0 }}>
+                    Observations and discussions are locked until this research dossier has been fully approved by the archive council.
+                  </p>
                 </div>
-                <div className="formGroup">
-                  <label htmlFor="comment-text-input">Observations & Notes</label>
-                  <textarea
-                    id="comment-text-input"
-                    rows={4}
-                    required
-                    className="formTextarea"
-                    placeholder="Write your research notes, observations, or feedback here..."
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                  />
-                </div>
-                <button type="submit" disabled={submitting} className="submitCommentBtn">
-                  {submitting ? "Publishing Note..." : "Publish Observation"}
-                </button>
-              </form>
+              )}
             </div>
           </div>
         </div>

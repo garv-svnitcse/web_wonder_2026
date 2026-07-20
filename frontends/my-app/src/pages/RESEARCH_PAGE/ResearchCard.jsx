@@ -45,7 +45,7 @@ export default function ResearchCard({ item }) {
 
   const handleOpenDossier = async () => {
     try {
-      await fetch(`http://127.0.0.1:5000/research/view?title=${encodeURIComponent(item.title)}`, {
+      await fetch(`http://localhost:5002/research/view?title=${encodeURIComponent(item.title)}`, {
         method: "PUT",
       });
     } catch (err) {
@@ -65,7 +65,11 @@ export default function ResearchCard({ item }) {
 
       <div className="researchContent">
         <h3 className="rcTitle">{item.title}</h3>
-        {item.description && <p className="rcDescription">{item.description}</p>}
+        {item.description && (
+          <p className="rcDescription">
+            {Array.isArray(item.description) ? item.description.join(" ") : item.description}
+          </p>
+        )}
 
         <div className="rcScientist">
           <img
@@ -99,7 +103,7 @@ export default function ResearchCard({ item }) {
           </div>
         )}
         
-        <Link to={`/research/${slug}`} className="researchButton" onClick={handleOpenDossier}>
+        <Link to={`/research/${encodeURIComponent(item.title || slug)}`} className="researchButton" onClick={handleOpenDossier}>
           OPEN DOSSIER
           <FaArrowRight />
         </Link>
