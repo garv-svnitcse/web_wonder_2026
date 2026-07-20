@@ -101,8 +101,11 @@ export default function QuizPage() {
     const [dashboardData, setDashboardData] = useState(null);
     const [leaderboardData, setLeaderboardData] = useState([]);
     const [currentQuiz, setCurrentQuiz] = useState(null);
-    const [selectedselectedAnswers, setSelectedselectedAnswers] = useState({}); // { [question_id]: selected_option_string }
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [selectedAnswers, setSelectedAnswers] = useState({}); // { [question_id]: selected_option_string }
     const [submitResult, setSubmitResult] = useState(null);
+    const [difficulty, setDifficulty] = useState("easy");
+    const questions = currentQuiz?.questions || [];
 
     // Fetch Dashboard Stats
     const fetchDashboard = async () => {
@@ -152,7 +155,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         setSubmitResult(null);
-        setSelectedselectedAnswers({});
+        setSelectedAnswers({});
         try {
             const res = await fetch('http://127.0.0.1:5000/quiz/start', {
                 method: 'POST',
@@ -172,20 +175,20 @@ export default function QuizPage() {
     };
 
     // Submit selectedAnswers for evaluation
-    const submitQuizselectedAnswers = async () => {
+    const submitQuizAnswers = async () => {
         if (!token || !currentQuiz) return;
         setLoading(true);
         setError(null);
 
         // Format body schema: { quiz_id, answer: [{ question_id, selected_option }] }
-        const formattedselectedAnswers = Object.entries(selectedselectedAnswers).map(([qId, option]) => ({
+        const formattedAnswers = Object.entries(selectedAnswers).map(([qId, option]) => ({
             question_id: qId,
             selected_option: option
         }));
 
         const body = {
             quiz_id: currentQuiz.quiz_id,
-            answer: formattedselectedAnswers
+            answer: formattedAnswers
         };
 
         try {
@@ -199,6 +202,7 @@ export default function QuizPage() {
             });
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const data = await res.json();
+            console.log("Submit Response:", data);
             setSubmitResult(data);
             setCurrentQuiz(null); // Clear quiz active state after submit
         } catch (err) {
@@ -225,108 +229,93 @@ export default function QuizPage() {
         }
     };
 
+    const handleAnswerChange = (questionId, selectedOption) => {
+        setSelectedAnswers((prev) => ({
+            ...prev,
+            [questionId]: selectedOption,
+        }));
+    };
     return (
         <div
             style={{
                 minHeight: "100vh",
                 background:
-                    "radial-gradient(circle at top right,#18361E 0%,#08110B 42%,#040806 100%)",
+                    "radial-gradient(circle at top,#1b3522 0%,#0a120d 55%,#050705 100%)",
                 color: "#ECE4D8",
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "Poppins, sans-serif",
                 overflowX: "hidden",
                 position: "relative",
-                paddingBottom: "120px"
+                paddingBottom: "100px",
             }}
         >
-            {/* Golden Glow */}
+            {/* Background Glow */}
             <div
                 style={{
                     position: "absolute",
-                    top: "-250px",
-                    right: "-220px",
-                    width: "720px",
-                    height: "720px",
+                    top: -250,
+                    right: -220,
+                    width: 700,
+                    height: 700,
                     borderRadius: "50%",
                     background:
-                        "radial-gradient(circle, rgba(214,161,75,.15), transparent 70%)",
-                    filter: "blur(45px)",
-                    pointerEvents: "none"
+                        "radial-gradient(circle,rgba(214,161,75,.18),transparent 70%)",
+                    filter: "blur(55px)",
                 }}
             />
 
-            {/* Forest Glow */}
             <div
                 style={{
                     position: "absolute",
-                    bottom: "-180px",
-                    left: "-180px",
-                    width: "520px",
-                    height: "520px",
+                    left: -200,
+                    bottom: -200,
+                    width: 500,
+                    height: 500,
                     borderRadius: "50%",
                     background:
-                        "radial-gradient(circle, rgba(58,135,72,.14), transparent 70%)",
+                        "radial-gradient(circle,rgba(40,120,60,.18),transparent 70%)",
                     filter: "blur(45px)",
-                    pointerEvents: "none"
                 }}
             />
 
-            {/* Main Wrapper */}
             <div
                 style={{
-                    width: "min(1380px,92%)",
+                    width: "min(1400px,92%)",
                     margin: "0 auto",
                     position: "relative",
-                    zIndex: 2
+                    zIndex: 5,
                 }}
             >
-
-                {/* ==========================================================
-                                HERO
-            ========================================================== */}
+                {/* HERO */}
 
                 <section
                     style={{
                         textAlign: "center",
-                        paddingTop: "110px",
-                        paddingBottom: "90px"
+                        padding: "110px 0 90px",
                     }}
                 >
-
-                    <div
+                    <span
                         style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "12px",
-                            padding: "10px 24px",
+                            display: "inline-block",
+                            padding: "10px 28px",
                             borderRadius: "999px",
                             border: "1px solid rgba(214,161,75,.25)",
                             background: "rgba(214,161,75,.08)",
                             color: "#D6A14B",
+                            fontWeight: 700,
                             letterSpacing: "5px",
-                            fontSize: "12px",
-                            fontWeight: 600
+                            fontSize: 12,
                         }}
                     >
-                        <span
-                            style={{
-                                width: "8px",
-                                height: "8px",
-                                borderRadius: "50%",
-                                background: "#D6A14B"
-                            }}
-                        />
-
                         JURASSIC JOURNEY
-                    </div>
+                    </span>
 
                     <h1
                         style={{
-                            fontFamily: "'Cinzel', serif",
-                            fontSize: "clamp(62px,7vw,96px)",
-                            marginTop: "40px",
-                            marginBottom: "28px",
-                            lineHeight: "1.05",
-                            color: "#ECE4D8"
+                            marginTop: 35,
+                            marginBottom: 25,
+                            fontFamily: "Cinzel, serif",
+                            fontSize: "clamp(60px,7vw,100px)",
+                            lineHeight: 1,
                         }}
                     >
                         Mesozoic Quiz
@@ -334,210 +323,188 @@ export default function QuizPage() {
 
                     <p
                         style={{
-                            width: "min(780px,90%)",
-                            margin: "0 auto",
-                            color: "#BEBEBE",
-                            lineHeight: "2",
-                            fontSize: "18px"
+                            width: "min(760px,90%)",
+                            margin: "auto",
+                            color: "#BBBBBB",
+                            lineHeight: 2,
+                            fontSize: 18,
                         }}
                     >
-                        Step into the prehistoric world and prove your knowledge
-                        across the Triassic, Jurassic and Cretaceous eras.
-                        Complete adaptive expeditions, improve your explorer
-                        level and compete with dinosaur enthusiasts worldwide.
+                        Challenge your prehistoric knowledge through adaptive dinosaur
+                        expeditions. Rise through the explorer ranks, unlock new
+                        difficulties, and compete against adventurers from around the globe.
                     </p>
 
                     <div
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: "22px",
-                            flexWrap: "wrap",
-                            marginTop: "55px"
+                            display: "grid",
+                            gridTemplateColumns:
+                                "repeat(auto-fit,minmax(220px,1fr))",
+                            gap: 25,
+                            marginTop: 55,
                         }}
                     >
-
                         <div
                             style={{
-                                padding: "22px 34px",
-                                borderRadius: "22px",
-                                background: "rgba(13,23,17,.82)",
+                                background: "rgba(15,25,18,.9)",
+                                padding: 30,
+                                borderRadius: 22,
                                 border: "1px solid rgba(214,161,75,.08)",
-                                minWidth: "220px"
                             }}
                         >
-                            <div
+                            <small
                                 style={{
-                                    color: "#777",
-                                    letterSpacing: "3px",
-                                    fontSize: "12px",
-                                    marginBottom: "10px"
+                                    color: "#888",
+                                    letterSpacing: 3,
                                 }}
                             >
                                 EXPEDITIONS
-                            </div>
+                            </small>
 
                             <h2
                                 style={{
-                                    margin: 0,
                                     fontFamily: "Cinzel",
-                                    fontSize: "42px"
+                                    fontSize: 46,
+                                    marginTop: 15,
                                 }}
                             >
                                 {dashboardData?.total_attempts ?? "--"}
                             </h2>
-
                         </div>
 
                         <div
                             style={{
-                                padding: "22px 34px",
-                                borderRadius: "22px",
-                                background: "rgba(13,23,17,.82)",
+                                background: "rgba(15,25,18,.9)",
+                                padding: 30,
+                                borderRadius: 22,
                                 border: "1px solid rgba(214,161,75,.08)",
-                                minWidth: "220px"
                             }}
                         >
-                            <div
+                            <small
                                 style={{
-                                    color: "#777",
-                                    letterSpacing: "3px",
-                                    fontSize: "12px",
-                                    marginBottom: "10px"
+                                    color: "#888",
+                                    letterSpacing: 3,
                                 }}
                             >
-                                HIGHEST SCORE
-                            </div>
+                                BEST SCORE
+                            </small>
 
                             <h2
                                 style={{
-                                    margin: 0,
                                     fontFamily: "Cinzel",
-                                    fontSize: "42px"
+                                    fontSize: 46,
+                                    marginTop: 15,
                                 }}
                             >
                                 {dashboardData?.highest_score ?? "--"}
                             </h2>
-
                         </div>
 
                         <div
                             style={{
-                                padding: "22px 34px",
-                                borderRadius: "22px",
-                                background: "rgba(13,23,17,.82)",
+                                background: "rgba(15,25,18,.9)",
+                                padding: 30,
+                                borderRadius: 22,
                                 border: "1px solid rgba(214,161,75,.08)",
-                                minWidth: "220px"
                             }}
                         >
-                            <div
+                            <small
                                 style={{
-                                    color: "#777",
-                                    letterSpacing: "3px",
-                                    fontSize: "12px",
-                                    marginBottom: "10px"
+                                    color: "#888",
+                                    letterSpacing: 3,
                                 }}
                             >
                                 CURRENT LEVEL
-                            </div>
+                            </small>
 
                             <h2
                                 style={{
-                                    margin: 0,
                                     fontFamily: "Cinzel",
-                                    fontSize: "42px",
-                                    textTransform: "uppercase"
+                                    fontSize: 46,
+                                    marginTop: 15,
+                                    textTransform: "uppercase",
                                 }}
                             >
                                 {dashboardData?.level ?? "--"}
                             </h2>
-
                         </div>
-
                     </div>
-
                 </section>
                 {/* ==========================================================
-                            AUTHENTICATION
-            ========================================================== */}
+                AUTHENTICATION
+========================================================== */}
 
                 <div
                     style={{
-                        width: "min(960px,100%)",
-                        margin: "0 auto",
-                        background: "rgba(13,23,17,.88)",
+                        width: "min(1000px,100%)",
+                        margin: "0 auto 70px",
+                        background: "rgba(13,23,17,.92)",
                         border: "1px solid rgba(214,161,75,.08)",
-                        borderRadius: "34px",
-                        backdropFilter: "blur(24px)",
+                        borderRadius: "32px",
                         overflow: "hidden",
-                        boxShadow: "0 30px 80px rgba(0,0,0,.45)"
+                        backdropFilter: "blur(24px)",
+                        boxShadow: "0 25px 70px rgba(0,0,0,.45)",
                     }}
                 >
-
-                    {/* Top Bar */}
+                    {/* Header */}
 
                     <div
                         style={{
-                            padding: "18px 34px",
+                            padding: "22px 35px",
+                            borderBottom: "1px solid rgba(214,161,75,.08)",
                             background:
-                                "linear-gradient(90deg,rgba(214,161,75,.12),transparent)",
-                            borderBottom: "1px solid rgba(214,161,75,.08)"
+                                "linear-gradient(90deg,rgba(214,161,75,.10),transparent)",
                         }}
                     >
-
                         <span
                             style={{
                                 color: "#D6A14B",
-                                letterSpacing: "5px",
-                                fontSize: "12px",
-                                fontWeight: 600
+                                letterSpacing: "4px",
+                                fontSize: 12,
+                                fontWeight: 700,
                             }}
                         >
                             EXPLORER AUTHENTICATION
                         </span>
-
                     </div>
 
                     <div
                         style={{
-                            padding: "45px"
+                            padding: "45px",
                         }}
                     >
-
                         <h2
                             style={{
                                 margin: 0,
-                                fontFamily: "'Cinzel', serif",
-                                fontSize: "40px",
-                                color: "#ECE4D8"
+                                fontFamily: "Cinzel",
+                                fontSize: 42,
                             }}
                         >
-                            Access the Archive
+                            Access The Archive
                         </h2>
 
                         <p
                             style={{
-                                marginTop: "18px",
-                                marginBottom: "35px",
-                                color: "#B9B9B9",
-                                lineHeight: "2",
-                                maxWidth: "720px"
+                                marginTop: 18,
+                                color: "#BBBBBB",
+                                lineHeight: 2,
+                                maxWidth: 700,
                             }}
                         >
-                            Authenticate using your explorer token to retrieve
-                            your expedition history, continue adaptive quizzes,
-                            and compete in the Hall of Explorers.
+                            Enter your explorer token to access adaptive quizzes,
+                            expedition history, statistics and the worldwide
+                            Jurassic Journey leaderboard.
                         </p>
 
                         <form
                             onSubmit={handleSaveToken}
                             style={{
                                 display: "flex",
-                                gap: "20px",
-                                flexWrap: "wrap"
+                                gap: 20,
+                                marginTop: 35,
+                                flexWrap: "wrap",
                             }}
                         >
-
                             <input
                                 type="text"
                                 name="tokenInput"
@@ -545,155 +512,136 @@ export default function QuizPage() {
                                 placeholder="Bearer Token..."
                                 style={{
                                     flex: 1,
-                                    minWidth: "300px",
-                                    height: "68px",
-                                    padding: "0 24px",
-                                    borderRadius: "18px",
-                                    border:
-                                        "1px solid rgba(255,255,255,.08)",
-                                    background:
-                                        "rgba(255,255,255,.03)",
+                                    minWidth: 320,
+                                    height: 68,
+                                    padding: "0 25px",
+                                    borderRadius: 18,
+                                    border: "1px solid rgba(255,255,255,.08)",
+                                    background: "rgba(255,255,255,.03)",
                                     color: "#ECE4D8",
+                                    fontSize: 15,
                                     outline: "none",
-                                    fontSize: "15px"
                                 }}
                             />
 
                             <button
                                 type="submit"
                                 style={{
-                                    height: "68px",
+                                    height: 68,
                                     padding: "0 42px",
+                                    borderRadius: 50,
                                     border: "none",
                                     cursor: "pointer",
-                                    borderRadius: "60px",
-                                    fontWeight: 700,
-                                    letterSpacing: "2px",
                                     background:
                                         "linear-gradient(135deg,#D6A14B,#AF7B28)",
                                     color: "#111",
-                                    fontSize: "14px",
-                                    boxShadow:
-                                        "0 15px 35px rgba(214,161,75,.25)"
+                                    fontWeight: 700,
+                                    letterSpacing: 2,
+                                    fontSize: 14,
                                 }}
                             >
                                 CONNECT
                             </button>
-
                         </form>
 
                         <div
                             style={{
-                                marginTop: "28px",
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
                                 flexWrap: "wrap",
-                                gap: "15px"
+                                marginTop: 28,
+                                gap: 20,
                             }}
                         >
-
                             <div
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: "12px"
+                                    gap: 12,
                                 }}
                             >
-
                                 <div
                                     style={{
-                                        width: "14px",
-                                        height: "14px",
+                                        width: 14,
+                                        height: 14,
                                         borderRadius: "50%",
-                                        background: token
-                                            ? "#4ADE80"
-                                            : "#EF4444"
+                                        background: token ? "#42d67b" : "#ef4444",
                                     }}
                                 />
 
                                 <span
                                     style={{
-                                        color: token
-                                            ? "#84E6A2"
-                                            : "#D97A7A",
-                                        fontWeight: 500
+                                        color: token ? "#8df0ae" : "#ff8b8b",
+                                        fontWeight: 600,
                                     }}
                                 >
                                     {token
                                         ? "Authentication Successful"
                                         : "Authentication Required"}
                                 </span>
-
                             </div>
 
-                            <div
+                            <span
                                 style={{
                                     color: "#777",
-                                    letterSpacing: "2px",
-                                    fontSize: "12px"
+                                    letterSpacing: 2,
+                                    fontSize: 12,
                                 }}
                             >
                                 PREHISTORIC DATABASE SECURED
-                            </div>
-
+                            </span>
                         </div>
-
                     </div>
-
                 </div>
                 {/* ==========================================================
-                                NAVIGATION
-            ========================================================== */}
+                        NAVIGATION
+========================================================== */}
 
                 <div
                     style={{
                         display: "flex",
                         justifyContent: "center",
-                        margin: "70px 0 80px"
+                        margin: "70px 0 80px",
                     }}
                 >
                     <div
                         style={{
                             display: "flex",
-                            alignItems: "center",
                             gap: "18px",
                             flexWrap: "wrap",
                             justifyContent: "center",
                             padding: "12px",
-                            borderRadius: "70px",
+                            borderRadius: "60px",
                             background: "rgba(13,23,17,.90)",
                             border: "1px solid rgba(214,161,75,.08)",
-                            backdropFilter: "blur(22px)",
-                            boxShadow:
-                                "0 25px 60px rgba(0,0,0,.35)"
+                            backdropFilter: "blur(18px)",
+                            boxShadow: "0 20px 60px rgba(0,0,0,.35)",
                         }}
                     >
                         {[
                             {
                                 id: "dashboard",
                                 title: "Dashboard",
-                                subtitle: "Explorer Profile"
+                                subtitle: "Explorer Profile",
                             },
                             {
                                 id: "active-quiz",
                                 title: "Expedition",
-                                subtitle: "Begin Journey"
+                                subtitle: "Begin Journey",
                             },
                             {
                                 id: "leaderboard",
                                 title: "Leaderboard",
-                                subtitle: "Global Rankings"
-                            }
+                                subtitle: "Hall of Fame",
+                            },
                         ].map((tab) => {
 
                             const active = activeTab === tab.id;
 
                             return (
-
                                 <button
                                     key={tab.id}
-
                                     onClick={() => {
 
                                         if (tab.id === "leaderboard") {
@@ -701,21 +649,14 @@ export default function QuizPage() {
                                         }
 
                                         setActiveTab(tab.id);
-
                                     }}
-
                                     style={{
                                         border: "none",
                                         cursor: "pointer",
-
-                                        padding: "18px 28px",
-
-                                        borderRadius: "55px",
-
-                                        transition: ".35s",
-
                                         minWidth: "220px",
-
+                                        padding: "18px 30px",
+                                        borderRadius: "55px",
+                                        transition: ".35s",
                                         textAlign: "left",
 
                                         background: active
@@ -724,15 +665,14 @@ export default function QuizPage() {
 
                                         color: active
                                             ? "#111"
-                                            : "#ECE4D8"
+                                            : "#ECE4D8",
                                     }}
                                 >
-
                                     <div
                                         style={{
+                                            fontSize: "17px",
                                             fontWeight: 700,
-                                            fontSize: "16px",
-                                            marginBottom: "6px"
+                                            marginBottom: "6px",
                                         }}
                                     >
                                         {tab.title}
@@ -742,40 +682,46 @@ export default function QuizPage() {
                                         style={{
                                             fontSize: "12px",
                                             letterSpacing: "2px",
-                                            opacity: active ? .75 : .55
+                                            opacity: active ? .75 : .55,
                                         }}
                                     >
                                         {tab.subtitle}
                                     </div>
-
                                 </button>
-
                             );
 
                         })}
-
                     </div>
                 </div>
+
+                {/* =======================
+        Loading
+======================= */}
 
                 {loading && (
 
                     <div
                         style={{
                             width: "min(900px,100%)",
-                            margin: "0 auto 45px",
+                            margin: "0 auto 40px",
                             padding: "22px",
                             borderRadius: "18px",
                             textAlign: "center",
                             background: "rgba(214,161,75,.08)",
-                            border: "1px solid rgba(214,161,75,.12)",
+                            border: "1px solid rgba(214,161,75,.15)",
                             color: "#D6A14B",
-                            letterSpacing: "3px"
+                            letterSpacing: "3px",
+                            fontWeight: 600,
                         }}
                     >
                         Loading prehistoric archive...
                     </div>
 
                 )}
+
+                {/* =======================
+        Error
+======================= */}
 
                 {error && (
 
@@ -785,10 +731,11 @@ export default function QuizPage() {
                             margin: "0 auto 45px",
                             padding: "22px",
                             borderRadius: "18px",
+                            background: "rgba(255,70,70,.08)",
+                            border: "1px solid rgba(255,70,70,.18)",
+                            color: "#FF8B8B",
                             textAlign: "center",
-                            background: "rgba(255,80,80,.08)",
-                            border: "1px solid rgba(255,80,80,.18)",
-                            color: "#ff8b8b"
+                            fontWeight: 500,
                         }}
                     >
                         {error}
@@ -797,57 +744,62 @@ export default function QuizPage() {
                 )}
 
                 {/* ==========================================================
-                            DASHBOARD STARTS HERE
-            ========================================================== */}
-                {activeTab === "dashboard" && (
-                    <div>
+                    DASHBOARD
+========================================================== */}
 
+                {activeTab === "dashboard" && (
+
+                    <div>
                         {/* ============================
-                TOP STATS
-        ============================ */}
+        TOP STATS
+============================ */}
 
                         <div
                             style={{
                                 display: "grid",
                                 gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
                                 gap: "26px",
-                                marginBottom: "45px"
+                                marginBottom: "45px",
                             }}
                         >
 
                             {[
                                 {
                                     title: "Highest Score",
-                                    value: dashboardData?.highest_score ?? "--"
+                                    value: dashboardData?.highest_score ?? "--",
+                                    color: "#D6A14B",
                                 },
                                 {
                                     title: "Average Accuracy",
                                     value: dashboardData
-                                        ? dashboardData.average_accuracy + "%"
-                                        : "--"
+                                        ? `${dashboardData.average_accuracy}%`
+                                        : "--",
+                                    color: "#58D68D",
                                 },
                                 {
                                     title: "Current Level",
-                                    value: dashboardData?.level ?? "--"
+                                    value: dashboardData?.level ?? "--",
+                                    color: "#74B9FF",
                                 },
                                 {
                                     title: "Explorer Rank",
                                     value: dashboardData
-                                        ? "#" + dashboardData.rank
-                                        : "--"
-                                }
-
-                            ].map((item, index) => (
+                                        ? `#${dashboardData.rank}`
+                                        : "--",
+                                    color: "#F4D03F",
+                                },
+                            ].map((card, index) => (
 
                                 <div
                                     key={index}
                                     style={{
-                                        background: "rgba(13,23,17,.9)",
+                                        background: "rgba(13,23,17,.92)",
                                         border: "1px solid rgba(214,161,75,.08)",
                                         borderRadius: "28px",
                                         padding: "35px",
-                                        backdropFilter: "blur(20px)",
-                                        transition: ".35s"
+                                        backdropFilter: "blur(18px)",
+                                        transition: ".3s",
+                                        boxShadow: "0 18px 40px rgba(0,0,0,.25)",
                                     }}
                                 >
 
@@ -856,20 +808,21 @@ export default function QuizPage() {
                                             color: "#777",
                                             letterSpacing: "3px",
                                             fontSize: "12px",
-                                            marginBottom: "18px"
+                                            marginBottom: "18px",
+                                            textTransform: "uppercase",
                                         }}
                                     >
-                                        {item.title}
+                                        {card.title}
                                     </div>
 
                                     <div
                                         style={{
                                             fontFamily: "Cinzel",
-                                            fontSize: "46px",
-                                            color: "#ECE4D8"
+                                            fontSize: "48px",
+                                            color: card.color,
                                         }}
                                     >
-                                        {item.value}
+                                        {card.value}
                                     </div>
 
                                 </div>
@@ -879,32 +832,32 @@ export default function QuizPage() {
                         </div>
 
                         {/* ============================
-                PROFILE + CTA
-        ============================ */}
+        PROFILE SECTION
+============================ */}
 
                         <div
                             style={{
                                 display: "grid",
-                                gridTemplateColumns: "1.2fr .8fr",
+                                gridTemplateColumns: "1.3fr .7fr",
                                 gap: "30px",
-                                marginBottom: "45px"
+                                marginBottom: "45px",
                             }}
                         >
 
                             <div
                                 style={{
-                                    background: "rgba(13,23,17,.9)",
+                                    background: "rgba(13,23,17,.92)",
                                     border: "1px solid rgba(214,161,75,.08)",
                                     borderRadius: "32px",
-                                    padding: "45px"
+                                    padding: "45px",
                                 }}
                             >
 
                                 <span
                                     style={{
                                         color: "#D6A14B",
-                                        letterSpacing: "5px",
-                                        fontSize: "12px"
+                                        letterSpacing: "4px",
+                                        fontSize: "12px",
                                     }}
                                 >
                                     EXPLORER PROFILE
@@ -912,10 +865,10 @@ export default function QuizPage() {
 
                                 <h2
                                     style={{
+                                        marginTop: "18px",
+                                        marginBottom: "30px",
                                         fontFamily: "Cinzel",
                                         fontSize: "48px",
-                                        marginTop: "18px",
-                                        marginBottom: "35px"
                                     }}
                                 >
                                     {dashboardData?.name || "Unknown Explorer"}
@@ -924,8 +877,9 @@ export default function QuizPage() {
                                 <div
                                     style={{
                                         display: "grid",
-                                        gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-                                        gap: "25px"
+                                        gridTemplateColumns:
+                                            "repeat(auto-fit,minmax(220px,1fr))",
+                                        gap: "25px",
                                     }}
                                 >
 
@@ -934,21 +888,15 @@ export default function QuizPage() {
                                         <div
                                             style={{
                                                 color: "#777",
-                                                letterSpacing: "3px",
                                                 fontSize: "12px",
-                                                marginBottom: "10px"
+                                                letterSpacing: "3px",
+                                                marginBottom: "10px",
                                             }}
                                         >
                                             EMAIL
                                         </div>
 
-                                        <div
-                                            style={{
-                                                color: "#ECE4D8"
-                                            }}
-                                        >
-                                            {dashboardData?.email || "--"}
-                                        </div>
+                                        <div>{dashboardData?.email || "--"}</div>
 
                                     </div>
 
@@ -957,19 +905,15 @@ export default function QuizPage() {
                                         <div
                                             style={{
                                                 color: "#777",
-                                                letterSpacing: "3px",
                                                 fontSize: "12px",
-                                                marginBottom: "10px"
+                                                letterSpacing: "3px",
+                                                marginBottom: "10px",
                                             }}
                                         >
-                                            TOTAL EXPEDITIONS
+                                            EXPEDITIONS
                                         </div>
 
-                                        <div
-                                            style={{
-                                                color: "#ECE4D8"
-                                            }}
-                                        >
+                                        <div>
                                             {dashboardData?.total_attempts ?? "--"}
                                         </div>
 
@@ -980,19 +924,15 @@ export default function QuizPage() {
                                         <div
                                             style={{
                                                 color: "#777",
-                                                letterSpacing: "3px",
                                                 fontSize: "12px",
-                                                marginBottom: "10px"
+                                                letterSpacing: "3px",
+                                                marginBottom: "10px",
                                             }}
                                         >
                                             AVERAGE SCORE
                                         </div>
 
-                                        <div
-                                            style={{
-                                                color: "#ECE4D8"
-                                            }}
-                                        >
+                                        <div>
                                             {dashboardData?.average_score ?? "--"}
                                         </div>
 
@@ -1001,7 +941,6 @@ export default function QuizPage() {
                                 </div>
 
                             </div>
-
                             <div
                                 style={{
                                     background: "linear-gradient(180deg,#1A2416,#101712)",
@@ -1010,7 +949,7 @@ export default function QuizPage() {
                                     padding: "40px",
                                     display: "flex",
                                     flexDirection: "column",
-                                    justifyContent: "space-between"
+                                    justifyContent: "space-between",
                                 }}
                             >
 
@@ -1019,8 +958,8 @@ export default function QuizPage() {
                                     <span
                                         style={{
                                             color: "#D6A14B",
-                                            letterSpacing: "5px",
-                                            fontSize: "12px"
+                                            letterSpacing: "4px",
+                                            fontSize: "12px",
                                         }}
                                     >
                                         NEW EXPEDITION
@@ -1028,10 +967,10 @@ export default function QuizPage() {
 
                                     <h2
                                         style={{
+                                            marginTop: "18px",
+                                            marginBottom: "22px",
                                             fontFamily: "Cinzel",
                                             fontSize: "40px",
-                                            marginTop: "18px",
-                                            marginBottom: "22px"
                                         }}
                                     >
                                         Ready to Explore?
@@ -1039,13 +978,12 @@ export default function QuizPage() {
 
                                     <p
                                         style={{
-                                            color: "#BDBDBD",
-                                            lineHeight: "2"
+                                            color: "#BBBBBB",
+                                            lineHeight: 2,
                                         }}
                                     >
-                                        Begin a new adaptive dinosaur expedition,
-                                        answer challenging questions and improve your
-                                        global ranking.
+                                        Begin another adaptive dinosaur expedition and improve your
+                                        explorer rank while discovering fascinating prehistoric facts.
                                     </p>
 
                                 </div>
@@ -1057,13 +995,13 @@ export default function QuizPage() {
                                         height: "68px",
                                         border: "none",
                                         cursor: "pointer",
-                                        borderRadius: "50px",
-                                        fontWeight: 700,
-                                        letterSpacing: "2px",
+                                        borderRadius: "55px",
                                         background:
                                             "linear-gradient(135deg,#D6A14B,#AF7B28)",
                                         color: "#111",
-                                        fontSize: "15px"
+                                        fontWeight: 700,
+                                        letterSpacing: "2px",
+                                        fontSize: "15px",
                                     }}
                                 >
                                     BEGIN EXPEDITION
@@ -1072,35 +1010,37 @@ export default function QuizPage() {
                             </div>
 
                         </div>
-                        {/* ============================
+
+                        {/* ===========================================
             EXPEDITION HISTORY
-        ============================ */}
+=========================================== */}
 
                         <div
                             style={{
-                                background: "rgba(13,23,17,.90)",
+                                background: "rgba(13,23,17,.92)",
                                 border: "1px solid rgba(214,161,75,.08)",
                                 borderRadius: "32px",
                                 overflow: "hidden",
-                                backdropFilter: "blur(20px)"
+                                backdropFilter: "blur(20px)",
                             }}
                         >
 
                             <div
                                 style={{
                                     padding: "30px 40px",
-                                    borderBottom: "1px solid rgba(214,161,75,.08)",
+                                    borderBottom:
+                                        "1px solid rgba(214,161,75,.08)",
                                     background:
-                                        "linear-gradient(90deg,rgba(214,161,75,.10),transparent)"
+                                        "linear-gradient(90deg,rgba(214,161,75,.10),transparent)",
                                 }}
                             >
 
                                 <div
                                     style={{
                                         color: "#D6A14B",
-                                        letterSpacing: "5px",
+                                        letterSpacing: "4px",
                                         fontSize: "12px",
-                                        marginBottom: "12px"
+                                        marginBottom: "12px",
                                     }}
                                 >
                                     EXPEDITION HISTORY
@@ -1108,9 +1048,9 @@ export default function QuizPage() {
 
                                 <h2
                                     style={{
+                                        margin: 0,
                                         fontFamily: "Cinzel",
                                         fontSize: "40px",
-                                        margin: 0
                                     }}
                                 >
                                     Previous Explorations
@@ -1118,11 +1058,11 @@ export default function QuizPage() {
 
                             </div>
 
-                            {dashboardData?.recent_attempts?.length ? (
+                            {dashboardData?.history?.length ? (
 
                                 <div
                                     style={{
-                                        overflowX: "auto"
+                                        overflowX: "auto",
                                     }}
                                 >
 
@@ -1130,7 +1070,7 @@ export default function QuizPage() {
                                         style={{
                                             width: "100%",
                                             borderCollapse: "collapse",
-                                            minWidth: "950px"
+                                            minWidth: "900px",
                                         }}
                                     >
 
@@ -1139,12 +1079,12 @@ export default function QuizPage() {
                                             <tr>
 
                                                 {[
-                                                    "Quiz",
                                                     "Difficulty",
                                                     "Score",
+                                                    "Wrong",
                                                     "Accuracy",
                                                     "Questions",
-                                                    "Date"
+                                                    "Level",
                                                 ].map((heading) => (
 
                                                     <th
@@ -1153,11 +1093,10 @@ export default function QuizPage() {
                                                             padding: "22px",
                                                             textAlign: "left",
                                                             color: "#D6A14B",
-                                                            fontWeight: 600,
                                                             letterSpacing: "2px",
                                                             fontSize: "13px",
                                                             borderBottom:
-                                                                "1px solid rgba(214,161,75,.08)"
+                                                                "1px solid rgba(214,161,75,.08)",
                                                         }}
                                                     >
                                                         {heading}
@@ -1171,56 +1110,38 @@ export default function QuizPage() {
 
                                         <tbody>
 
-                                            {dashboardData.recent_attempts.map((attempt, index) => (
+                                            {dashboardData.history.map((attempt, index) => (
 
                                                 <tr
-                                                    key={attempt.id || index}
-                                                    style={{
-                                                        transition: ".25s"
-                                                    }}
+                                                    key={attempt._id || index}
                                                 >
-
                                                     <td
                                                         style={{
                                                             padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)",
-                                                            color: "#ECE4D8",
-                                                            fontWeight: 600
-                                                        }}
-                                                    >
-                                                        {attempt.quiz_title ||
-                                                            attempt.quiz_name ||
-                                                            `Expedition ${index + 1}`}
-                                                    </td>
-
-                                                    <td
-                                                        style={{
-                                                            padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)"
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
                                                         }}
                                                     >
                                                         <span
                                                             style={{
-                                                                padding: "8px 18px",
-                                                                borderRadius: "30px",
-                                                                background:
-                                                                    "rgba(214,161,75,.12)",
+                                                                padding: "8px 16px",
+                                                                borderRadius: "999px",
+                                                                background: "rgba(214,161,75,.12)",
                                                                 color: "#D6A14B",
-                                                                fontSize: "13px"
+                                                                fontSize: "13px",
+                                                                fontWeight: 600,
+                                                                textTransform: "capitalize",
                                                             }}
                                                         >
-                                                            {attempt.difficulty || "--"}
+                                                            {attempt.difficulty}
                                                         </span>
                                                     </td>
 
                                                     <td
                                                         style={{
                                                             padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)",
-                                                            fontWeight: 600
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                            fontWeight: 700,
+                                                            color: "#58D68D",
                                                         }}
                                                     >
                                                         {attempt.score}
@@ -1229,18 +1150,62 @@ export default function QuizPage() {
                                                     <td
                                                         style={{
                                                             padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)"
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                            color: "#FF7675",
                                                         }}
                                                     >
-                                                        {attempt.accuracy}%
+                                                        {attempt.wrong_answers}
                                                     </td>
 
                                                     <td
                                                         style={{
                                                             padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)"
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: "14px",
+                                                            }}
+                                                        >
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    height: "10px",
+                                                                    borderRadius: "999px",
+                                                                    background: "rgba(255,255,255,.08)",
+                                                                    overflow: "hidden",
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    style={{
+                                                                        width: `${attempt.accuracy}%`,
+                                                                        height: "100%",
+                                                                        borderRadius: "999px",
+                                                                        background:
+                                                                            "linear-gradient(90deg,#58D68D,#2ECC71)",
+                                                                    }}
+                                                                />
+                                                            </div>
+
+                                                            <span
+                                                                style={{
+                                                                    minWidth: "55px",
+                                                                    textAlign: "right",
+                                                                    fontWeight: 600,
+                                                                }}
+                                                            >
+                                                                {attempt.accuracy}%
+                                                            </span>
+                                                        </div>
+                                                    </td>
+
+                                                    <td
+                                                        style={{
+                                                            padding: "22px",
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
                                                         }}
                                                     >
                                                         {attempt.total_questions}
@@ -1249,16 +1214,17 @@ export default function QuizPage() {
                                                     <td
                                                         style={{
                                                             padding: "22px",
-                                                            borderBottom:
-                                                                "1px solid rgba(255,255,255,.04)",
-                                                            color: "#AFAFAF"
+                                                            borderBottom: "1px solid rgba(255,255,255,.05)",
                                                         }}
                                                     >
-                                                        {attempt.completed_at
-                                                            ? new Date(
-                                                                attempt.completed_at
-                                                            ).toLocaleDateString()
-                                                            : "--"}
+                                                        <span
+                                                            style={{
+                                                                color: "#74B9FF",
+                                                                fontWeight: 600,
+                                                            }}
+                                                        >
+                                                            {attempt.level}
+                                                        </span>
                                                     </td>
 
                                                 </tr>
@@ -1276,47 +1242,46 @@ export default function QuizPage() {
                                 <div
                                     style={{
                                         padding: "80px 40px",
-                                        textAlign: "center"
+                                        textAlign: "center",
                                     }}
                                 >
 
-                                    <div
+                                    <h3
                                         style={{
                                             fontFamily: "Cinzel",
-                                            fontSize: "42px",
-                                            marginBottom: "18px"
+                                            fontSize: "34px",
+                                            marginBottom: "18px",
                                         }}
                                     >
                                         No Expeditions Yet
-                                    </div>
+                                    </h3>
 
                                     <p
                                         style={{
-                                            color: "#AFAFAF",
+                                            color: "#AAAAAA",
                                             maxWidth: "650px",
                                             margin: "0 auto",
-                                            lineHeight: "2"
+                                            lineHeight: 2,
                                         }}
                                     >
-                                        Your prehistoric adventure hasn't started yet.
-                                        Complete your first expedition to unlock statistics,
-                                        achievements and appear on the global leaderboard.
+                                        Your expedition log is currently empty.
+                                        Begin your first dinosaur quiz to start building your
+                                        prehistoric exploration history.
                                     </p>
 
                                     <button
                                         onClick={startNewQuiz}
                                         style={{
-                                            marginTop: "40px",
-                                            height: "65px",
-                                            padding: "0 40px",
+                                            marginTop: "35px",
+                                            padding: "18px 40px",
+                                            borderRadius: "999px",
                                             border: "none",
-                                            borderRadius: "50px",
                                             cursor: "pointer",
                                             background:
                                                 "linear-gradient(135deg,#D6A14B,#AF7B28)",
                                             color: "#111",
                                             fontWeight: 700,
-                                            letterSpacing: "2px"
+                                            letterSpacing: "2px",
                                         }}
                                     >
                                         START FIRST EXPEDITION
@@ -1329,76 +1294,32 @@ export default function QuizPage() {
                         </div>
 
                     </div>
+
                 )}
+                {/* ==========================================================
+                    ACTIVE QUIZ
+========================================================== */}
+
                 {activeTab === "active-quiz" && (
+
                     <div
                         style={{
-                            maxWidth: "1100px",
-                            margin: "0 auto"
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "35px",
                         }}
                     >
 
-                        {/* ======================================
-                    EXPEDITION HEADER
-        ====================================== */}
+                        {/* ======================
+    QUIZ HEADER
+====================== */}
 
                         <div
                             style={{
                                 background: "rgba(13,23,17,.92)",
                                 border: "1px solid rgba(214,161,75,.08)",
                                 borderRadius: "32px",
-                                padding: "45px",
-                                marginBottom: "35px",
-                                backdropFilter: "blur(20px)"
-                            }}
-                        >
-
-                            <span
-                                style={{
-                                    color: "#D6A14B",
-                                    letterSpacing: "5px",
-                                    fontSize: "12px"
-                                }}
-                            >
-                                ACTIVE EXPEDITION
-                            </span>
-
-                            <h1
-                                style={{
-                                    fontFamily: "Cinzel",
-                                    fontSize: "52px",
-                                    marginTop: "18px",
-                                    marginBottom: "20px"
-                                }}
-                            >
-                                {currentQuiz?.title || "Dinosaur Knowledge Expedition"}
-                            </h1>
-
-                            <p
-                                style={{
-                                    color: "#BDBDBD",
-                                    lineHeight: "2",
-                                    maxWidth: "700px"
-                                }}
-                            >
-                                Carefully study each question before choosing your answer.
-                                Every correct response increases your expedition score and
-                                improves your position on the global leaderboard.
-                            </p>
-
-                        </div>
-
-                        {/* ======================================
-                    PROGRESS
-        ====================================== */}
-
-                        <div
-                            style={{
-                                background: "rgba(13,23,17,.90)",
-                                border: "1px solid rgba(214,161,75,.08)",
-                                borderRadius: "26px",
-                                padding: "30px",
-                                marginBottom: "35px"
+                                padding: "40px",
                             }}
                         >
 
@@ -1407,440 +1328,635 @@ export default function QuizPage() {
                                     display: "flex",
                                     justifyContent: "space-between",
                                     alignItems: "center",
-                                    marginBottom: "18px",
                                     flexWrap: "wrap",
-                                    gap: "12px"
+                                    gap: "25px",
                                 }}
                             >
 
-                                <span
-                                    style={{
-                                        color: "#ECE4D8",
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Progress
-                                </span>
+                                <div>
 
-                                <span
-                                    style={{
-                                        color: "#D6A14B",
-                                        fontWeight: 700
-                                    }}
-                                >
-                                    {selectedselectedAnswers.filter(Boolean).length} / {currentQuiz?.questions?.length || 0}
-                                </span>
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            letterSpacing: "4px",
+                                            fontSize: "12px",
+                                        }}
+                                    >
+                                        EXPEDITION CONTROL
+                                    </span>
 
-                            </div>
+                                    <h2
+                                        style={{
+                                            marginTop: "18px",
+                                            marginBottom: "15px",
+                                            fontFamily: "Cinzel",
+                                            fontSize: "46px",
+                                        }}
+                                    >
+                                        Dinosaur Knowledge Expedition
+                                    </h2>
 
-                            <div
-                                style={{
-                                    height: "14px",
-                                    borderRadius: "50px",
-                                    overflow: "hidden",
-                                    background: "rgba(255,255,255,.06)"
-                                }}
-                            >
+                                    <p
+                                        style={{
+                                            color: "#BBBBBB",
+                                            maxWidth: "650px",
+                                            lineHeight: 2,
+                                        }}
+                                    >
+                                        Select a difficulty level and begin your adaptive
+                                        prehistoric adventure.
+                                    </p>
+
+                                </div>
 
                                 <div
                                     style={{
-                                        width: `${currentQuiz?.questions?.length
-                                            ? (selectedAnswers.filter(Boolean).length /
-                                                currentQuiz.questions.length) *
-                                            100
-                                            : 0
-                                            }%`,
-                                        height: "100%",
-                                        transition: ".4s",
-                                        background:
-                                            "linear-gradient(90deg,#D6A14B,#E8C777)"
+                                        display: "flex",
+                                        gap: "15px",
+                                        flexWrap: "wrap",
                                     }}
-                                />
+                                >
+
+                                    {["easy", "medium", "hard"].map((level) => (
+
+                                        <button
+                                            key={level}
+                                            onClick={() => setDifficulty(level)}
+                                            style={{
+                                                padding: "16px 28px",
+                                                borderRadius: "999px",
+                                                cursor: "pointer",
+                                                border: "none",
+
+                                                background:
+                                                    difficulty === level
+                                                        ? "linear-gradient(135deg,#D6A14B,#AF7B28)"
+                                                        : "rgba(255,255,255,.05)",
+
+                                                color:
+                                                    difficulty === level
+                                                        ? "#111"
+                                                        : "#ECE4D8",
+
+                                                fontWeight: 700,
+                                                textTransform: "uppercase",
+                                                letterSpacing: "2px",
+                                            }}
+                                        >
+                                            {level}
+                                        </button>
+
+                                    ))}
+
+                                </div>
 
                             </div>
 
                         </div>
 
-                        {/* ======================================
-                    QUESTION CARD
-        ====================================== */}
+                        {/* ======================
+        START CARD
+====================== */}
 
-                        {currentQuiz?.questions?.map((question, questionIndex) => (
+                        {questions.length === 0 && (
 
                             <div
-                                key={question.id || questionIndex}
                                 style={{
                                     background: "rgba(13,23,17,.92)",
                                     border: "1px solid rgba(214,161,75,.08)",
                                     borderRadius: "32px",
-                                    padding: "45px",
-                                    marginBottom: "35px"
+                                    padding: "70px",
+                                    textAlign: "center",
                                 }}
                             >
 
+                                <h2
+                                    style={{
+                                        fontFamily: "Cinzel",
+                                        fontSize: "52px",
+                                        marginBottom: "20px",
+                                    }}
+                                >
+                                    Ready For Discovery?
+                                </h2>
+
+                                <p
+                                    style={{
+                                        color: "#BBBBBB",
+                                        maxWidth: "700px",
+                                        margin: "0 auto",
+                                        lineHeight: 2,
+                                    }}
+                                >
+                                    Your expedition hasn't begun yet.
+                                    Press the button below to generate a new adaptive dinosaur quiz.
+                                </p>
+
+                                <button
+                                    onClick={startNewQuiz}
+                                    style={{
+                                        marginTop: "40px",
+                                        padding: "20px 48px",
+                                        border: "none",
+                                        borderRadius: "999px",
+                                        cursor: "pointer",
+                                        background:
+                                            "linear-gradient(135deg,#D6A14B,#AF7B28)",
+                                        color: "#111",
+                                        fontWeight: 700,
+                                        letterSpacing: "2px",
+                                        fontSize: "15px",
+                                    }}
+                                >
+                                    START EXPEDITION
+                                </button>
+
+                            </div>
+
+                        )}
+                        {/* ======================
+        ACTIVE QUIZ
+====================== */}
+
+                        {questions.length > 0 && (
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "30px",
+                                }}
+                            >
+
+                                {/* Progress */}
+
                                 <div
                                     style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "16px",
-                                        marginBottom: "25px"
+                                        background: "rgba(13,23,17,.92)",
+                                        border: "1px solid rgba(214,161,75,.08)",
+                                        borderRadius: "28px",
+                                        padding: "28px 35px",
                                     }}
                                 >
 
                                     <div
                                         style={{
-                                            width: "52px",
-                                            height: "52px",
-                                            borderRadius: "50%",
-                                            background:
-                                                "linear-gradient(135deg,#D6A14B,#AF7B28)",
-                                            color: "#111",
                                             display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            fontWeight: 700,
-                                            fontSize: "20px"
+                                            justifyContent: "space-between",
+                                            marginBottom: "18px",
+                                            flexWrap: "wrap",
+                                            gap: "12px",
                                         }}
                                     >
-                                        {questionIndex + 1}
-                                    </div>
 
-                                    <div>
+                                        <div>
+
+                                            <div
+                                                style={{
+                                                    color: "#D6A14B",
+                                                    fontSize: "12px",
+                                                    letterSpacing: "3px",
+                                                }}
+                                            >
+                                                QUESTION
+                                            </div>
+
+                                            <h2
+                                                style={{
+                                                    marginTop: "8px",
+                                                    fontFamily: "Cinzel",
+                                                }}
+                                            >
+                                                {currentQuestion + 1} / {questions.length}
+                                            </h2>
+
+                                        </div>
 
                                         <div
                                             style={{
-                                                color: "#777",
-                                                letterSpacing: "3px",
-                                                fontSize: "12px"
+                                                textAlign: "right",
                                             }}
                                         >
-                                            QUESTION
+
+                                            <div
+                                                style={{
+                                                    color: "#888",
+                                                    fontSize: "12px",
+                                                    letterSpacing: "3px",
+                                                }}
+                                            >
+                                                COMPLETION
+                                            </div>
+
+                                            <h2
+                                                style={{
+                                                    marginTop: "8px",
+                                                    color: "#58D68D",
+                                                    fontFamily: "Cinzel",
+                                                }}
+                                            >
+                                                {Math.round(
+                                                    ((currentQuestion + 1) /
+                                                        questions.length) *
+                                                    100
+                                                )}
+                                                %
+                                            </h2>
+
                                         </div>
 
-                                        <h2
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            height: "12px",
+                                            borderRadius: "999px",
+                                            overflow: "hidden",
+                                            background: "rgba(255,255,255,.08)",
+                                        }}
+                                    >
+
+                                        <div
                                             style={{
-                                                marginTop: "10px",
-                                                fontFamily: "Cinzel",
-                                                fontSize: "34px"
+                                                height: "100%",
+                                                width: `${((currentQuestion + 1) /
+                                                    questions.length) *
+                                                    100}%`,
+                                                background:
+                                                    "linear-gradient(90deg,#D6A14B,#58D68D)",
+                                                transition: ".4s",
                                             }}
-                                        >
-                                            {question.question}
-                                        </h2>
+                                        />
 
                                     </div>
 
                                 </div>
 
-                                {/* OPTIONS START BELOW */}
+                                {/* Question */}
+
                                 <div
                                     style={{
-                                        display: "grid",
-                                        gap: "18px"
+                                        background: "rgba(13,23,17,.92)",
+                                        borderRadius: "32px",
+                                        border: "1px solid rgba(214,161,75,.08)",
+                                        padding: "45px",
                                     }}
                                 >
 
-                                    {question.options.map((option, optionIndex) => {
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            letterSpacing: "3px",
+                                            fontSize: "12px",
+                                        }}
+                                    >
+                                        QUESTION {currentQuestion + 1}
+                                    </span>
 
-                                        const selected =
-                                            selectedAnswers[questionIndex] === option;
+                                    <h2
+                                        style={{
+                                            marginTop: "18px",
+                                            marginBottom: "40px",
+                                            lineHeight: 1.5,
+                                            fontSize: "34px",
+                                            fontFamily: "Cinzel",
+                                        }}
+                                    >
+                                        {questions[currentQuestion].question}
+                                    </h2>
 
-                                        return (
+                                    <div
+                                        style={{
+                                            display: "grid",
+                                            gap: "20px",
+                                        }}
+                                    >
 
-                                            <label
-                                                key={optionIndex}
+                                        {questions[currentQuestion].options.map((option) => (
+
+                                            <button
+                                                key={option}
+                                                onClick={() =>
+                                                    handleAnswerChange(
+                                                        questions[currentQuestion].question_id,
+                                                        option
+                                                    )
+                                                }
                                                 style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "22px",
-                                                    padding: "22px 24px",
-                                                    borderRadius: "22px",
+                                                    width: "100%",
+                                                    textAlign: "left",
+                                                    padding: "24px 28px",
+                                                    borderRadius: "18px",
                                                     cursor: "pointer",
-                                                    transition: ".3s",
+                                                    transition: ".25s",
+                                                    fontSize: "16px",
 
-                                                    background: selected
-                                                        ? "linear-gradient(135deg,rgba(214,161,75,.22),rgba(214,161,75,.08))"
-                                                        : "rgba(255,255,255,.03)",
+                                                    border:
+                                                        selectedAnswers[
+                                                            questions[currentQuestion]
+                                                                .question_id
+                                                        ] === option
+                                                            ? "2px solid #D6A14B"
+                                                            : "1px solid rgba(255,255,255,.08)",
 
-                                                    border: selected
-                                                        ? "1px solid rgba(214,161,75,.45)"
-                                                        : "1px solid rgba(255,255,255,.06)"
+                                                    background:
+                                                        selectedAnswers[
+                                                            questions[currentQuestion]
+                                                                .question_id
+                                                        ] === option
+                                                            ? "rgba(214,161,75,.15)"
+                                                            : "rgba(255,255,255,.03)",
+
+                                                    color: "#ECE4D8",
                                                 }}
                                             >
+                                                {option}
+                                            </button>
 
-                                                <input
-                                                    type="radio"
-                                                    name={`question-${questionIndex}`}
-                                                    checked={selected}
-                                                    onChange={() =>
-                                                        handleAnswerChange(
-                                                            questionIndex,
-                                                            option
-                                                        )
-                                                    }
-                                                    style={{
-                                                        display: "none"
-                                                    }}
-                                                />
+                                        ))}
 
-                                                <div
-                                                    style={{
-                                                        width: "48px",
-                                                        height: "48px",
-                                                        borderRadius: "50%",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        fontWeight: 700,
-                                                        fontSize: "18px",
+                                    </div>
 
-                                                        background: selected
-                                                            ? "#D6A14B"
-                                                            : "rgba(255,255,255,.06)",
+                                </div>
+                                {/* ======================
+            ACTIONS
+    ====================== */}
 
-                                                        color: selected
-                                                            ? "#111"
-                                                            : "#ECE4D8"
-                                                    }}
-                                                >
-                                                    {String.fromCharCode(
-                                                        65 + optionIndex
-                                                    )}
-                                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        flexWrap: "wrap",
+                                        gap: "20px",
+                                    }}
+                                >
 
-                                                <div
-                                                    style={{
-                                                        flex: 1,
-                                                        color: "#ECE4D8",
-                                                        fontSize: "17px",
-                                                        lineHeight: "1.8"
-                                                    }}
-                                                >
-                                                    {option}
-                                                </div>
+                                    <button
+                                        onClick={() =>
+                                            setCurrentQuestion((prev) =>
+                                                Math.max(prev - 1, 0)
+                                            )
+                                        }
+                                        disabled={currentQuestion === 0}
+                                        style={{
+                                            padding: "18px 38px",
+                                            borderRadius: "999px",
+                                            border: "none",
+                                            cursor:
+                                                currentQuestion === 0
+                                                    ? "not-allowed"
+                                                    : "pointer",
+                                            opacity: currentQuestion === 0 ? 0.45 : 1,
+                                            background: "rgba(255,255,255,.08)",
+                                            color: "#ECE4D8",
+                                            fontWeight: 600,
+                                            letterSpacing: "2px",
+                                        }}
+                                    >
+                                        ← PREVIOUS
+                                    </button>
 
-                                                {selected && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            gap: "16px",
+                                            flexWrap: "wrap",
+                                        }}
+                                    >
 
-                                                    <div
-                                                        style={{
-                                                            color: "#D6A14B",
-                                                            fontWeight: 700,
-                                                            letterSpacing: "2px"
-                                                        }}
-                                                    >
-                                                        SELECTED
-                                                    </div>
+                                        {currentQuestion < questions.length - 1 ? (
 
-                                                )}
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentQuestion((prev) => prev + 1)
+                                                }
+                                                style={{
+                                                    padding: "18px 38px",
+                                                    borderRadius: "999px",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                    background:
+                                                        "linear-gradient(135deg,#2F7D4A,#58D68D)",
+                                                    color: "#fff",
+                                                    fontWeight: 700,
+                                                    letterSpacing: "2px",
+                                                }}
+                                            >
+                                                NEXT →
+                                            </button>
 
-                                            </label>
+                                        ) : (
 
-                                        );
+                                            <button
+                                                onClick={submitQuizAnswers}
+                                                disabled={
+                                                    Object.keys(selectedAnswers).length !==
+                                                    questions.length
+                                                }
+                                                style={{
+                                                    padding: "18px 42px",
+                                                    borderRadius: "999px",
+                                                    border: "none",
+                                                    cursor:
+                                                        Object.keys(selectedAnswers).length !==
+                                                            questions.length
+                                                            ? "not-allowed"
+                                                            : "pointer",
 
-                                    })}
+                                                    opacity:
+                                                        Object.keys(selectedAnswers).length !==
+                                                            questions.length
+                                                            ? .45
+                                                            : 1,
 
+                                                    background:
+                                                        "linear-gradient(135deg,#D6A14B,#AF7B28)",
+
+                                                    color: "#111",
+                                                    fontWeight: 700,
+                                                    letterSpacing: "2px",
+                                                }}
+                                            >
+                                                SUBMIT EXPEDITION
+                                            </button>
+
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+                                {/* Answer Counter */}
+
+                                <div
+                                    style={{
+                                        textAlign: "center",
+                                        color: "#888",
+                                        letterSpacing: "2px",
+                                        fontSize: "13px",
+                                    }}
+                                >
+                                    Answered{" "}
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {Object.keys(selectedAnswers).length}
+                                    </span>{" "}
+                                    of{" "}
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {questions.length}
+                                    </span>{" "}
+                                    questions
                                 </div>
 
                             </div>
 
-                        ))}
-
-                        {/* ======================================
-                SUBMIT SECTION
-        ====================================== */}
-
-                        <div
-                            style={{
-                                marginTop: "55px",
-                                textAlign: "center"
-                            }}
-                        >
-
-                            <button
-                                onClick={submitQuizselectedAnswers}
-                                disabled={
-                                    selectedAnswers.filter(Boolean).length !==
-                                    (currentQuiz?.questions?.length || 0)
-                                }
-                                style={{
-                                    height: "74px",
-                                    padding: "0 65px",
-                                    border: "none",
-                                    cursor:
-                                        selectedAnswers.filter(Boolean).length ===
-                                            (currentQuiz?.questions?.length || 0)
-                                            ? "pointer"
-                                            : "not-allowed",
-                                    borderRadius: "60px",
-                                    fontWeight: 700,
-                                    letterSpacing: "3px",
-                                    fontSize: "15px",
-
-                                    background:
-                                        selectedAnswers.filter(Boolean).length ===
-                                            (currentQuiz?.questions?.length || 0)
-                                            ? "linear-gradient(135deg,#D6A14B,#AF7B28)"
-                                            : "#555",
-
-                                    color:
-                                        selectedAnswers.filter(Boolean).length ===
-                                            (currentQuiz?.questions?.length || 0)
-                                            ? "#111"
-                                            : "#DDD",
-
-                                    transition: ".3s"
-                                }}
-                            >
-                                SUBMIT EXPEDITION
-                            </button>
-
-                            <p
-                                style={{
-                                    marginTop: "22px",
-                                    color: "#9A9A9A",
-                                    lineHeight: "1.8"
-                                }}
-                            >
-                                Answer every question before submitting your expedition.
-                            </p>
-
-                        </div>
+                        )}
 
                     </div>
+
                 )}
-                {activeTab === "results" && quizResults && (
+                {/* ==========================================================
+                    QUIZ RESULTS
+========================================================== */}
+
+                {submitResult && (
+
                     <div
                         style={{
-                            maxWidth: "1100px",
-                            margin: "0 auto"
+                            marginTop: "50px",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "35px",
                         }}
                     >
 
-                        {/* ======================================
-                RESULTS HERO
-        ====================================== */}
+                        {/* ======================
+        RESULT HERO
+====================== */}
 
                         <div
                             style={{
                                 background:
-                                    "linear-gradient(135deg,#182317,#0D1711)",
-                                border: "1px solid rgba(214,161,75,.12)",
+                                    "linear-gradient(135deg,#18261B,#101712)",
                                 borderRadius: "36px",
+                                border: "1px solid rgba(214,161,75,.10)",
                                 padding: "60px",
                                 textAlign: "center",
-                                marginBottom: "40px"
                             }}
                         >
 
-                            <div
-                                style={{
-                                    fontSize: "70px",
-                                    marginBottom: "20px"
-                                }}
-                            >
-                                🦖
-                            </div>
-
-                            <div
+                            <span
                                 style={{
                                     color: "#D6A14B",
-                                    letterSpacing: "5px",
-                                    fontSize: "12px"
+                                    letterSpacing: "4px",
+                                    fontSize: "12px",
                                 }}
                             >
                                 EXPEDITION COMPLETE
-                            </div>
+                            </span>
 
                             <h1
                                 style={{
+                                    marginTop: "20px",
+                                    marginBottom: "20px",
                                     fontFamily: "Cinzel",
                                     fontSize: "60px",
-                                    marginTop: "20px",
-                                    marginBottom: "18px"
                                 }}
                             >
-                                Congratulations Explorer
+                                Mission Accomplished
                             </h1>
 
                             <p
                                 style={{
-                                    color: "#BDBDBD",
-                                    lineHeight: "2",
+                                    color: "#BBBBBB",
                                     maxWidth: "700px",
-                                    margin: "0 auto"
+                                    margin: "0 auto",
+                                    lineHeight: 2,
                                 }}
                             >
-                                You successfully completed another prehistoric
-                                expedition. Your performance has been recorded in
-                                the Jurassic Journey archives.
+                                Your dinosaur expedition has been evaluated.
+                                Explore your statistics below and prepare for
+                                another prehistoric adventure.
                             </p>
 
                         </div>
 
-                        {/* ======================================
-                    SCORE CARDS
-        ====================================== */}
+                        {/* ======================
+        STATS
+====================== */}
 
                         <div
                             style={{
                                 display: "grid",
                                 gridTemplateColumns:
-                                    "repeat(auto-fit,minmax(230px,1fr))",
+                                    "repeat(auto-fit,minmax(240px,1fr))",
                                 gap: "25px",
-                                marginBottom: "40px"
                             }}
                         >
 
                             {[
                                 {
-                                    title: "Final Score",
-                                    value: quizResults.score
+                                    title: "Score",
+                                    value: submitResult.score,
+                                    color: "#58D68D"
+                                },
+                                {
+                                    title: "Wrong Answers",
+                                    value: submitResult.wrong_answers,
+                                    color: "#FF7675"
                                 },
                                 {
                                     title: "Accuracy",
-                                    value: quizResults.accuracy + "%"
+                                    value: `${submitResult.accuracy}%`,
+                                    color: "#74B9FF"
                                 },
                                 {
-                                    title: "Correct",
-                                    value: quizResults.correct_selectedAnswers
-                                },
-                                {
-                                    title: "Rank",
-                                    value:
-                                        quizResults.rank
-                                            ? "#" + quizResults.rank
-                                            : "--"
+                                    title: "Difficulty",
+                                    value: submitResult.difficulty,
+                                    color: "#D6A14B"
                                 }
-
-                            ].map((card, index) => (
+                            ].map((item, index) => (
 
                                 <div
                                     key={index}
                                     style={{
                                         background: "rgba(13,23,17,.92)",
+                                        padding: "35px",
+                                        borderRadius: "30px",
                                         border: "1px solid rgba(214,161,75,.08)",
-                                        borderRadius: "28px",
-                                        padding: "35px"
                                     }}
                                 >
 
                                     <div
                                         style={{
-                                            color: "#777",
-                                            letterSpacing: "3px",
                                             fontSize: "12px",
-                                            marginBottom: "15px"
+                                            letterSpacing: "3px",
+                                            color: "#888",
+                                            marginBottom: "18px",
                                         }}
                                     >
-                                        {card.title}
+                                        {item.title}
                                     </div>
 
                                     <div
                                         style={{
+                                            fontSize: "46px",
                                             fontFamily: "Cinzel",
-                                            fontSize: "48px"
+                                            color: item.color,
+                                            textTransform: "capitalize",
                                         }}
                                     >
-                                        {card.value}
+                                        {item.value}
                                     </div>
 
                                 </div>
@@ -1849,231 +1965,702 @@ export default function QuizPage() {
 
                         </div>
 
-                        {/* ======================================
-                PERFORMANCE SUMMARY
-        ====================================== */}
+                        {/* ======================
+        SUMMARY
+====================== */}
 
                         <div
                             style={{
                                 background: "rgba(13,23,17,.92)",
-                                border: "1px solid rgba(214,161,75,.08)",
-                                borderRadius: "30px",
+                                borderRadius: "32px",
                                 padding: "45px",
-                                marginBottom: "40px"
+                                border: "1px solid rgba(214,161,75,.08)",
+                            }}
+                        >
+
+                            <h2
+                                style={{
+                                    fontFamily: "Cinzel",
+                                    marginBottom: "25px",
+                                }}
+                            >
+                                Performance Summary
+                            </h2>
+
+                            <div
+                                style={{
+                                    display: "grid",
+                                    gridTemplateColumns:
+                                        "repeat(auto-fit,minmax(250px,1fr))",
+                                    gap: "25px",
+                                }}
+                            >
+
+                                <div>
+
+                                    <div
+                                        style={{
+                                            color: "#888",
+                                            letterSpacing: "3px",
+                                            fontSize: "12px",
+                                            marginBottom: "12px",
+                                        }}
+                                    >
+                                        TOTAL QUESTIONS
+                                    </div>
+
+                                    <h3>{submitResult.total_questions}</h3>
+
+                                </div>
+
+                                <div>
+
+                                    <div
+                                        style={{
+                                            color: "#888",
+                                            letterSpacing: "3px",
+                                            fontSize: "12px",
+                                            marginBottom: "12px",
+                                        }}
+                                    >
+                                        CORRECT ANSWERS
+                                    </div>
+
+                                    <h3>{submitResult.score}</h3>
+
+                                </div>
+
+                                <div>
+
+                                    <div
+                                        style={{
+                                            color: "#888",
+                                            letterSpacing: "3px",
+                                            fontSize: "12px",
+                                            marginBottom: "12px",
+                                        }}
+                                    >
+                                        INCORRECT ANSWERS
+                                    </div>
+
+                                    <h3>{submitResult.wrong_answers}</h3>
+
+                                </div>
+
+                                <div>
+
+                                    <div
+                                        style={{
+                                            color: "#888",
+                                            letterSpacing: "3px",
+                                            fontSize: "12px",
+                                            marginBottom: "12px",
+                                        }}
+                                    >
+                                        EXPLORER LEVEL
+                                    </div>
+
+                                    <h3
+                                        style={{
+                                            textTransform: "capitalize",
+                                        }}
+                                    >
+                                        {submitResult.level}
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        {/* ======================
+        ANSWER REVIEW
+====================== */}
+
+                        {submitResult.answer_review &&
+                            submitResult.answer_review.length > 0 && (
+
+                                <div
+                                    style={{
+                                        background: "rgba(13,23,17,.92)",
+                                        borderRadius: "32px",
+                                        border: "1px solid rgba(214,161,75,.08)",
+                                        overflow: "hidden",
+                                    }}
+                                >
+
+                                    <div
+                                        style={{
+                                            padding: "30px 40px",
+                                            borderBottom: "1px solid rgba(214,161,75,.08)",
+                                            background:
+                                                "linear-gradient(90deg,rgba(214,161,75,.10),transparent)",
+                                        }}
+                                    >
+
+                                        <div
+                                            style={{
+                                                color: "#D6A14B",
+                                                fontSize: "12px",
+                                                letterSpacing: "4px",
+                                                marginBottom: "10px",
+                                            }}
+                                        >
+                                            ANSWER REVIEW
+                                        </div>
+
+                                        <h2
+                                            style={{
+                                                margin: 0,
+                                                fontFamily: "Cinzel",
+                                                fontSize: "40px",
+                                            }}
+                                        >
+                                            Review Your Expedition
+                                        </h2>
+
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            padding: "35px",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: "25px",
+                                        }}
+                                    >
+
+                                        {submitResult.answer_review.map((answer, index) => (
+
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    padding: "28px",
+                                                    borderRadius: "22px",
+                                                    background:
+                                                        answer.is_correct
+                                                            ? "rgba(46,204,113,.08)"
+                                                            : "rgba(231,76,60,.08)",
+
+                                                    border:
+                                                        answer.is_correct
+                                                            ? "1px solid rgba(46,204,113,.20)"
+                                                            : "1px solid rgba(231,76,60,.20)",
+                                                }}
+                                            >
+
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                        flexWrap: "wrap",
+                                                        gap: "15px",
+                                                    }}
+                                                >
+
+                                                    <h3
+                                                        style={{
+                                                            margin: 0,
+                                                            fontFamily: "Cinzel",
+                                                            fontSize: "28px",
+                                                            flex: 1,
+                                                        }}
+                                                    >
+                                                        Question {index + 1}
+                                                    </h3>
+
+                                                    <span
+                                                        style={{
+                                                            padding: "8px 18px",
+                                                            borderRadius: "999px",
+                                                            background:
+                                                                answer.is_correct
+                                                                    ? "#2ECC71"
+                                                                    : "#E74C3C",
+                                                            color: "#fff",
+                                                            fontWeight: 700,
+                                                            fontSize: "13px",
+                                                            letterSpacing: "2px",
+                                                        }}
+                                                    >
+                                                        {answer.is_correct
+                                                            ? "CORRECT"
+                                                            : "INCORRECT"}
+                                                    </span>
+
+                                                </div>
+
+                                                <p
+                                                    style={{
+                                                        marginTop: "22px",
+                                                        lineHeight: 1.8,
+                                                        color: "#ECE4D8",
+                                                    }}
+                                                >
+                                                    {answer.question}
+                                                </p>
+
+                                                <div
+                                                    style={{
+                                                        marginTop: "22px",
+                                                        display: "grid",
+                                                        gap: "14px",
+                                                    }}
+                                                >
+
+                                                    <div>
+
+                                                        <strong
+                                                            style={{
+                                                                color: "#74B9FF",
+                                                            }}
+                                                        >
+                                                            Your Answer:
+                                                        </strong>
+
+                                                        <div
+                                                            style={{
+                                                                marginTop: "6px",
+                                                            }}
+                                                        >
+                                                            {answer.selected_answer || "-"}
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div>
+
+                                                        <strong
+                                                            style={{
+                                                                color: "#58D68D",
+                                                            }}
+                                                        >
+                                                            Correct Answer:
+                                                        </strong>
+
+                                                        <div
+                                                            style={{
+                                                                marginTop: "6px",
+                                                            }}
+                                                        >
+                                                            {answer.correct_answer}
+                                                        </div>
+
+                                                    </div>
+
+                                                    {answer.explanation && (
+
+                                                        <div>
+
+                                                            <strong
+                                                                style={{
+                                                                    color: "#D6A14B",
+                                                                }}
+                                                            >
+                                                                Explanation:
+                                                            </strong>
+
+                                                            <p
+                                                                style={{
+                                                                    marginTop: "8px",
+                                                                    color: "#BBBBBB",
+                                                                    lineHeight: 1.8,
+                                                                }}
+                                                            >
+                                                                {answer.explanation}
+                                                            </p>
+
+                                                        </div>
+
+                                                    )}
+
+                                                </div>
+
+                                            </div>
+
+                                        ))}
+
+                                    </div>
+
+                                </div>
+
+                            )}
+
+                        {/* ======================
+        ACTION BUTTONS
+====================== */}
+
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: "20px",
+                                flexWrap: "wrap",
+                                marginTop: "10px",
+                            }}
+                        >
+
+                            <button
+                                onClick={startNewQuiz}
+                                style={{
+                                    padding: "18px 42px",
+                                    borderRadius: "999px",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    background:
+                                        "linear-gradient(135deg,#D6A14B,#AF7B28)",
+                                    color: "#111",
+                                    fontWeight: 700,
+                                    letterSpacing: "2px",
+                                }}
+                            >
+                                NEW EXPEDITION
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setSubmitResult(null);
+                                    setActiveTab("dashboard");
+                                }}
+                                style={{
+                                    padding: "18px 42px",
+                                    borderRadius: "999px",
+                                    border: "1px solid rgba(255,255,255,.12)",
+                                    cursor: "pointer",
+                                    background: "rgba(255,255,255,.05)",
+                                    color: "#ECE4D8",
+                                    fontWeight: 700,
+                                    letterSpacing: "2px",
+                                }}
+                            >
+                                BACK TO DASHBOARD
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                )}
+                {/* ==========================================================
+                    LEADERBOARD
+========================================================== */}
+
+                {activeTab === "leaderboard" && (
+
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "35px",
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                background:
+                                    "linear-gradient(135deg,#1B2517,#101712)",
+                                borderRadius: "36px",
+                                padding: "60px",
+                                textAlign: "center",
+                                border: "1px solid rgba(214,161,75,.10)",
                             }}
                         >
 
                             <span
                                 style={{
                                     color: "#D6A14B",
-                                    letterSpacing: "5px",
-                                    fontSize: "12px"
+                                    letterSpacing: "4px",
+                                    fontSize: "12px",
                                 }}
                             >
-                                PERFORMANCE REPORT
+                                WORLD RANKINGS
                             </span>
 
-                            <h2
+                            <h1
                                 style={{
                                     fontFamily: "Cinzel",
-                                    fontSize: "42px",
-                                    marginTop: "18px"
+                                    fontSize: "62px",
+                                    marginTop: "20px",
+                                    marginBottom: "18px",
                                 }}
                             >
-                                Expedition Summary
-                            </h2>
+                                Explorer Leaderboard
+                            </h1>
 
                             <p
                                 style={{
-                                    color: "#BDBDBD",
-                                    lineHeight: "2",
-                                    marginTop: "20px"
+                                    maxWidth: "700px",
+                                    margin: "0 auto",
+                                    color: "#BBBBBB",
+                                    lineHeight: 2,
                                 }}
                             >
-                                Score achieved:
-                                <strong> {quizResults.score}</strong>
-                                <br />
-
-                                Correct selectedAnswers:
-                                <strong> {quizResults.correct_selectedAnswers}</strong>
-
-                                <br />
-
-                                Accuracy:
-                                <strong> {quizResults.accuracy}%</strong>
-
-                                <br />
-
-                                Difficulty:
-                                <strong> {quizResults.difficulty}</strong>
-
-                                <br />
-
-                                Experience Earned:
-                                <strong>
-                                    {" "}
-                                    {quizResults.experience_points}
-                                </strong>
+                                Discover the greatest dinosaur explorers and compare your expedition
+                                performance against adventurers from around the world.
                             </p>
 
                         </div>
 
-                        <div
-                            style={{
-                                textAlign: "center"
-                            }}
-                        >
+                        {/* ==========================
+        TOP 3
+========================== */}
 
-                            <button
-                                onClick={fetchDashboard}
+                        {leaderboardData?.length > 0 && (
+
+                            <div
                                 style={{
-                                    height: "68px",
-                                    padding: "0 55px",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    borderRadius: "50px",
-                                    fontWeight: 700,
-                                    letterSpacing: "2px",
-                                    background:
-                                        "linear-gradient(135deg,#D6A14B,#AF7B28)",
-                                    color: "#111",
-                                    fontSize: "15px"
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+                                    gap: "25px",
                                 }}
                             >
-                                RETURN TO DASHBOARD
-                            </button>
 
-                        </div>
+                                {leaderboardData.slice(0, 3).map((user, index) => {
 
-                    </div>
-                )}
-                {activeTab === "leaderboard" && (
-                    <div
-                        style={{
-                            maxWidth: "1200px",
-                            margin: "0 auto"
-                        }}
-                    >
+                                    const medals = [
+                                        "🥇",
+                                        "🥈",
+                                        "🥉"
+                                    ];
+
+                                    return (
+
+                                        <div
+                                            key={index}
+                                            style={{
+                                                background: "rgba(13,23,17,.92)",
+                                                border: "1px solid rgba(214,161,75,.08)",
+                                                borderRadius: "30px",
+                                                padding: "40px",
+                                                textAlign: "center",
+                                            }}
+                                        >
+
+                                            <div
+                                                style={{
+                                                    fontSize: "55px",
+                                                }}
+                                            >
+                                                {medals[index]}
+                                            </div>
+
+                                            <h2
+                                                style={{
+                                                    fontFamily: "Cinzel",
+                                                    marginTop: "15px",
+                                                    marginBottom: "12px",
+                                                }}
+                                            >
+                                                {user.name}
+                                            </h2>
+
+                                            <div
+                                                style={{
+                                                    fontSize: "38px",
+                                                    color: "#D6A14B",
+                                                    fontFamily: "Cinzel",
+                                                }}
+                                            >
+                                                #{index + 1}
+                                            </div>
+
+                                            <p
+                                                style={{
+                                                    marginTop: "15px",
+                                                    color: "#BBBBBB",
+                                                }}
+                                            >
+                                                Highest Score : {user.highest_score}
+                                            </p>
+
+                                            <p
+                                                style={{
+                                                    color: "#BBBBBB",
+                                                }}
+                                            >
+                                                Accuracy : {user.average_accuracy}%
+                                            </p>
+
+                                            <p
+                                                style={{
+                                                    color: "#BBBBBB",
+                                                }}
+                                            >
+                                                Level : {user.level}
+                                            </p>
+
+                                        </div>
+
+                                    );
+
+                                })}
+
+                            </div>
+
+                        )}
+
+                        {/* ==========================
+        FULL TABLE
+========================== */}
 
                         <div
                             style={{
-                                textAlign: "center",
-                                marginBottom: "45px"
+                                background: "rgba(13,23,17,.92)",
+                                borderRadius: "32px",
+                                overflow: "hidden",
+                                border: "1px solid rgba(214,161,75,.08)",
                             }}
                         >
 
                             <div
                                 style={{
-                                    color: "#D6A14B",
-                                    letterSpacing: "5px",
-                                    fontSize: "12px"
+                                    padding: "28px 40px",
+                                    borderBottom: "1px solid rgba(214,161,75,.08)",
                                 }}
                             >
-                                HALL OF EXPLORERS
+
+                                <h2
+                                    style={{
+                                        margin: 0,
+                                        fontFamily: "Cinzel",
+                                    }}
+                                >
+                                    Global Rankings
+                                </h2>
+
                             </div>
 
-                            <h1
+                            <div
                                 style={{
-                                    fontFamily: "Cinzel",
-                                    fontSize: "60px",
-                                    marginTop: "20px"
-                                }}
-                            >
-                                Global Leaderboard
-                            </h1>
-
-                        </div>
-
-                        <div
-                            style={{
-                                background: "rgba(13,23,17,.92)",
-                                borderRadius: "30px",
-                                overflow: "hidden",
-                                border: "1px solid rgba(214,161,75,.08)"
-                            }}
-                        >
-
-                            <table
-                                style={{
-                                    width: "100%",
-                                    borderCollapse: "collapse"
+                                    overflowX: "auto",
                                 }}
                             >
 
-                                <thead>
+                                <table
+                                    style={{
+                                        width: "100%",
+                                        borderCollapse: "collapse",
+                                        minWidth: "900px",
+                                    }}
+                                >
 
-                                    <tr>
+                                    <thead>
 
-                                        {[
-                                            "Rank",
-                                            "Explorer",
-                                            "Level",
-                                            "Highest Score",
-                                            "Accuracy"
-                                        ].map(h => (
-                                            <th
-                                                key={h}
-                                                style={{
-                                                    padding: "24px",
-                                                    textAlign: "left",
-                                                    color: "#D6A14B",
-                                                    borderBottom: "1px solid rgba(214,161,75,.08)"
-                                                }}
-                                            >
-                                                {h}
-                                            </th>
-                                        ))}
+                                        <tr>
 
-                                    </tr>
+                                            {[
+                                                "Rank",
+                                                "Explorer",
+                                                "Highest Score",
+                                                "Accuracy",
+                                                "Attempts",
+                                                "Level"
+                                            ].map(head => (
 
-                                </thead>
+                                                <th
+                                                    key={head}
+                                                    style={{
+                                                        padding: "22px",
+                                                        textAlign: "left",
+                                                        color: "#D6A14B",
+                                                        letterSpacing: "2px",
+                                                        borderBottom: "1px solid rgba(214,161,75,.08)",
+                                                    }}
+                                                >
+                                                    {head}
+                                                </th>
 
-                                <tbody>
-
-                                    {leaderboard.map((player, index) => (
-
-                                        <tr key={index}>
-
-                                            <td style={{ padding: "24px" }}>
-                                                {index === 0
-                                                    ? "🥇"
-                                                    : index === 1
-                                                        ? "🥈"
-                                                        : index === 2
-                                                            ? "🥉"
-                                                            : "#" + (index + 1)}
-                                            </td>
-
-                                            <td style={{ padding: "24px" }}>
-                                                {player.name}
-                                            </td>
-
-                                            <td style={{ padding: "24px" }}>
-                                                {player.level}
-                                            </td>
-
-                                            <td style={{ padding: "24px" }}>
-                                                {player.highest_score}
-                                            </td>
-
-                                            <td style={{ padding: "24px" }}>
-                                                {player.average_accuracy}%
-                                            </td>
+                                            ))}
 
                                         </tr>
 
-                                    ))}
+                                    </thead>
 
-                                </tbody>
+                                    <tbody>
 
-                            </table>
+                                        {leaderboardData?.map((user, index) => (
+
+                                            <tr key={user._id || index}>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                        fontWeight: 700,
+                                                    }}
+                                                >
+                                                    #{index + 1}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                    }}
+                                                >
+                                                    {user.name}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                        color: "#58D68D",
+                                                    }}
+                                                >
+                                                    {user.highest_score}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                    }}
+                                                >
+                                                    {user.average_accuracy}%
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                    }}
+                                                >
+                                                    {user.total_attempts}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "22px",
+                                                        borderBottom: "1px solid rgba(255,255,255,.05)",
+                                                        textTransform: "capitalize",
+                                                        color: "#74B9FF",
+                                                    }}
+                                                >
+                                                    {user.level}
+                                                </td>
+
+                                            </tr>
+
+                                        ))}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
 
                         </div>
 
                     </div>
+
                 )}
+
             </div>
         </div>
-    )
+    );
 }
+
+
 
