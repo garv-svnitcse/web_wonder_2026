@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import DinosaurCard from "../components/DinosaurCard/DinosaurCard";
@@ -6,13 +7,15 @@ import "../styles/ResearchDatabase.css";
 
 export default function ResearchDatabase() {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [dinosaurs, setDinosaurs] = useState([]);
 
     const [loading, setLoading] = useState(true);
 
     const [search, setSearch] = useState("");
 
-    const [era, setEra] = useState("");
+    const [era, setEra] = useState(searchParams.get("era") || "");
 
     const [diet, setDiet] = useState("");
 
@@ -168,7 +171,17 @@ export default function ResearchDatabase() {
 
                         value={era}
 
-                        onChange={(e) => setEra(e.target.value)}
+                        onChange={(e) => {
+                            const newEra = e.target.value;
+                            setEra(newEra);
+                            if (newEra) {
+                                setSearchParams({ era: newEra });
+                            } else {
+                                const newParams = new URLSearchParams(searchParams);
+                                newParams.delete("era");
+                                setSearchParams(newParams);
+                            }
+                        }}
 
                     >
 

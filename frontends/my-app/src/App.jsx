@@ -5,6 +5,7 @@ import ResearchDatabase from "./pages/ResearchDatabase";
 import Dinosaur from "./pages/Dinosaur";
 import Viewer from "./pages/Viewer";
 import QuizPage from "./pages/QuizPage";
+import TimelinePage from "./pages/TimelinePage";
 
 function App() {
 
@@ -19,6 +20,14 @@ function App() {
                     path="/"
 
                     element={<Home />}
+
+                />
+
+                <Route
+
+                    path="/timeline"
+
+                    element={<TimelinePage />}
 
                 />
 

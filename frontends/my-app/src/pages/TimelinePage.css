@@ -1,0 +1,505 @@
+/* ===========================================================
+   TIMELINE PAGE CONTAINER & LAYOUT
+   =========================================================== */
+
+.timeline-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #08110b;
+}
+
+.timeline-page-content {
+    flex: 1;
+    position: relative;
+    padding-top: 100px; /* Leave room for Navbar */
+    min-height: 100vh;
+    background: linear-gradient(to bottom, rgba(8, 17, 11, 0.75) 0%, rgba(5, 10, 7, 0.95) 100%), 
+                url("../assets/prehistoric_jungle_bg.png") center center / cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* ===========================================================
+   HEADER SECTION
+   =========================================================== */
+
+.timeline-header-section {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    z-index: 10;
+}
+
+.timeline-section-subtitle {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #a3a3a3;
+    letter-spacing: 0.5em;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.timeline-section-title {
+    font-family: "Cinzel", serif;
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #f1ebd9;
+    margin: 0;
+    text-shadow: 0 0 30px rgba(241, 235, 217, 0.2),
+                 0 0 60px rgba(241, 235, 217, 0.1);
+}
+
+.timeline-section-desc {
+    font-size: 15px;
+    color: #a1a1aa;
+    letter-spacing: 0.1em;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    position: relative;
+    display: inline-block;
+    padding: 0 40px;
+}
+
+.timeline-section-desc::before,
+.timeline-section-desc::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 25px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #c2a878, transparent);
+}
+
+.timeline-section-desc::before {
+    left: 0;
+}
+
+.timeline-section-desc::after {
+    right: 0;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.85;
+}
+
+.mouse-icon {
+    width: 22px;
+    height: 36px;
+    border: 2px solid #a3a3a3;
+    border-radius: 20px;
+    position: relative;
+}
+
+.mouse-wheel {
+    width: 4px;
+    height: 8px;
+    background-color: #c2a878;
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollScroll 1.6s infinite ease-in-out;
+}
+
+@keyframes scrollScroll {
+    0% {
+        top: 6px;
+        opacity: 1;
+    }
+    50% {
+        top: 16px;
+        opacity: 0;
+    }
+    100% {
+        top: 6px;
+        opacity: 1;
+    }
+}
+
+.scroll-text {
+    font-size: 11px;
+    color: #a3a3a3;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* ===========================================================
+   HORIZONTAL TIMELINE CANVAS
+   =========================================================== */
+
+.timeline-scroll-viewport {
+    width: 100%;
+    padding: 20px 40px 60px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    cursor: grab;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.timeline-scroll-viewport.active-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+.timeline-canvas {
+    position: relative;
+    width: 2050px;
+    height: 680px;
+    margin: 0 auto;
+}
+
+/* SVG Line Canvas Overlay */
+.timeline-svg-connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2050px;
+    height: 680px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ===========================================================
+   MEDALLIONS
+   =========================================================== */
+
+.timeline-medallion {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid;
+    padding: 4px;
+    background: #090e0b;
+    z-index: 3;
+    cursor: pointer;
+    overflow: visible; /* to allow pulse shadow */
+    transition: box-shadow 0.3s ease;
+}
+
+.medallion-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1b261f, #090e0b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fossil-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 0.5s ease;
+}
+
+.timeline-medallion:hover .fossil-image {
+    transform: scale(1.08);
+}
+
+/* Pulsing little connector point under medallion */
+.medallion-pulse {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid #090e0b;
+    animation: medallionPulseAnim 2s infinite ease-in-out;
+}
+
+@keyframes medallionPulseAnim {
+    0% {
+        box-shadow: 0 0 0 0px currentColor;
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0px rgba(255, 255, 255, 0);
+    }
+}
+
+/* ===========================================================
+   ERA CARDS
+   =========================================================== */
+
+.timeline-era-card {
+    position: absolute;
+    width: 360px;
+    background: rgba(10, 16, 12, 0.65);
+    backdrop-filter: blur(20px) saturate(130%);
+    -webkit-backdrop-filter: blur(20px) saturate(130%);
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 24px;
+    z-index: 3;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.card-header-icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.card-title {
+    font-family: "Cinzel", serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.card-description {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #d1d5db;
+    margin: 0 0 20px 0;
+}
+
+/* Grid parameters inside card */
+.card-facts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 16px;
+}
+
+.card-fact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fact-icon {
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fact-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.fact-label {
+    font-size: 10px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.fact-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f3f4f6;
+}
+
+/* Card Button */
+.card-explore-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid;
+    border-radius: 50px;
+    color: #e5e7eb;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-arrow {
+    transition: transform 0.3s ease;
+    font-size: 10px;
+}
+
+.card-explore-btn:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color) !important;
+    color: #ffffff;
+    box-shadow: 0 0 15px var(--hover-color);
+}
+
+.card-explore-btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+/* ===========================================================
+   BOTTOM AXIS RULER SYSTEM
+   =========================================================== */
+
+.timeline-ruler-system {
+    position: absolute;
+    width: 2050px;
+    height: 100px;
+    z-index: 2;
+}
+
+/* Horizontal line representing bottom axis */
+.timeline-axis-line {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    right: 150px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Horizontal colored overlay bars on axis */
+.timeline-span-bar {
+    position: absolute;
+    top: -1px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+/* Axis point dots */
+.axis-connection-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: -5px;
+    transform: translateX(-50%);
+    z-index: 4;
+}
+
+/* Year span and period titles on axis */
+.axis-period-label {
+    position: absolute;
+    top: -65px;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label-years {
+    font-family: "Cinzel", serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.label-subtitle {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    opacity: 0.75;
+}
+
+/* Ruler tick lines and marks */
+.ruler-tick-group {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ruler-tick-mark {
+    width: 1px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.ruler-tick-label {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* Legend in bottom-center area */
+.timeline-axis-legend {
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+}
+
+/* ===========================================================
+   CUSTOM HORIZONTAL SCROLLBAR
+   =========================================================== */
+
+.timeline-scroll-viewport::-webkit-scrollbar {
+    height: 6px;
+}
+
+.timeline-scroll-viewport::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    margin: 0 40px;
+}
+
+.timeline-scroll-viewport::-webkit-scrollbar-thumb {
+    background: rgba(194, 168, 120, 0.3);
+    border-radius: 10px;
+}
+
+.timeline-scroll-viewport::-webkit-scrollbar-thumb:hover {
+    background: rgba(194, 168, 120, 0.65);
+}
+
+/* ===========================================================
+   RESPONSIVE OVERRIDES
+   =========================================================== */
+
+/* On touch/mobile devices where horizontal scrolls are native */
+@media (max-width: 1024px) {
+    .timeline-scroll-viewport {
+        cursor: default;
+    }
+}
