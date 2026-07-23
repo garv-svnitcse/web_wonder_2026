@@ -7,7 +7,7 @@ export default function Viewer() {
     const { slug } = useParams();
     const navigate = useNavigate();
     const containerRef = useRef(null);
-    
+
     const [statusText, setStatusText] = useState("Initializing gallery room...");
     const [showOverlay, setShowOverlay] = useState(true);
     const [isPointerLocked, setIsPointerLocked] = useState(false);
@@ -16,7 +16,7 @@ export default function Viewer() {
     // Fetch dinosaur details to get the 3D model URL
     useEffect(() => {
         let isMounted = true;
-        fetch(`http://127.0.0.1:5000/dinosaurs/${slug}`)
+        fetch(`http://127.0.0.1:5001/dinosaurs/${slug}`)
             .then(res => {
                 if (!res.ok) throw new Error("HTTP error " + res.status);
                 return res.json();
@@ -360,15 +360,25 @@ export default function Viewer() {
 
         // Fetch model URLs
         const modelUrls = [];
-        if (dinoData["3d_model_url"]) {
-            modelUrls.push(getModelDirectUrl(dinoData["3d_model_url"]));
+        const dbModelUrl = dinoData["3d_model_url"] || dinoData["model_url"] || dinoData["3d_model"] || dinoData["model"];
+        if (dbModelUrl) {
+            modelUrls.push(getModelDirectUrl(dbModelUrl));
         }
-        // Local named caches (e.g. /models/brachiosaurus.glb or /brachiosaurus.glb)
+
+        // Local named caches (e.g. /models/brachiosaurus-altithorax.glb or /brachiosaurus-altithorax.glb)
         modelUrls.push(`/models/${slug}.glb`);
         modelUrls.push(`/${slug}.glb`);
-        // Local and global generic fallbacks
-        modelUrls.push('/dino.glb');
-        modelUrls.push('https://drive.google.com/uc?export=download&id=19cP06Djtrlv5p7tPsXF4sq08jCwBOgf2');
+
+        // Local named caches using short slug (e.g. /models/brachiosaurus.glb or /brachiosaurus.glb)
+        const shortSlug = slug.split('-')[0];
+        modelUrls.push(`/models/${shortSlug}.glb`);
+        modelUrls.push(`/${shortSlug}.glb`);
+
+        // Generic T-Rex skeleton fallbacks are ONLY used for T-Rex
+        if (slug.includes('tyrannosaurus') || slug.includes('trex')) {
+            modelUrls.push('/dino.glb');
+            modelUrls.push('https://drive.google.com/uc?export=download&id=19cP06Djtrlv5p7tPsXF4sq08jCwBOgf2');
+        }
 
         async function loadDinosaurModel() {
             const gltfLoader = new GLTFLoader();
@@ -435,12 +445,12 @@ export default function Viewer() {
         plaqueBase.castShadow = true;
         plaqueBase.receiveShadow = true;
         plaqueGroup.add(plaqueBase);
-        
+
         const plaqueStand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.3, 16), plaqueMaterial);
         plaqueStand.position.set(0, 0.2, 2.45);
         plaqueStand.castShadow = true;
         plaqueGroup.add(plaqueStand);
-        
+
         const plaqueTop = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.04, 0.45), plaqueMaterial);
         plaqueTop.position.set(0, 0.37, 2.45);
         plaqueTop.rotation.x = -0.25;
@@ -580,17 +590,17 @@ export default function Viewer() {
                 if (keys.backward) moveInput.sub(forwardDir);
                 if (keys.right) moveInput.add(rightDir);
                 if (keys.left) moveInput.sub(rightDir);
-                
+
                 const inputLength = moveInput.length();
                 if (inputLength > 1) moveInput.normalize();
-                
+
                 const speed = PLAYER_SPEED * (keys.sprint ? PLAYER_SPRINT_MULTIPLIER : 1.0);
                 const targetVel = moveInput.clone().multiplyScalar(speed);
                 const velXZ = new THREE.Vector2(velocity.x, velocity.z);
                 const targetXZ = new THREE.Vector2(targetVel.x, targetVel.z);
                 const acceleration = 18;
                 const deceleration = 14;
-                
+
                 if (inputLength > 0.01) {
                     const newXZ = velXZ.lerp(targetXZ, 1 - Math.exp(-acceleration * effectiveDt));
                     velocity.x = newXZ.x;
@@ -644,7 +654,7 @@ export default function Viewer() {
             window.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('pointerlockchange', onPointerLockChange);
             window.removeEventListener('resize', onResize);
-            
+
             renderer.domElement.removeEventListener('click', triggerLock);
             cancelAnimationFrame(animationFrameId);
             renderer.dispose();
@@ -671,7 +681,7 @@ export default function Viewer() {
 
             {/* Instruction Panel Overlay */}
             {showOverlay && (
-                <div 
+                <div
                     onClick={() => containerRef.current?.querySelector('canvas')?.requestPointerLock()}
                     className="absolute inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm cursor-pointer transition-opacity duration-300"
                 >
@@ -679,7 +689,7 @@ export default function Viewer() {
                         <h2 className="text-xl md:text-2xl font-serif text-[#c5a880] tracking-wider uppercase mb-4">
                             Prehistoric Gallery
                         </h2>
-                        
+
                         <div className="flex items-center justify-center gap-4 my-3 text-sm font-mono text-white/80">
                             <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">W</span>
                             <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">A</span>
@@ -687,7 +697,7 @@ export default function Viewer() {
                             <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">D</span>
                             <span>to move</span>
                         </div>
-                        
+
                         <div className="flex items-center justify-center gap-2 my-3 text-sm font-mono text-white/80">
                             <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">Mouse</span>
                             <span>to look around</span>

@@ -30,7 +30,7 @@ const navItems = [
     {
         title: "Dinosaurs",
         icon: <GiDinosaurBones />,
-        path: "/research"
+        path: "/research-database"
     },
 
     {
@@ -48,7 +48,7 @@ const navItems = [
     {
         title: "Research",
         icon: <FaFlask />,
-        path: "/community"
+        path: "/research"
     },
 
     {

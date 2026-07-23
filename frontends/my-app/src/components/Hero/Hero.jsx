@@ -234,6 +234,7 @@ export default function Hero() {
                             }}
 
                             className="secondaryHeroButton"
+                            onClick={() => window.open("https://www.youtube.com/watch?v=fFKEedgHd9U", "_blank")}
 
                         >
 
@@ -421,8 +422,6 @@ export default function Hero() {
                 }
 
             </div>
-
-            {/* BOTTOM FADE */}
 
             <div className="heroBottomFade"></div>
 

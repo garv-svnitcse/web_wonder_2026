@@ -76,9 +76,24 @@ def all_list(search: str = "", era: str = "", diet: str = "", sort: str = "name"
             "description": i.get("description"),
             "length": f"{length_m} m" if length_m else "N/A",
             "weight": weight_str,
-            "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A"
+            "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
+            "3d_model_url": i.get("3d_model_url") or f"/models/{str(i.get('slug', '')).split('-')[0]}.glb"
         })
     return dino_list
+
+@router.get("/model-proxy")
+def model_proxy(id: str):
+    import requests
+    from fastapi.responses import StreamingResponse
+    url = f"https://docs.google.com/uc?export=download&id={id}"
+    
+    def stream_chunks():
+        with requests.get(url, stream=True, allow_redirects=True) as r:
+            for chunk in r.iter_content(chunk_size=102400):
+                if chunk:
+                    yield chunk
+
+    return StreamingResponse(stream_chunks(), media_type="application/octet-stream")
 
 @router.get('/{slug}')
 def dino_detail(slug: str):
@@ -89,4 +104,6 @@ def dino_detail(slug: str):
         raise HTTPException(status_code=404, detail='Dinosaur Not Found')
     dinosaur_detail["id"] = str(dinosaur_detail.pop("_id"))
     dinosaur_detail["image"] = get_thumbnail_url(dinosaur_detail.get("image"))
+    if "3d_model_url" not in dinosaur_detail or not dinosaur_detail["3d_model_url"]:
+        dinosaur_detail["3d_model_url"] = f"/models/{slug.split('-')[0]}.glb"
     return dinosaur_detail

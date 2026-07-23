@@ -185,7 +185,7 @@ export default function Dinosaur() {
     const fetchSpecimen = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://127.0.0.1:5000/dinosaurs/${slug}`);
+        const response = await fetch(`http://127.0.0.1:5001/dinosaurs/${slug}`);
         if (!response.ok) {
           throw new Error('Dinosaur not found');
         }
@@ -208,7 +208,7 @@ export default function Dinosaur() {
     const fetchRelated = async () => {
       if (!specimen) return;
       try {
-        const response = await fetch(`http://127.0.0.1:5000/dinosaurs`);
+        const response = await fetch(`http://127.0.0.1:5001/dinosaurs`);
         const allDinos = await response.json();
         if (Array.isArray(allDinos)) {
           const filtered = allDinos.filter(d => d.slug !== slug);
@@ -246,7 +246,7 @@ export default function Dinosaur() {
         <Radio size={48} color="#e11d48" className="mb-6 opacity-80" />
         <h2 className="text-2xl font-serif text-white tracking-wide">Specimen Dossier Lost</h2>
         <p className="my-4 text-sm text-[#94a3b8]">This classification has not yet been logged in the archives.</p>
-        <Link to="/research" className="inline-block px-8 py-3 bg-[#121815] border border-[#c5a880]/40 text-[#c5a880] text-sm uppercase tracking-wider font-semibold rounded-sm transition duration-300 hover:bg-[#c5a880] hover:text-black">
+        <Link to="/research-database" className="inline-block px-8 py-3 bg-[#121815] border border-[#c5a880]/40 text-[#c5a880] text-sm uppercase tracking-wider font-semibold rounded-sm transition duration-300 hover:bg-[#c5a880] hover:text-black">
           Return to Catalog
         </Link>
       </div>
@@ -284,7 +284,7 @@ export default function Dinosaur() {
         
         {/* Back Navigation Link */}
         <div className="w-full flex justify-between items-center">
-          <Link to="/research" className="text-xs uppercase tracking-[0.25em] text-[#c5a880] hover:text-white transition duration-300 flex items-center gap-2 font-semibold font-mono">
+          <Link to="/research-database" className="text-xs uppercase tracking-[0.25em] text-[#c5a880] hover:text-white transition duration-300 flex items-center gap-2 font-semibold font-mono">
             ← Back to Expedition
           </Link>
           {usingFallback && (
@@ -484,13 +484,13 @@ export default function Dinosaur() {
               <div className="card-header-badge py-1.5 px-3 rounded-sm self-start inline-block">
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">Fossil Evidence</h4>
               </div>
-              <div className="w-full bg-gradient-to-b from-black/60 to-black/45 bg-[radial-gradient(rgba(197,168,128,0.03)_1px,transparent_1px)] bg-[size:16px_16px] rounded-sm p-3 flex justify-center items-center border border-white/5 shadow-inner">
-                <svg viewBox="0 0 100 100" className="w-full h-24 stroke-[#c5a880] fill-none opacity-85 group-hover/card:opacity-100 transition-opacity duration-300 glow-gold" strokeWidth="1.5">
-                  <path d="M20,60 Q30,40 60,35 Q80,35 85,50 Q85,65 70,68 L50,68 L45,80 Q35,82 25,75 Z" />
-                  <path d="M30,68 C40,68 55,60 65,60 M65,45 Q70,48 70,52 Z" />
-                  <circle cx="58" cy="48" r="3" fill="#c5a880" className="animate-pulse" />
-                  <path d="M35,68 L38,71 L41,68 L44,71 L47,68 L50,71" />
-                </svg>
+              <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-[#c5a880]/40 transition-all duration-350">
+                <img 
+                  src="/images/fossil.jpg" 
+                  alt="Fossil Evidence" 
+                  className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
               <p className="text-xs text-white/70 leading-relaxed font-light pt-1">
                 {specimen.fossil_evidence?.summary.substring(0, 120)}...
@@ -520,16 +520,13 @@ export default function Dinosaur() {
               <div className="card-header-badge py-1.5 px-3 rounded-sm self-start inline-block">
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">DNA Insights</h4>
               </div>
-              <div className="w-full bg-gradient-to-b from-black/60 to-black/45 bg-[radial-gradient(rgba(34,211,238,0.03)_1px,transparent_1px)] bg-[size:16px_16px] rounded-sm p-3 flex justify-center items-center border border-white/5 shadow-inner">
-                <svg viewBox="0 0 100 100" className="w-full h-24 stroke-cyan-400 fill-none opacity-85 group-hover/card:opacity-100 transition-opacity duration-300 glow-cyan" strokeWidth="1.5">
-                  <path d="M20,30 C35,40 45,60 50,68 C55,75 65,75 80,65" />
-                  <path d="M20,70 C35,75 45,75 50,68 C55,60 65,40 80,30" />
-                  <line x1="28" y1="36" x2="28" y2="64" />
-                  <line x1="38" y1="44" x2="38" y2="72" />
-                  <line x1="48" y1="52" x2="48" y2="74" />
-                  <line x1="58" y1="64" x2="58" y2="40" />
-                  <line x1="68" y1="70" x2="68" y2="34" />
-                </svg>
+              <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-cyan-500/40 transition-all duration-350">
+                <img 
+                  src="/images/dna.jpg" 
+                  alt="DNA Insights" 
+                  className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
               <p className="text-xs text-white/70 leading-relaxed font-light pt-1">
                 Advanced structural analysis of genetic materials revealing details about species growth parameters.
@@ -559,12 +556,13 @@ export default function Dinosaur() {
               <div className="card-header-badge py-1.5 px-3 rounded-sm self-start inline-block">
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">Behavior & Lifestyle</h4>
               </div>
-              <div className="w-full bg-gradient-to-b from-black/60 to-black/45 bg-[radial-gradient(rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:16px_16px] rounded-sm p-3 flex justify-center items-center border border-white/5 shadow-inner">
-                <svg viewBox="0 0 100 100" className="w-full h-24 stroke-amber-500 fill-none opacity-85 group-hover/card:opacity-100 transition-opacity duration-300 glow-amber" strokeWidth="1.5">
-                  <path d="M50,70 L45,52 L35,42 Q40,38 50,46 Q60,38 65,42 L55,52 Z" fill="rgba(245, 158, 11, 0.05)" />
-                  <path d="M50,70 L50,56" />
-                  <circle cx="50" cy="74" r="3" fill="rgba(245, 158, 11, 0.2)" />
-                </svg>
+              <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-amber-500/40 transition-all duration-350">
+                <img 
+                  src="/images/behaviour.jpg" 
+                  alt="Behavior & Lifestyle" 
+                  className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
               <p className="text-xs text-white/70 leading-relaxed font-light pt-1">
                 Ecosystem mapping, hunting profile, pack structure, and territorial behavioral dossier.
