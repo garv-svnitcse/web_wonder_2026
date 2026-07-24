@@ -8,12 +8,14 @@ import QuizPage from "./pages/QuizPage";
 import TimelinePage from "./pages/TimelinePage";
 import Research from "./pages/RESEARCH_PAGE/Research";
 import ResearchDossier from "./pages/RESEARCH_PAGE/ResearchDossier";
+import Login from "./pages/LOGIN_PAGE/Login";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/timeline" element={<TimelinePage />} />
         <Route path="/research" element={<Research />} />
         <Route path="/research-database" element={<ResearchDatabase />} />
