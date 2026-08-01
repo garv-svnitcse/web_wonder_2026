@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-    FaThermometerHalf, 
-    FaLeaf, 
-    FaTree, 
+import {
+    FaThermometerHalf,
+    FaLeaf,
+    FaTree,
     FaSeedling,
     FaArrowRight,
     FaGlobeAmericas
@@ -33,10 +33,10 @@ const eras = [
         ],
         coordinates: {
             dotX: 250,
-            medallionY: 480,
-            cardTop: 360,
+            medallionY: 220,
+            cardTop: 240,
             cardLeft: 380,
-            lineEnd: { x: 380, y: 395 }
+            lineEnd: { x: 380, y: 275 }
         }
     },
     {
@@ -75,10 +75,10 @@ const eras = [
         ],
         coordinates: {
             dotX: 1450,
-            medallionY: 260,
-            cardTop: 280,
+            medallionY: 220,
+            cardTop: 240,
             cardLeft: 1580,
-            lineEnd: { x: 1580, y: 315 }
+            lineEnd: { x: 1580, y: 275 }
         }
     }
 ];
@@ -99,9 +99,9 @@ const ticks = [
     { label: "120", x: 1300 },
     { label: "110", x: 1400 },
     { label: "100", x: 1500 },
-    { label: "90",  x: 1600 },
-    { label: "80",  x: 1700 },
-    { label: "70",  x: 1800 },
+    { label: "90", x: 1600 },
+    { label: "80", x: 1700 },
+    { label: "70", x: 1800 },
     { label: "PRESENT DAY", x: 1900 }
 ];
 
@@ -146,30 +146,24 @@ export default function TimelinePage() {
         // Map era id to the format expected by the ResearchDatabase era selector
         // Triassic -> Triassic, Jurassic -> Jurassic, Cretaceous -> Cretaceous
         const capitalized = eraId.charAt(0).toUpperCase() + eraId.slice(1);
-        navigate(`/research?era=${capitalized}`);
+        navigate(`/research-database?era=${capitalized}`);
     };
 
     return (
         <div className="timeline-page-container">
             <Navbar />
-            
+
             <main className="timeline-page-content">
                 {/* Heading Area */}
                 <div className="timeline-header-section">
-                    <span className="timeline-section-subtitle">JURASSIVERSE</span>
+                    <span className="timeline-section-subtitle">JURASSIC JOURNEY</span>
                     <h1 className="timeline-section-title">TIMELINE</h1>
                     <p className="timeline-section-desc">Journey through Earth's ancient eras</p>
-                    
-                    <div className="scroll-indicator">
-                        <div className="mouse-icon">
-                            <span className="mouse-wheel"></span>
-                        </div>
-                        <span className="scroll-text">Scroll to explore</span>
-                    </div>
+
                 </div>
 
                 {/* Horizontal Drag/Scroll Canvas Container */}
-                <div 
+                <div
                     className={`timeline-scroll-viewport ${isDragging ? "active-dragging" : ""}`}
                     ref={scrollContainerRef}
                     onMouseDown={handleMouseDown}
@@ -178,7 +172,7 @@ export default function TimelinePage() {
                     onMouseMove={handleMouseMove}
                 >
                     <div className="timeline-canvas">
-                        
+
                         {/* SVG Connecting Lines Canvas */}
                         <svg className="timeline-svg-connections" width="2050" height="680">
                             {/* SVG filters for glowing effects */}
@@ -208,12 +202,12 @@ export default function TimelinePage() {
 
                             {/* Dotted Vertical Connectors (Axis to Medallions) */}
                             {eras.map((era) => (
-                                <line 
+                                <line
                                     key={`dotted-${era.id}`}
-                                    x1={era.coordinates.dotX} 
-                                    y1={580} 
-                                    x2={era.coordinates.dotX} 
-                                    y2={era.coordinates.medallionY} 
+                                    x1={era.coordinates.dotX}
+                                    y1={580}
+                                    x2={era.coordinates.dotX}
+                                    y2={era.coordinates.medallionY}
                                     stroke={era.color}
                                     strokeWidth="2"
                                     strokeDasharray="4 6"
@@ -228,14 +222,14 @@ export default function TimelinePage() {
                                 const startY = era.coordinates.medallionY;
                                 const endX = era.coordinates.lineEnd.x;
                                 const endY = era.coordinates.lineEnd.y;
-                                
+
                                 return (
-                                    <line 
+                                    <line
                                         key={`solid-${era.id}`}
-                                        x1={startX} 
-                                        y1={startY} 
-                                        x2={endX} 
-                                        y2={endY} 
+                                        x1={startX}
+                                        y1={startY}
+                                        x2={endX}
+                                        y2={endY}
                                         stroke={era.color}
                                         strokeWidth="2"
                                         opacity="0.85"
@@ -253,9 +247,9 @@ export default function TimelinePage() {
 
                             return (
                                 <div key={era.id} className="timeline-era-group">
-                                    
+
                                     {/* Circular Fossil Medallion */}
-                                    <motion.div 
+                                    <motion.div
                                         className="timeline-medallion"
                                         style={{
                                             top: `${medTop}px`,
@@ -267,29 +261,29 @@ export default function TimelinePage() {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <div className="medallion-inner">
-                                            <img 
-                                                src={era.fossil} 
-                                                alt={`${era.period} Fossil`} 
+                                            <img
+                                                src={era.fossil}
+                                                alt={`${era.period} Fossil`}
                                                 className="fossil-image"
                                                 draggable="false"
                                             />
                                         </div>
                                         {/* Colored pulsing center circle indicator */}
-                                        <div 
-                                            className="medallion-pulse" 
+                                        <div
+                                            className="medallion-pulse"
                                             style={{ backgroundColor: era.color }}
                                         ></div>
                                     </motion.div>
 
                                     {/* Floating Details Card */}
-                                    <motion.div 
+                                    <motion.div
                                         className="timeline-era-card"
                                         style={{
                                             top: `${era.coordinates.cardTop}px`,
                                             left: `${era.coordinates.cardLeft}px`,
                                             borderColor: `${era.color}22`
                                         }}
-                                        whileHover={{ 
+                                        whileHover={{
                                             y: -5,
                                             borderColor: `${era.color}88`,
                                             boxShadow: `0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px ${era.color}22`
@@ -325,7 +319,7 @@ export default function TimelinePage() {
                                         </div>
 
                                         {/* Explore Button */}
-                                        <button 
+                                        <button
                                             className="card-explore-btn"
                                             style={{ borderColor: `${era.color}44`, "--hover-color": era.color }}
                                             onClick={() => handleExplore(era.id)}
@@ -342,36 +336,36 @@ export default function TimelinePage() {
                         <div className="timeline-ruler-system" style={{ top: "580px" }}>
                             {/* Horizontal main axis line */}
                             <div className="timeline-axis-line"></div>
-                            
+
                             {/* Colored era bars on top of the main axis line */}
                             {/* Triassic bar (250 to 201 MYA) -> tick 250 (100px) to tick 200 (600px) */}
-                            <div 
-                                className="timeline-span-bar" 
-                                style={{ 
-                                    left: "100px", 
-                                    width: "500px", 
+                            <div
+                                className="timeline-span-bar"
+                                style={{
+                                    left: "100px",
+                                    width: "500px",
                                     backgroundColor: eras[0].color,
                                     boxShadow: `0 0 10px ${eras[0].color}`
                                 }}
                             ></div>
-                            
+
                             {/* Jurassic bar (201 to 145 MYA) -> tick 200 (600px) to midway 160/140 (1050px) */}
-                            <div 
-                                className="timeline-span-bar" 
-                                style={{ 
-                                    left: "600px", 
-                                    width: "450px", 
+                            <div
+                                className="timeline-span-bar"
+                                style={{
+                                    left: "600px",
+                                    width: "450px",
                                     backgroundColor: eras[1].color,
                                     boxShadow: `0 0 10px ${eras[1].color}`
                                 }}
                             ></div>
-                            
+
                             {/* Cretaceous bar (145 to 66 MYA) -> midway 160/140 (1050px) to tick 70 (1800px) + ~40px (1840px) */}
-                            <div 
-                                className="timeline-span-bar" 
-                                style={{ 
-                                    left: "1050px", 
-                                    width: "790px", 
+                            <div
+                                className="timeline-span-bar"
+                                style={{
+                                    left: "1050px",
+                                    width: "790px",
                                     backgroundColor: eras[2].color,
                                     boxShadow: `0 0 10px ${eras[2].color}`
                                 }}
@@ -379,10 +373,10 @@ export default function TimelinePage() {
 
                             {/* Active connection dots on the line */}
                             {eras.map((era) => (
-                                <div 
+                                <div
                                     key={`axis-dot-${era.id}`}
                                     className="axis-connection-dot"
-                                    style={{ 
+                                    style={{
                                         left: `${era.coordinates.dotX}px`,
                                         backgroundColor: era.color,
                                         boxShadow: `0 0 15px ${era.color}, 0 0 30px ${era.color}`
@@ -392,10 +386,10 @@ export default function TimelinePage() {
 
                             {/* Period Info Labels right above the ticks */}
                             {eras.map((era) => (
-                                <div 
+                                <div
                                     key={`axis-label-${era.id}`}
                                     className="axis-period-label"
-                                    style={{ 
+                                    style={{
                                         left: `${era.coordinates.dotX}px`,
                                         color: era.color
                                     }}
@@ -407,8 +401,8 @@ export default function TimelinePage() {
 
                             {/* Ticks and Ticks Labels (Years) */}
                             {ticks.map((tick, idx) => (
-                                <div 
-                                    key={idx} 
+                                <div
+                                    key={idx}
                                     className="ruler-tick-group"
                                     style={{ left: `${tick.x}px` }}
                                 >
@@ -426,7 +420,7 @@ export default function TimelinePage() {
                     </div>
                 </div>
             </main>
-            
+
             <Footer />
         </div>
     );

@@ -1,12 +1,28 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import DinosaurCard from "../components/DinosaurCard/DinosaurCard";
+import Navbar from "../components/Navbar/Navbar";
+import GlassAuthModal from "../components/GlassAuthModal";
 import "../styles/ResearchDatabase.css";
 
 export default function ResearchDatabase() {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const getStoredToken = () => {
+        const val = localStorage.getItem('access_token');
+        if (!val) return '';
+        const clean = val.trim();
+        const parts = clean.split('.');
+        if (parts.length !== 3) {
+            return '';
+        }
+        return clean;
+    };
+
+    const [token, setToken] = useState(getStoredToken());
 
     const [dinosaurs, setDinosaurs] = useState([]);
 
@@ -73,6 +89,7 @@ export default function ResearchDatabase() {
 
     return (
         <div className="databasePage">
+            <Navbar isLoggedIn={!!token} />
             <section className="databaseHero">
                 <motion.h1
                     initial={{

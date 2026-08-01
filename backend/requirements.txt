@@ -8,3 +8,5 @@ resend
 pymongo
 passlib[argon2]
 python-jose[cryptography]
+google-genai
+scikit-learn

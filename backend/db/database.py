@@ -13,5 +13,7 @@ quiz_collection = db['quiz']
 quiz_attempt_collection = db['quiz_attempt']
 researcher_detail = db['researcher_detail']
 comment_collection = db['comment']
+community_post_collection = db['community_posts']
+community_comment_collection = db['community_comments']
 
 print("MongoDB connected successfully")

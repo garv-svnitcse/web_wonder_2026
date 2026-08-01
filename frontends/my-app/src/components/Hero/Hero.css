@@ -262,6 +262,8 @@
 
     gap: 60px;
 
+    padding-top: 130px;
+
 }
 
 /* =======================================================
@@ -817,6 +819,12 @@
     .hero {
 
         padding-top: 120px;
+
+    }
+
+    .heroContainer {
+
+        padding-top: 0;
 
     }
 
