@@ -11,6 +11,7 @@ import ResearchDossier from "./pages/RESEARCH_PAGE/ResearchDossier";
 // import Login from "./pages/LOGIN_PAGE/Login";
 import CommunityPage from "./pages/CommunityPage";
 import DNALabPage from "./pages/DNALabPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/dna" element={<DNALabPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

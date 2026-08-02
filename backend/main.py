@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from routes import contact, auth, timeline, research, quiz, dinosaur, community_redit
+from routes import contact, auth, timeline, research, quiz, dinosaur, community_redit, admin
 
 app = FastAPI()
 
@@ -36,3 +36,4 @@ app.include_router(research.router, prefix='/research', tags=['Research'])
 app.include_router(quiz.router, prefix='/quiz', tags=['Quiz'])
 app.include_router(dinosaur.router, prefix='/dinosaurs', tags=['Dinosaur'])
 app.include_router(community_redit.router, prefix='/community', tags=['Community'])
+app.include_router(admin.router, prefix='/admin', tags=['Admin'])
