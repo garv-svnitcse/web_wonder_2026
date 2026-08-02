@@ -5,8 +5,7 @@ import {
   Menu, MessageSquare, Plus, Search, Trash2, Users, X, ChevronRight,
 } from "lucide-react";
 import "./AdminDashboard.css";
-
-const API = "http://127.0.0.1:5001";
+import { apiUrl } from "../config/api";
 const emptyDinosaur = {
   name: "", scientific_name: "", slug: "", period: "Cretaceous", diet: "Herbivore",
   threat: "Low", description: "", image: "", video: "", habitat: "", million_years_ago: "",
@@ -40,7 +39,7 @@ export default function AdminDashboard() {
   const fetchOverview = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/admin/overview`, { headers: tokenHeaders() });
+      const res = await fetch(apiUrl("/admin/overview"), { headers: tokenHeaders() });
       if (!res.ok) throw new Error(res.status === 401 || res.status === 403 ? "Sign in with an administrator account to manage the archive." : "The dashboard could not reach the backend.");
       setData(await res.json());
       setMessage("");
@@ -63,7 +62,7 @@ export default function AdminDashboard() {
     const numericKeys = ["million_years_ago", "length_m", "weight_tons", "speed_kmph"];
     const payload = Object.fromEntries(Object.entries(form).map(([key, value]) => [key, numericKeys.includes(key) ? (value === "" ? null : Number(value)) : value]));
     try {
-      const response = await fetch(`${API}/admin/dinosaurs`, { method: "POST", headers: tokenHeaders(true), body: JSON.stringify(payload) });
+      const response = await fetch(apiUrl("/admin/dinosaurs"), { method: "POST", headers: tokenHeaders(true), body: JSON.stringify(payload) });
       const responseData = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(responseData.detail || "Could not save dinosaur.");
       setFormOpen(false); setForm(emptyDinosaur); setMessage(`${responseData.name} was added to the public dinosaur database.`); fetchOverview();
@@ -72,7 +71,7 @@ export default function AdminDashboard() {
   const removeDinosaur = async (dinosaur) => {
     if (!window.confirm(`Remove ${dinosaur.name} from the database?`)) return;
     try {
-      const response = await fetch(`${API}/admin/dinosaurs/${dinosaur.id}`, { method: "DELETE", headers: tokenHeaders() });
+      const response = await fetch(apiUrl(`/admin/dinosaurs/${dinosaur.id}`), { method: "DELETE", headers: tokenHeaders() });
       if (!response.ok) throw new Error("Could not remove this dinosaur.");
       setMessage(`${dinosaur.name} was removed.`); fetchOverview();
     } catch (err) { setMessage(err.message); }

@@ -41,7 +41,7 @@ export default function ResearchDossier() {
     async function loadDossier() {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5001/research/${encodeURIComponent(slug)}`);
+        const response = await fetch(`/api/research/${encodeURIComponent(slug)}`);
         if (response.ok) {
           const data = await response.json();
           if (active) {
@@ -79,7 +79,7 @@ export default function ResearchDossier() {
     if (!item?.title || !author.trim() || !commentText.trim()) return;
     setSubmitting(true);
     try {
-      const response = await fetch(`http://localhost:5001/research/${encodeURIComponent(item.title)}`, {
+      const response = await fetch(`/api/research/${encodeURIComponent(item.title)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function ResearchDossier() {
       });
       if (response.ok) {
         setCommentText("");
-        const res = await fetch(`http://localhost:5001/research/${encodeURIComponent(slug)}`);
+        const res = await fetch(`/api/research/${encodeURIComponent(slug)}`);
         if (res.ok) {
           const data = await res.json();
           if (data.comments) {
@@ -348,4 +348,3 @@ export default function ResearchDossier() {
     </div>
   );
 }
-

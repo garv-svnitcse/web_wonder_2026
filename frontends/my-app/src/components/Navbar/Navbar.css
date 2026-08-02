@@ -405,9 +405,7 @@
 
     inset:0;
 
-    background:rgba(0,0,0,.65);
-
-    backdrop-filter:blur(8px);
+    background:#07100b;
 
     z-index:99998;
 
@@ -449,13 +447,15 @@
 
     -25px 0 60px rgba(0,0,0,.5);
 
+    will-change:transform;
+
 }
 
 .mobileTop{
 
-    display:flex;
+    display:grid;
 
-    justify-content:space-between;
+    grid-template-columns:minmax(0,1fr) 50px;
 
     align-items:center;
 
@@ -472,6 +472,8 @@
     align-items:center;
 
     gap:16px;
+
+    min-width:0;
 
 }
 
@@ -491,7 +493,23 @@
 
     color:white;
 
+    padding:0;
+
+    display:grid;
+
+    place-items:center;
+
+    justify-self:end;
+
+    line-height:1;
+
     transition:.35s;
+
+}
+
+.closeButton svg{
+
+    display:block;
 
 }
 
@@ -757,6 +775,53 @@
 }
 
 @media(max-width:768px){
+
+    /* The menu panel is inside the glass navbar in the React tree, so it
+       needs to escape the rounded container when it opens. */
+    .navbarGlass{
+        overflow:visible;
+    }
+
+    .mobileSidebar{
+        overflow:hidden;
+    }
+
+    .mobileTop{
+        padding:18px 20px;
+        flex:none;
+        grid-template-columns:minmax(0,1fr) 48px;
+    }
+
+    .mobileNavigation{
+        flex:1;
+        min-height:0;
+        overflow-y:auto;
+        gap:4px;
+        padding:14px 18px;
+    }
+
+    .closeButton{
+        width:48px;
+        height:48px;
+    }
+
+    .mobileNavigation a{
+        padding:13px 15px;
+        border-radius:12px;
+        font-size:15px;
+    }
+
+    .mobileBottom{
+        margin-top:0;
+        padding:16px 20px 20px;
+        flex:none;
+        border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .mobileCTA{
+        height:50px;
+        font-size:11px;
+    }
 
     .navbar{
 

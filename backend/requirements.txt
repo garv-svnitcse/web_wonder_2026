@@ -6,6 +6,8 @@ email-validator
 python-dotenv
 resend
 pymongo
+cloudinary
+python-multipart
 passlib[argon2]
 python-jose[cryptography]
 google-genai

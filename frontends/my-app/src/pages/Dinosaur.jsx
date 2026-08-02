@@ -185,7 +185,7 @@ export default function Dinosaur() {
     const fetchSpecimen = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://127.0.0.1:5001/dinosaurs/${slug}`);
+        const response = await fetch(`/api/dinosaurs/${slug}`);
         if (!response.ok) {
           throw new Error('Dinosaur not found');
         }
@@ -208,7 +208,7 @@ export default function Dinosaur() {
     const fetchRelated = async () => {
       if (!specimen) return;
       try {
-        const response = await fetch(`http://127.0.0.1:5001/dinosaurs`);
+        const response = await fetch(`/api/dinosaurs`);
         const allDinos = await response.json();
         if (Array.isArray(allDinos)) {
           const filtered = allDinos.filter(d => d.slug !== slug);

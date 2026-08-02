@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 import GlassAuthModal from "../GlassAuthModal";
 
 import {
@@ -125,6 +126,15 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
         return () => window.removeEventListener("scroll", handleScroll);
 
     }, []);
+
+    useEffect(() => {
+        if (!open) return undefined;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [open]);
 
     return (
 
@@ -267,6 +277,10 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
 
                             onClick={() => setOpen(true)}
 
+                            aria-label="Open navigation menu"
+
+                            aria-expanded={open}
+
                         >
 
                             <FaBars />
@@ -274,7 +288,7 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
                         </button>
 
                     </div>
-                    <AnimatePresence>
+                    {createPortal(<AnimatePresence>
 
                         {
 
@@ -361,6 +375,8 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
                                                 className="closeButton"
 
                                                 onClick={() => setOpen(false)}
+
+                                                aria-label="Close navigation menu"
 
                                             >
 
@@ -458,7 +474,7 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
 
                         }
 
-                    </AnimatePresence>
+                    </AnimatePresence>, document.body)}
 
                 </div>
 
