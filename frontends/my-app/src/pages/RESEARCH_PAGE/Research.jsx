@@ -10,12 +10,27 @@ import ResearchTimeline from "./ResearchTimeline";
 import TrendingTags from "./TrendingTags";
 import ContributorLeaderboard from "./ContributorLeaderboard";
 import Footer from "../../components/Footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
+import GlassAuthModal from "../../components/GlassAuthModal";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { database } from "./researchData";
 
 import "./Research.css";
 
 export default function Research() {
+  const navigate = useNavigate();
+  const getStoredToken = () => {
+    const val = localStorage.getItem('access_token');
+    if (!val) return '';
+    const clean = val.trim();
+    const parts = clean.split('.');
+    if (parts.length !== 3) {
+      return '';
+    }
+    return clean;
+  };
+  const [token, setToken] = useState(getStoredToken());
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [era, setEra] = useState("");
@@ -25,6 +40,7 @@ export default function Research() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!token) return;
     let active = true;
     async function loadPreview() {
       try {
@@ -69,6 +85,7 @@ export default function Research() {
 
   return (
     <>
+      <Navbar isLoggedIn={!!token} />
       <section
         className="research"
         style={{ position: "relative", overflow: "hidden" }}
@@ -125,6 +142,13 @@ export default function Research() {
         </div>
       </section>
       <Footer />
+      {!token && (
+        <GlassAuthModal
+          isOpen={true}
+          onClose={() => navigate('/')}
+          onAuthSuccess={(newToken) => setToken(newToken)}
+        />
+      )}
     </>
   );
 }

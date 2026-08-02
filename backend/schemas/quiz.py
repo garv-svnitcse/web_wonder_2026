@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Literal
+from typing import List, Literal, Optional
 
 class StartQuiz(BaseModel):
     difficulty: Literal['easy', 'medium', 'hard']
@@ -24,3 +24,12 @@ class UserAnswer(BaseModel):
 class QuizSubmission(BaseModel):
     quiz_id: str
     answer: List[UserAnswer]
+
+class ChatHistoryItem(BaseModel):
+    role: Literal['user', 'assistant']
+    content: str
+
+class ChatMessage(BaseModel):
+    quiz_id: str
+    message: str
+    history: Optional[List[ChatHistoryItem]] = []

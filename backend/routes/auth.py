@@ -34,7 +34,6 @@ def login(user: auth.Login):
         "user_id": str(existing_user["_id"]),
         "role": existing_user.get("role", "user")
     })
-    print(token)
     return {
         'access_token': token,
         'role': existing_user.get('role', 'user'),

@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import GlassAuthModal from "../GlassAuthModal";
 
 import {
     FaBars,
     FaTimes,
-    FaSearch,
-    FaVolumeUp,
-    FaVolumeMute,
     FaHome,
     FaFlask,
     FaUsers,
@@ -65,15 +63,42 @@ const navItems = [
 
 ];
 
-export default function Navbar() {
+export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
+    const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
-
-    const [sound, setSound] = useState(true);
 
     const [scrolled, setScrolled] = useState(false);
 
     const [visible, setVisible] = useState(true);
+
+    const getStoredToken = () => {
+        const val = localStorage.getItem('access_token');
+        if (!val) return '';
+        const clean = val.trim();
+        const parts = clean.split('.');
+        if (parts.length !== 3) {
+            return '';
+        }
+        return clean;
+    };
+
+    const [isLoggedIn, setIsLoggedIn] = useState(!!getStoredToken());
+
+    useEffect(() => {
+        setIsLoggedIn(propIsLoggedIn !== undefined ? propIsLoggedIn : !!getStoredToken());
+    }, [propIsLoggedIn]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('access_token');
+        setIsLoggedIn(false);
+        navigate('/');
+        window.location.reload();
+    };
+
+    const handleBeginExpedition = () => {
+        navigate('/quiz');
+    };
 
     useEffect(() => {
 
@@ -216,49 +241,25 @@ export default function Navbar() {
 
                     <div className="navbarButtons">
 
-                        <button
-
-                            className="circleButton"
-
-                        >
-
-                            <FaSearch />
-
-                        </button>
-
-                        <button
-
-                            className="circleButton"
-
-                            onClick={() => setSound(!sound)}
-
-                        >
-
-                            {
-
-                                sound
-
-                                    ?
-
-                                    <FaVolumeUp />
-
-                                    :
-
-                                    <FaVolumeMute />
-
-                            }
-
-                        </button>
-
-                        <button
-
-                            className="expeditionButton"
-
-                        >
-
-                            BEGIN EXPEDITION
-
-                        </button>
+                        {isLoggedIn ? (
+                            <button
+                                className="expeditionButton"
+                                onClick={handleLogout}
+                                style={{
+                                    background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
+                                    color: '#ffffff'
+                                }}
+                            >
+                                LOGOUT
+                            </button>
+                        ) : (
+                            <button
+                                className="expeditionButton"
+                                onClick={handleBeginExpedition}
+                            >
+                                BEGIN EXPEDITION
+                            </button>
+                        )}
 
                         <button
 
@@ -421,17 +422,31 @@ export default function Navbar() {
 
                                         <div className="mobileBottom">
 
-                                            <button
-
-                                                className="mobileCTA"
-
-                                                onClick={() => setOpen(false)}
-
-                                            >
-
-                                                BEGIN EXPEDITION
-
-                                            </button>
+                                            {isLoggedIn ? (
+                                                <button
+                                                    className="mobileCTA"
+                                                    onClick={() => {
+                                                        setOpen(false);
+                                                        handleLogout();
+                                                    }}
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
+                                                        color: '#ffffff'
+                                                    }}
+                                                >
+                                                    LOGOUT
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="mobileCTA"
+                                                    onClick={() => {
+                                                        setOpen(false);
+                                                        handleBeginExpedition();
+                                                    }}
+                                                >
+                                                    BEGIN EXPEDITION
+                                                </button>
+                                            )}
 
                                         </div>
 
@@ -448,6 +463,8 @@ export default function Navbar() {
                 </div>
 
             </motion.header>
+
+
 
             <AnimatePresence>
                 {!visible && (

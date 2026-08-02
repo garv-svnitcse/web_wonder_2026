@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar/Navbar';
+import GlassAuthModal from '../components/GlassAuthModal';
 
 /**
  * =========================================================================
@@ -89,8 +92,18 @@ import React, { useState, useEffect } from 'react';
  */
 
 export default function QuizPage() {
-    // Teammate note: Set/get auth token from localStorage after authentication is implemented
-    const [token, setToken] = useState(localStorage.getItem('access_token') || '');
+    const navigate = useNavigate();
+    const getStoredToken = () => {
+        const val = localStorage.getItem('access_token');
+        if (!val) return '';
+        const clean = val.trim();
+        const parts = clean.split('.');
+        if (parts.length !== 3) {
+            return '';
+        }
+        return clean;
+    };
+    const [token, setToken] = useState(getStoredToken());
 
     // UI state management
     const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'active-quiz' | 'leaderboard'
@@ -107,6 +120,81 @@ export default function QuizPage() {
     const [difficulty, setDifficulty] = useState("easy");
     const questions = currentQuiz?.questions || [];
 
+    // AI Doubt Chatbot states
+    const [chatMessages, setChatMessages] = useState([
+        {
+            role: 'assistant',
+            content: "Greetings, Explorer! 🦖 I am your JurrasiVerse AI Paleontologist. Congratulations on completing your expedition quiz! If you have any doubts, questions, or curiosity about any quiz questions or dinosaur concepts, feel free to ask me here."
+        }
+    ]);
+    const [chatInput, setChatInput] = useState('');
+    const [chatLoading, setChatLoading] = useState(false);
+    const [chatError, setChatError] = useState(null);
+
+    const chatEndRef = React.useRef(null);
+
+    useEffect(() => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatMessages, chatLoading]);
+
+    const renderMessageParts = (text) => {
+        let parts = [];
+        const boldRegexText = /\*\*(.*?)\*\*/g;
+        let match;
+        let lastIndex = 0;
+        
+        while ((match = boldRegexText.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                parts.push(text.substring(lastIndex, match.index));
+            }
+            parts.push(<strong key={match.index} style={{ color: "#D6A14B" }}>{match[1]}</strong>);
+            lastIndex = boldRegexText.lastIndex;
+        }
+        if (lastIndex < text.length) {
+            parts.push(text.substring(lastIndex));
+        }
+        return parts.length > 0 ? parts : text;
+    };
+
+    const renderMessageContent = (content) => {
+        if (!content) return null;
+        return content.split('\n').map((line, idx) => {
+            let parts = [];
+            const boldRegexText = /\*\*(.*?)\*\*/g;
+            let match;
+            let lastIndex = 0;
+            
+            while ((match = boldRegexText.exec(line)) !== null) {
+                if (match.index > lastIndex) {
+                    parts.push(line.substring(lastIndex, match.index));
+                }
+                parts.push(<strong key={match.index} style={{ color: "#D6A14B" }}>{match[1]}</strong>);
+                lastIndex = boldRegexText.lastIndex;
+            }
+            if (lastIndex < line.length) {
+                parts.push(line.substring(lastIndex));
+            }
+
+            if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+                const cleanText = line.trim().substring(2);
+                return (
+                    <div key={idx} style={{ paddingLeft: "15px", display: "flex", gap: "10px", marginTop: "4px" }}>
+                        <span style={{ color: "#D6A14B" }}>•</span>
+                        <div>{renderMessageParts(cleanText)}</div>
+                    </div>
+                );
+            }
+
+            return (
+                <p key={idx} style={{ margin: "6px 0", lineHeight: "1.6" }}>
+                    {parts.length > 0 ? parts : line}
+                </p>
+            );
+        });
+    };
+
     // Fetch Dashboard Stats
     const fetchDashboard = async () => {
         if (!token) return;
@@ -118,6 +206,11 @@ export default function QuizPage() {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                setToken('');
+                throw new Error("Session expired. Please log in again.");
+            }
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const data = await res.json();
             setDashboardData(data);
@@ -139,6 +232,11 @@ export default function QuizPage() {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                setToken('');
+                throw new Error("Session expired. Please log in again.");
+            }
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const data = await res.json();
             setLeaderboardData(data);
@@ -156,6 +254,15 @@ export default function QuizPage() {
         setError(null);
         setSubmitResult(null);
         setSelectedAnswers({});
+        setChatMessages([
+            {
+                role: 'assistant',
+                content: "Greetings, Explorer! 🦖 I am your JurrasiVerse AI Paleontologist. Congratulations on completing your expedition quiz! If you have any doubts, questions, or curiosity about any quiz questions or dinosaur concepts, feel free to ask me here."
+            }
+        ]);
+        setChatInput('');
+        setChatLoading(false);
+        setChatError(null);
         try {
             const res = await fetch('http://127.0.0.1:5001/quiz/start', {
                 method: 'POST',
@@ -163,6 +270,11 @@ export default function QuizPage() {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                setToken('');
+                throw new Error("Session expired. Please log in again.");
+            }
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const data = await res.json();
             setCurrentQuiz(data);
@@ -200,15 +312,77 @@ export default function QuizPage() {
                 },
                 body: JSON.stringify(body)
             });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                setToken('');
+                throw new Error("Session expired. Please log in again.");
+            }
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const data = await res.json();
             console.log("Submit Response:", data);
-            setSubmitResult(data);
+            setSubmitResult({
+                ...data,
+                quiz_id: currentQuiz.quiz_id
+            });
             setCurrentQuiz(null); // Clear quiz active state after submit
         } catch (err) {
             setError('Failed to submit quiz: ' + err.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    // Send a message to the AI Chat endpoint
+    const handleSendChatMessage = async (e) => {
+        if (e) e.preventDefault();
+        const trimmedMessage = chatInput.trim();
+        if (!trimmedMessage || chatLoading || !submitResult) return;
+
+        const userMsg = { role: 'user', content: trimmedMessage };
+        
+        setChatMessages(prev => [...prev, userMsg]);
+        setChatInput('');
+        setChatLoading(true);
+        setChatError(null);
+
+        const historyToSend = chatMessages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
+
+        const body = {
+            quiz_id: submitResult.quiz_id || 'mock_quiz_id',
+            message: trimmedMessage,
+            history: historyToSend
+        };
+
+        try {
+            const res = await fetch('http://127.0.0.1:5001/quiz/ai_chat', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                setToken('');
+                throw new Error("Session expired. Please log in again.");
+            }
+            if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+            const data = await res.json();
+            
+            if (data && data.reply) {
+                setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+            } else {
+                throw new Error("No response text received from AI.");
+            }
+        } catch (err) {
+            console.error("AI chat error:", err);
+            setChatError(err.message || "Failed to communicate with the AI agent.");
+        } finally {
+            setChatLoading(false);
         }
     };
 
@@ -248,6 +422,7 @@ export default function QuizPage() {
                 paddingBottom: "100px",
             }}
         >
+            <Navbar isLoggedIn={!!token} />
             {/* Background Glow */}
             <div
                 style={{
@@ -430,170 +605,7 @@ export default function QuizPage() {
                         </div>
                     </div>
                 </section>
-                {/* ==========================================================
-                AUTHENTICATION
-========================================================== */}
-
-                <div
-                    style={{
-                        width: "min(1000px,100%)",
-                        margin: "0 auto 70px",
-                        background: "rgba(13,23,17,.92)",
-                        border: "1px solid rgba(214,161,75,.08)",
-                        borderRadius: "32px",
-                        overflow: "hidden",
-                        backdropFilter: "blur(24px)",
-                        boxShadow: "0 25px 70px rgba(0,0,0,.45)",
-                    }}
-                >
-                    {/* Header */}
-
-                    <div
-                        style={{
-                            padding: "22px 35px",
-                            borderBottom: "1px solid rgba(214,161,75,.08)",
-                            background:
-                                "linear-gradient(90deg,rgba(214,161,75,.10),transparent)",
-                        }}
-                    >
-                        <span
-                            style={{
-                                color: "#D6A14B",
-                                letterSpacing: "4px",
-                                fontSize: 12,
-                                fontWeight: 700,
-                            }}
-                        >
-                            EXPLORER AUTHENTICATION
-                        </span>
-                    </div>
-
-                    <div
-                        style={{
-                            padding: "45px",
-                        }}
-                    >
-                        <h2
-                            style={{
-                                margin: 0,
-                                fontFamily: "Cinzel",
-                                fontSize: 42,
-                            }}
-                        >
-                            Access The Archive
-                        </h2>
-
-                        <p
-                            style={{
-                                marginTop: 18,
-                                color: "#BBBBBB",
-                                lineHeight: 2,
-                                maxWidth: 700,
-                            }}
-                        >
-                            Enter your explorer token to access adaptive quizzes,
-                            expedition history, statistics and the worldwide
-                            Jurassic Journey leaderboard.
-                        </p>
-
-                        <form
-                            onSubmit={handleSaveToken}
-                            style={{
-                                display: "flex",
-                                gap: 20,
-                                marginTop: 35,
-                                flexWrap: "wrap",
-                            }}
-                        >
-                            <input
-                                type="text"
-                                name="tokenInput"
-                                defaultValue={token}
-                                placeholder="Bearer Token..."
-                                style={{
-                                    flex: 1,
-                                    minWidth: 320,
-                                    height: 68,
-                                    padding: "0 25px",
-                                    borderRadius: 18,
-                                    border: "1px solid rgba(255,255,255,.08)",
-                                    background: "rgba(255,255,255,.03)",
-                                    color: "#ECE4D8",
-                                    fontSize: 15,
-                                    outline: "none",
-                                }}
-                            />
-
-                            <button
-                                type="submit"
-                                style={{
-                                    height: 68,
-                                    padding: "0 42px",
-                                    borderRadius: 50,
-                                    border: "none",
-                                    cursor: "pointer",
-                                    background:
-                                        "linear-gradient(135deg,#D6A14B,#AF7B28)",
-                                    color: "#111",
-                                    fontWeight: 700,
-                                    letterSpacing: 2,
-                                    fontSize: 14,
-                                }}
-                            >
-                                CONNECT
-                            </button>
-                        </form>
-
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                flexWrap: "wrap",
-                                marginTop: 28,
-                                gap: 20,
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 12,
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: 14,
-                                        height: 14,
-                                        borderRadius: "50%",
-                                        background: token ? "#42d67b" : "#ef4444",
-                                    }}
-                                />
-
-                                <span
-                                    style={{
-                                        color: token ? "#8df0ae" : "#ff8b8b",
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    {token
-                                        ? "Authentication Successful"
-                                        : "Authentication Required"}
-                                </span>
-                            </div>
-
-                            <span
-                                style={{
-                                    color: "#777",
-                                    letterSpacing: 2,
-                                    fontSize: 12,
-                                }}
-                            >
-                                PREHISTORIC DATABASE SECURED
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                {/* Authentication is handled globally via glassmorphic modal popup */}
                 {/* ==========================================================
                         NAVIGATION
 ========================================================== */}
@@ -2288,6 +2300,266 @@ export default function QuizPage() {
                             )}
 
                         {/* ======================
+        AI DOUBT SOLVER CHATBOX
+====================== */}
+
+                        <div
+                            style={{
+                                background: "rgba(13,23,17,.95)",
+                                borderRadius: "32px",
+                                border: "1px solid rgba(214,161,75,.15)",
+                                padding: "40px",
+                                marginTop: "15px",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "25px",
+                                boxShadow: "0 20px 50px rgba(0,0,0,0.3)"
+                            }}
+                        >
+                            <div
+                                style={{
+                                    borderBottom: "1px solid rgba(214,161,75,.12)",
+                                    paddingBottom: "20px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    flexWrap: "wrap",
+                                    gap: "15px"
+                                }}
+                            >
+                                <div>
+                                    <span
+                                        style={{
+                                            color: "#D6A14B",
+                                            fontSize: "11px",
+                                            letterSpacing: "3px",
+                                            fontWeight: 600,
+                                            textTransform: "uppercase"
+                                        }}
+                                    >
+                                        Expedition Support
+                                    </span>
+                                    <h2
+                                        style={{
+                                            margin: "5px 0 0 0",
+                                            fontFamily: "Cinzel",
+                                            fontSize: "36px",
+                                            color: "#ECE4D8"
+                                        }}
+                                    >
+                                        Jurassic AI Doubt Solver
+                                    </h2>
+                                </div>
+                                <div
+                                    style={{
+                                        background: "rgba(214,161,75,.1)",
+                                        border: "1px solid rgba(214,161,75,.2)",
+                                        borderRadius: "999px",
+                                        padding: "8px 16px",
+                                        fontSize: "12px",
+                                        color: "#D6A14B",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            display: "inline-block",
+                                            width: "8px",
+                                            height: "8px",
+                                            background: "#2ECC71",
+                                            borderRadius: "50%",
+                                            boxShadow: "0 0 8px #2ECC71"
+                                        }}
+                                    />
+                                    PALEONTOLOGIST ONLINE
+                                </div>
+                            </div>
+
+                            <p
+                                style={{
+                                    margin: 0,
+                                    color: "#BBBBBB",
+                                    fontSize: "14px",
+                                    lineHeight: 1.6
+                                }}
+                            >
+                                Have any questions about the correct answers, explanations, or dinosaur history from this quiz? Ask our AI expert below to review your answers together.
+                            </p>
+
+                            {/* Chat Window */}
+                            <div
+                                style={{
+                                    background: "rgba(10,18,14,0.6)",
+                                    border: "1px solid rgba(255,255,255,.03)",
+                                    borderRadius: "24px",
+                                    padding: "25px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "18px",
+                                    maxHeight: "400px",
+                                    overflowY: "auto",
+                                    boxShadow: "inset 0 4px 20px rgba(0,0,0,0.2)"
+                                }}
+                            >
+                                {chatMessages.map((msg, idx) => (
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                                            maxWidth: "85%",
+                                            gap: "6px"
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                fontSize: "11px",
+                                                color: msg.role === 'user' ? '#D6A14B' : '#888',
+                                                letterSpacing: "1px",
+                                                fontWeight: 600,
+                                                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                                                padding: "0 6px"
+                                            }}
+                                        >
+                                            {msg.role === 'user' ? 'YOU' : 'AI PALEONTOLOGIST'}
+                                        </div>
+                                        <div
+                                            style={{
+                                                background: msg.role === 'user' ? 'rgba(214,161,75,.08)' : 'rgba(255,255,255,.02)',
+                                                border: msg.role === 'user' ? '1px solid rgba(214,161,75,.25)' : '1px solid rgba(255,255,255,.06)',
+                                                borderRadius: msg.role === 'user' ? "20px 20px 4px 20px" : "20px 20px 20px 4px",
+                                                padding: "16px 20px",
+                                                color: "#ECE4D8",
+                                                fontSize: "15px",
+                                                boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                                            }}
+                                        >
+                                            {renderMessageContent(msg.content)}
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {chatLoading && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignSelf: 'flex-start',
+                                            maxWidth: "85%",
+                                            gap: "6px"
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                fontSize: "11px",
+                                                color: '#888',
+                                                letterSpacing: "1px",
+                                                fontWeight: 600,
+                                                padding: "0 6px"
+                                            }}
+                                        >
+                                            AI PALEONTOLOGIST
+                                        </div>
+                                        <div
+                                            style={{
+                                                background: 'rgba(255,255,255,.02)',
+                                                border: '1px solid rgba(255,255,255,.06)',
+                                                borderRadius: "20px 20px 20px 4px",
+                                                padding: "16px 20px",
+                                                color: "#888",
+                                                fontSize: "14px",
+                                                fontStyle: "italic",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "10px"
+                                            }}
+                                        >
+                                            <div style={{ display: "flex", gap: "5px" }}>
+                                                <span style={{ width: "6px", height: "6px", background: "#D6A14B", borderRadius: "50%", animation: "pulse 1s infinite alternate" }} />
+                                                <span style={{ width: "6px", height: "6px", background: "#D6A14B", borderRadius: "50%", animation: "pulse 1s infinite alternate 0.2s" }} />
+                                                <span style={{ width: "6px", height: "6px", background: "#D6A14B", borderRadius: "50%", animation: "pulse 1s infinite alternate 0.4s" }} />
+                                            </div>
+                                            Examining fossil records...
+                                        </div>
+                                    </div>
+                                )}
+
+                                {chatError && (
+                                    <div
+                                        style={{
+                                            background: "rgba(231,76,60,.1)",
+                                            border: "1px solid rgba(231,76,60,.3)",
+                                            borderRadius: "16px",
+                                            padding: "16px 20px",
+                                            color: "#FF7675",
+                                            fontSize: "14px",
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        ⚠️ {chatError}
+                                    </div>
+                                )}
+
+                                <div ref={chatEndRef} />
+                            </div>
+
+                            {/* Chat Input */}
+                            <form
+                                onSubmit={handleSendChatMessage}
+                                style={{
+                                    display: "flex",
+                                    gap: "15px",
+                                    marginTop: "5px"
+                                }}
+                            >
+                                <input
+                                    type="text"
+                                    value={chatInput}
+                                    onChange={(e) => setChatInput(e.target.value)}
+                                    placeholder="Ask the Paleontologist about a quiz question or dinosaur fact..."
+                                    disabled={chatLoading}
+                                    style={{
+                                        flex: 1,
+                                        background: "rgba(0,0,0,0.3)",
+                                        border: "1px solid rgba(214,161,75,.15)",
+                                        borderRadius: "999px",
+                                        padding: "18px 28px",
+                                        color: "#ECE4D8",
+                                        fontSize: "15px",
+                                        outline: "none",
+                                        transition: "all 0.3s ease",
+                                        boxShadow: "inset 0 2px 10px rgba(0,0,0,0.3)"
+                                    }}
+                                    onFocus={(e) => e.target.style.borderColor = "rgba(214,161,75,0.6)"}
+                                    onBlur={(e) => e.target.style.borderColor = "rgba(214,161,75,0.15)"}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={chatLoading || !chatInput.trim()}
+                                    style={{
+                                        background: chatInput.trim() && !chatLoading
+                                            ? "linear-gradient(135deg,#D6A14B,#AF7B28)"
+                                            : "rgba(255,255,255,.04)",
+                                        border: "none",
+                                        color: chatInput.trim() && !chatLoading ? "#111" : "#666",
+                                        padding: "18px 38px",
+                                        borderRadius: "999px",
+                                        fontWeight: 700,
+                                        letterSpacing: "1.5px",
+                                        cursor: chatInput.trim() && !chatLoading ? "pointer" : "not-allowed",
+                                        transition: "all 0.3s ease"
+                                    }}
+                                >
+                                    SEND
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* ======================
         ACTION BUTTONS
 ====================== */}
 
@@ -2658,6 +2930,13 @@ export default function QuizPage() {
                 )}
 
             </div>
+            {!token && (
+                <GlassAuthModal
+                    isOpen={true}
+                    onClose={() => navigate('/')}
+                    onAuthSuccess={(newToken) => setToken(newToken)}
+                />
+            )}
         </div>
     );
 }
