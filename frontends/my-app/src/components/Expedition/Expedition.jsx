@@ -22,12 +22,12 @@ const cards = [
         link: "/timeline",
     },
     {
-        title: "DNA LAB",
-        subtitle: "Genetic Research",
+        title: "TESTIMONIALS",
+        subtitle: "Explorer Feedback",
         video: "/videos/dna.mp4",
         description:
-            "Explore prehistoric genetics through an interactive DNA laboratory.",
-        link: "/dna",
+            "Read reviews and reflections from our distinguished paleontology experts, engineers, and design directors.",
+        link: "/testimonials",
     },
     {
         title: "RESEARCH",

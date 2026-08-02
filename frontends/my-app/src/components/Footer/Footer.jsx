@@ -196,9 +196,9 @@ export default function Footer() {
 
                             <li>
 
-                                <Link to="/dna">
+                                <Link to="/testimonials">
 
-                                    DNA Lab
+                                    Testimonials
 
                                 </Link>
 
@@ -292,7 +292,7 @@ export default function Footer() {
                         <p>
 
                             Receive the latest discoveries, new species,
-                            timeline updates and DNA laboratory reports.
+                            timeline updates, and explorer testimonials.
 
                         </p>
 

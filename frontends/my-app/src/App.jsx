@@ -10,7 +10,7 @@ import Research from "./pages/RESEARCH_PAGE/Research";
 import ResearchDossier from "./pages/RESEARCH_PAGE/ResearchDossier";
 // import Login from "./pages/LOGIN_PAGE/Login";
 import CommunityPage from "./pages/CommunityPage";
-import DNALabPage from "./pages/DNALabPage";
+import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
         <Route path="/viewer/:slug" element={<Viewer />} />
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/community" element={<CommunityPage />} />
-        <Route path="/dna" element={<DNALabPage />} />
+        <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>

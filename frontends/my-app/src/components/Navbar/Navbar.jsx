@@ -10,7 +10,8 @@ import {
     FaHome,
     FaFlask,
     FaUsers,
-    FaQuestionCircle
+    FaQuestionCircle,
+    FaCommentAlt
 } from "react-icons/fa";
 
 import { GiDinosaurBones, GiDna2 } from "react-icons/gi";
@@ -39,9 +40,9 @@ const navItems = [
     },
 
     {
-        title: "DNA Lab",
-        icon: <GiDna2 />,
-        path: "/dna"
+        title: "Testimonials",
+        icon: <FaCommentAlt />,
+        path: "/testimonials"
     },
 
     {
