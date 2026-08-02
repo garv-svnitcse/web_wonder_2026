@@ -146,7 +146,7 @@ export default function TimelinePage() {
         // Map era id to the format expected by the ResearchDatabase era selector
         // Triassic -> Triassic, Jurassic -> Jurassic, Cretaceous -> Cretaceous
         const capitalized = eraId.charAt(0).toUpperCase() + eraId.slice(1);
-        navigate(`/research?era=${capitalized}`);
+        navigate(`/research-database?era=${capitalized}`);
     };
 
     return (
