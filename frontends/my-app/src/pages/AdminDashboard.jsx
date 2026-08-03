@@ -450,3 +450,162 @@ function CommunitySection({ rows, comments, onRemove, onRemoveComment }) {
 function UsersPanel({ count }) {
   return <section className="users-panel"><span><Users size={30}/></span><div><p>REGISTERED EXPLORERS</p><strong>{count}</strong><h2>Member management is tied to your authentication backend.</h2><p>User accounts are displayed here as they are created through the current sign-up flow.</p></div></section>
 }
+
+function DinosaurForm({ form, change, save, saving, close, isEditing }) {
+  return (
+    <div className="modal-backdrop">
+      <form className="dino-form" onSubmit={save} style={{ width: "min(840px, 95%)" }}>
+        <div className="modal-heading">
+          <div>
+            <p className="eyebrow">{isEditing ? "EDIT RECORD IN ARCHIVE" : "PUBLIC DATABASE ENTRY"}</p>
+            <h2>{isEditing ? "Edit Dinosaur Details" : "Add Dinosaur Record"}</h2>
+          </div>
+          <button type="button" onClick={close}><X size={20}/></button>
+        </div>
+
+        <div className="form-sections-container">
+          
+          <h3 className="field-section-title">1. Basic Identification</h3>
+          <div className="field-grid">
+            <label>Display Name *
+              <input required type="text" name="name" value={form.name} onChange={change} placeholder="e.g. Tyrannosaurus Rex" />
+            </label>
+            <label>Scientific Name
+              <input type="text" name="scientific_name" value={form.scientific_name} onChange={change} placeholder="e.g. Tyrannosaurus rex" />
+            </label>
+            <label>Slug (auto-generated if empty)
+              <input type="text" name="slug" value={form.slug} onChange={change} placeholder="e.g. tyrannosaurus-rex" />
+            </label>
+            <label>Geological Era / Period *
+              <input required type="text" name="period" value={form.period} onChange={change} placeholder="e.g. Late Cretaceous" />
+            </label>
+            <label>Dietary Category *
+              <select name="diet" value={form.diet} onChange={change}>
+                <option value="Herbivore">Herbivore</option>
+                <option value="Carnivore">Carnivore</option>
+                <option value="Omnivore">Omnivore</option>
+              </select>
+            </label>
+            <label>Threat Level
+              <select name="threat" value={form.threat} onChange={change}>
+                <option value="Low">Low</option>
+                <option value="Moderate">Moderate</option>
+                <option value="High">High</option>
+              </select>
+            </label>
+            <label>Habitat / Discovery Continent
+              <input type="text" name="habitat" value={form.habitat} onChange={change} placeholder="e.g. North America" />
+            </label>
+            <label>Million Years Ago
+              <input type="number" name="million_years_ago" value={form.million_years_ago} onChange={change} placeholder="e.g. 66" step="any" />
+            </label>
+          </div>
+
+          <h3 className="field-section-title">2. Physical Dimensions & Metrics</h3>
+          <div className="field-grid">
+            <label>Length (meters)
+              <input type="number" name="length_m" value={form.length_m} onChange={change} placeholder="e.g. 12.3" step="any" />
+            </label>
+            <label>Weight (tons)
+              <input type="number" name="weight_tons" value={form.weight_tons} onChange={change} placeholder="e.g. 8.4" step="any" />
+            </label>
+            <label>Height (meters)
+              <input type="number" name="height_m" value={form.height_m} onChange={change} placeholder="e.g. 4.0" step="any" />
+            </label>
+            <label>Speed (km/h)
+              <input type="number" name="speed_kmph" value={form.speed_kmph} onChange={change} placeholder="e.g. 27" step="any" />
+            </label>
+            <label className="span-two">Bite Force (PSI)
+              <input type="number" name="bite_force_psi" value={form.bite_force_psi} onChange={change} placeholder="e.g. 12800" step="any" />
+            </label>
+          </div>
+
+          <h3 className="field-section-title">3. Scientific Classification (Taxonomy)</h3>
+          <div className="field-grid">
+            <label>Kingdom
+              <input type="text" name="class_kingdom" value={form.class_kingdom} onChange={change} />
+            </label>
+            <label>Phylum
+              <input type="text" name="class_phylum" value={form.class_phylum} onChange={change} />
+            </label>
+            <label>Class
+              <input type="text" name="class_class" value={form.class_class} onChange={change} />
+            </label>
+            <label>Order
+              <input type="text" name="class_order" value={form.class_order} onChange={change} placeholder="e.g. Saurischia" />
+            </label>
+            <label>Family
+              <input type="text" name="class_family" value={form.class_family} onChange={change} placeholder="e.g. Tyrannosauridae" />
+            </label>
+            <label>Genus
+              <input type="text" name="class_genus" value={form.class_genus} onChange={change} placeholder="e.g. Tyrannosaurus" />
+            </label>
+            <label className="span-two">Species
+              <input type="text" name="class_species" value={form.class_species} onChange={change} placeholder="e.g. rex" />
+            </label>
+          </div>
+
+          <h3 className="field-section-title">4. Discovery & Fossil Evidence</h3>
+          <div className="field-grid">
+            <label>Year of Discovery
+              <input type="text" name="fossil_discovery_year" value={form.fossil_discovery_year} onChange={change} placeholder="e.g. 1902" />
+            </label>
+            <label>Excavation Location
+              <input type="text" name="fossil_discovery_location" value={form.fossil_discovery_location} onChange={change} placeholder="e.g. Hell Creek, Montana" />
+            </label>
+            <label className="span-two">Discovered By
+              <input type="text" name="fossil_discovered_by" value={form.fossil_discovered_by} onChange={change} placeholder="e.g. Barnum Brown" />
+            </label>
+            <label className="span-two">Fossil Discovery Summary
+              <textarea name="fossil_summary" value={form.fossil_summary} onChange={change} placeholder="Description of the excavated fossils and cataloging details..." rows="3" />
+            </label>
+          </div>
+
+          <h3 className="field-section-title">5. DNA Lab Genomics & Behavior</h3>
+          <div className="field-grid">
+            <label>DNA Sequence Integrity Status
+              <input type="text" name="dna_status" value={form.dna_status} onChange={change} placeholder="e.g. 98.7% Sequenced" />
+            </label>
+            <label className="span-two">Genomics Summary Note
+              <textarea name="dna_summary" value={form.dna_summary} onChange={change} placeholder="Details about protein retrieval, genetic completeness, etc..." rows="2" />
+            </label>
+            <label>Hunting / Foraging Style
+              <input type="text" name="behaviour_hunting_style" value={form.behaviour_hunting_style} onChange={change} placeholder="e.g. Pack hunter / browser" />
+            </label>
+            <label>Social Behavior
+              <input type="text" name="behaviour_social_behavior" value={form.behaviour_social_behavior} onChange={change} placeholder="e.g. Solitary, highly territorial" />
+            </label>
+            <label className="span-two">Cognitive Intelligence Rating Description
+              <input type="text" name="behaviour_intelligence" value={form.behaviour_intelligence} onChange={change} placeholder="e.g. High tactical agility" />
+            </label>
+            <label className="span-two">Target Prey (comma-separated values)
+              <input type="text" name="behaviour_prey" value={form.behaviour_prey} onChange={change} placeholder="e.g. Hadrosaurs, Ceratopsians" />
+            </label>
+            <label className="span-two">Competitors & Predators (comma-separated values)
+              <input type="text" name="behaviour_predators" value={form.behaviour_predators} onChange={change} placeholder="e.g. T-Rex, Raptors" />
+            </label>
+          </div>
+
+          <h3 className="field-section-title">6. Media & Overview</h3>
+          <div className="field-grid">
+            <label>Image URL / Source Path
+              <input type="text" name="image" value={form.image} onChange={change} placeholder="e.g. /src/assets/Dinosaurs_Images/trex.png" />
+            </label>
+            <label>YouTube Video URL (Embed format)
+              <input type="text" name="video" value={form.video} onChange={change} placeholder="e.g. https://www.youtube.com/embed/aYV3DkMvW0E" />
+            </label>
+            <label className="span-two">Brief Overview Description
+              <textarea name="description" value={form.description} onChange={change} placeholder="Apex predator description, behavioral quirks, and lore..." rows="3" />
+            </label>
+          </div>
+
+        </div>
+
+        <div className="form-actions">
+          <button type="button" className="secondary-button" onClick={close}>Cancel</button>
+          <button disabled={saving} className="primary-button">{saving ? "Saving…" : (isEditing ? "Save changes" : "Add dinosaur")}</button>
+        </div>
+      </form>
+    </div>
+  );
+}
