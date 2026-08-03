@@ -10,8 +10,9 @@ import Research from "./pages/RESEARCH_PAGE/Research";
 import ResearchDossier from "./pages/RESEARCH_PAGE/ResearchDossier";
 // import Login from "./pages/LOGIN_PAGE/Login";
 import CommunityPage from "./pages/CommunityPage";
-import DNALabPage from "./pages/DNALabPage";
+import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import CinemaPage from "./pages/CinemaPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/timeline" element={<TimelinePage />} />
+        <Route path="/cinema" element={<CinemaPage />} />
         <Route path="/research" element={<Research />} />
         <Route path="/research-database" element={<ResearchDatabase />} />
         <Route path="/research/:slug" element={<ResearchDossier />} />
@@ -27,7 +29,7 @@ function App() {
         <Route path="/viewer/:slug" element={<Viewer />} />
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/community" element={<CommunityPage />} />
-        <Route path="/dna" element={<DNALabPage />} />
+        <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>

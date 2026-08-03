@@ -78,7 +78,7 @@ export default function SubmitResearchForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/research/research", {
+      const response = await fetch("/api/research/research", {
         method: "POST",
         body: submitData,
       });

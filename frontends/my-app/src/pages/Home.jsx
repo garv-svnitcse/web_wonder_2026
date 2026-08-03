@@ -9,7 +9,7 @@ import Hero from "../components/Hero/Hero";
 import Expedition from "../components/Expedition/Expedition";
 import Featured from "../components/Featured/Featured";
 import Timeline from "../components/Timeline/Timeline";
-import DNALab from "../components/DNALab/DNALab";
+import Testimonials from "../components/Testimonials/Testimonials";
 import Research from "../components/Research/Research";
 import Quiz from "../components/Quiz/Quiz";
 import Community from "../components/Community/Community";
@@ -53,7 +53,7 @@ export default function Home() {
 
                 <Timeline />
 
-                <DNALab />
+                <Testimonials />
 
             </main>
 

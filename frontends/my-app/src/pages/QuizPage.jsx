@@ -201,7 +201,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://127.0.0.1:5001/quiz/dashboard', {
+            const res = await fetch('/api/quiz/dashboard', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -227,7 +227,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://127.0.0.1:5001/quiz/leaderboard', {
+            const res = await fetch('/api/quiz/leaderboard', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -264,7 +264,7 @@ export default function QuizPage() {
         setChatLoading(false);
         setChatError(null);
         try {
-            const res = await fetch('http://127.0.0.1:5001/quiz/start', {
+            const res = await fetch('/api/quiz/start', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -304,7 +304,7 @@ export default function QuizPage() {
         };
 
         try {
-            const res = await fetch('http://127.0.0.1:5001/quiz/submit', {
+            const res = await fetch('/api/quiz/submit', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -357,7 +357,7 @@ export default function QuizPage() {
         };
 
         try {
-            const res = await fetch('http://127.0.0.1:5001/quiz/ai_chat', {
+            const res = await fetch('/api/quiz/ai_chat', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -2940,6 +2940,5 @@ export default function QuizPage() {
         </div>
     );
 }
-
 
 

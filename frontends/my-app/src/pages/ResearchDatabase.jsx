@@ -60,7 +60,7 @@ export default function ResearchDatabase() {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:5001/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
+                    `/api/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
                 );
                 const data = await response.json();
                 if (active) {

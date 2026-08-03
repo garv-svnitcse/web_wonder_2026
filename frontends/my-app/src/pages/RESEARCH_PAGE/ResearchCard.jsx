@@ -45,7 +45,7 @@ export default function ResearchCard({ item }) {
 
   const handleOpenDossier = async () => {
     try {
-      await fetch(`http://localhost:5001/research/view?title=${encodeURIComponent(item.title)}`, {
+      await fetch(`/api/research/view?title=${encodeURIComponent(item.title)}`, {
         method: "PUT",
       });
     } catch (err) {

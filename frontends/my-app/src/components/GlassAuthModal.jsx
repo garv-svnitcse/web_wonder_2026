@@ -16,8 +16,8 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
     setLoading(true);
 
     const url = isLogin 
-      ? 'http://127.0.0.1:5001/auth/login' 
-      : 'http://127.0.0.1:5001/auth/signup';
+      ? '/api/auth/login'
+      : '/api/auth/signup';
     
     const body = isLogin 
       ? { email, password } 

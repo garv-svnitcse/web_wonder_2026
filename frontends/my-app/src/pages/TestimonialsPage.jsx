@@ -1,16 +1,15 @@
 import React from "react";
-import DNALab from "../components/DNALab/DNALab";
+import Testimonials from "../components/Testimonials/Testimonials";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 
-export default function DNALabPage() {
-    // Check if user is logged in to pass the session status to the Navbar
+export default function TestimonialsPage() {
     const isLoggedIn = !!localStorage.getItem('access_token');
 
     return (
         <div style={{ background: "#07100B", minHeight: "100vh" }}>
             <Navbar isLoggedIn={isLoggedIn} />
-            <DNALab />
+            <Testimonials />
             <Footer />
         </div>
     );
