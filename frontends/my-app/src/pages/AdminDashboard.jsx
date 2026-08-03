@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Bone, BookOpen, ClipboardList, FileText, LayoutDashboard,
-  Menu, MessageSquare, Plus, Search, Trash2, Users, X, ChevronRight, Edit3, MessageCircle
+  Menu, MessageSquare, Plus, Search, Trash2, Users, X, ChevronRight, Edit3
 } from "lucide-react";
 import "./AdminDashboard.css";
 import { apiUrl } from "../config/api";
@@ -53,21 +53,11 @@ export default function AdminDashboard() {
   const [posts, setPosts] = useState([]);
   const [communityComments, setCommunityComments] = useState([]);
 
-  // Dinosaur Form States
+  // Dinosaur Form States (Dinosaurs can still be added/edited)
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyDinosaur);
   const [saving, setSaving] = useState(false);
   const [editingDinoId, setEditingDinoId] = useState(null);
-
-  // Research Form States
-  const [researchFormOpen, setResearchFormOpen] = useState(false);
-  const [researchForm, setResearchForm] = useState({ title: "", author: "", species: "", status: "pending" });
-  const [editingResearchId, setEditingResearchId] = useState(null);
-
-  // Community Form States
-  const [postFormOpen, setPostFormOpen] = useState(false);
-  const [postForm, setPostForm] = useState({ title: "", author: "", content: "" });
-  const [editingPostId, setEditingPostId] = useState(null);
 
   const fetchOverview = async () => {
     setLoading(true);
@@ -211,40 +201,7 @@ export default function AdminDashboard() {
     } catch (err) { setMessage(err.message); }
   };
 
-  // Research Handlers
-  const handleEditResearch = (research) => {
-    setEditingResearchId(research.id);
-    setResearchForm({
-      title: research.title || "",
-      author: research.researcher || "",
-      species: research.species || "",
-      status: research.status || "pending"
-    });
-    setResearchFormOpen(true);
-  };
-
-  const saveResearch = async (event) => {
-    event.preventDefault();
-    setSaving(true);
-    try {
-      const response = await fetch(apiUrl(`/admin/research/${editingResearchId}`), {
-        method: "PUT",
-        headers: tokenHeaders(true),
-        body: JSON.stringify(researchForm)
-      });
-      const resData = await response.json();
-      if (!response.ok) throw new Error(resData.detail || "Could not update research post.");
-      setResearchFormOpen(false);
-      setMessage("Research post was updated successfully.");
-      fetchOverview();
-      fetchResearchData();
-    } catch (err) {
-      setMessage(err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
+  // Research Handlers (Delete/Remove only)
   const removeResearch = async (research) => {
     if (!window.confirm(`Are you sure you want to delete research "${research.title}"?`)) return;
     try {
@@ -273,39 +230,7 @@ export default function AdminDashboard() {
     } catch (err) { setMessage(err.message); }
   };
 
-  // Community Handlers
-  const handleEditPost = (post) => {
-    setEditingPostId(post.id);
-    setPostForm({
-      title: post.title || "",
-      author: post.author || "",
-      content: post.content || ""
-    });
-    setPostFormOpen(true);
-  };
-
-  const savePost = async (event) => {
-    event.preventDefault();
-    setSaving(true);
-    try {
-      const response = await fetch(apiUrl(`/admin/community/posts/${editingPostId}`), {
-        method: "PUT",
-        headers: tokenHeaders(true),
-        body: JSON.stringify(postForm)
-      });
-      const resData = await response.json();
-      if (!response.ok) throw new Error(resData.detail || "Could not update community post.");
-      setPostFormOpen(false);
-      setMessage("Community post was updated successfully.");
-      fetchOverview();
-      fetchCommunityData();
-    } catch (err) {
-      setMessage(err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
+  // Community Handlers (Delete/Remove only)
   const removePost = async (post) => {
     if (!window.confirm(`Delete post "${post.title}"?`)) return;
     try {
@@ -337,8 +262,8 @@ export default function AdminDashboard() {
   const heading = {
     dashboard: ["Archive overview", "Monitor the discoveries and activity across JurassiVerse."],
     dinosaurs: ["Dinosaur catalog", "Create the records that appear in the public research database."],
-    research: ["Research review & comments", "Review papers, approvals, and moderate reader comments."],
-    community: ["Community threads & posts", "Moderate public forum discussions and comment feeds."],
+    research: ["Research review & comments", "Moderate and remove research submissions and reader comments."],
+    community: ["Community threads & posts", "Moderate and remove public forum discussions and comment feeds."],
     users: ["Explorer accounts", "Registered JurassiVerse members."]
   }[section];
 
@@ -357,8 +282,8 @@ export default function AdminDashboard() {
           {loading ? <div className="admin-loading">Loading archive records…</div> : <>
             {section === "dashboard" && <Dashboard data={data} setSection={setSection} />}
             {section === "dinosaurs" && <Dinosaurs rows={dinosaurs} onRemove={removeDinosaur} onEdit={handleEditDino} />}
-            {section === "research" && <ResearchSection rows={research} comments={researchComments} onEdit={handleEditResearch} onRemove={removeResearch} onRemoveComment={removeResearchComment} />}
-            {section === "community" && <CommunitySection rows={posts} comments={communityComments} onEdit={handleEditPost} onRemove={removePost} onRemoveComment={removeCommunityComment} />}
+            {section === "research" && <ResearchSection rows={research} comments={researchComments} onRemove={removeResearch} onRemoveComment={removeResearchComment} />}
+            {section === "community" && <CommunitySection rows={posts} comments={communityComments} onRemove={removePost} onRemoveComment={removeCommunityComment} />}
             {section === "users" && <UsersPanel count={data.counts.users} />}
           </>}
         </div>
@@ -367,73 +292,6 @@ export default function AdminDashboard() {
       {/* Dynamic Dinosaur Form Modal */}
       {formOpen && <DinosaurForm form={form} change={changeDino} save={saveDinosaur} saving={saving} close={() => setFormOpen(false)} isEditing={!!editingDinoId} />}
       
-      {/* Research Edit Form Modal */}
-      {researchFormOpen && (
-        <div className="modal-backdrop">
-          <form className="dino-form" onSubmit={saveResearch}>
-            <div className="modal-heading">
-              <div>
-                <p className="eyebrow">MODERATE RESEARCH POST</p>
-                <h2>Edit Research Details</h2>
-              </div>
-              <button type="button" onClick={() => setResearchFormOpen(false)}><X size={20}/></button>
-            </div>
-            <div className="field-grid">
-              <label className="span-two">Study Title *
-                <input required type="text" name="title" value={researchForm.title} onChange={e => setResearchForm({ ...researchForm, title: e.target.value })} />
-              </label>
-              <label>Researcher / Author *
-                <input required type="text" name="author" value={researchForm.author} onChange={e => setResearchForm({ ...researchForm, author: e.target.value })} />
-              </label>
-              <label>Target Species / Subject
-                <input type="text" name="species" value={researchForm.species} onChange={e => setResearchForm({ ...researchForm, species: e.target.value })} />
-              </label>
-              <label className="span-two">Publication Status
-                <select name="status" value={researchForm.status} onChange={e => setResearchForm({ ...researchForm, status: e.target.value })}>
-                  <option value="pending">Pending Review</option>
-                  <option value="approved">Approved & Published</option>
-                  <option value="rejected">Rejected / Archived</option>
-                </select>
-              </label>
-            </div>
-            <div className="form-actions">
-              <button type="button" className="secondary-button" onClick={() => setResearchFormOpen(false)}>Cancel</button>
-              <button disabled={saving} className="primary-button">{saving ? "Saving…" : "Save Changes"}</button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Community Post Edit Form Modal */}
-      {postFormOpen && (
-        <div className="modal-backdrop">
-          <form className="dino-form" onSubmit={savePost}>
-            <div className="modal-heading">
-              <div>
-                <p className="eyebrow">COMMUNITY FORUM POST</p>
-                <h2>Edit Thread Details</h2>
-              </div>
-              <button type="button" onClick={() => setPostFormOpen(false)}><X size={20}/></button>
-            </div>
-            <div className="field-grid">
-              <label className="span-two">Thread Title *
-                <input required type="text" name="title" value={postForm.title} onChange={e => setPostForm({ ...postForm, title: e.target.value })} />
-              </label>
-              <label className="span-two">Author Profile Name *
-                <input required type="text" name="author" value={postForm.author} onChange={e => setPostForm({ ...postForm, author: e.target.value })} />
-              </label>
-              <label className="span-two">Post Text Body *
-                <textarea required rows="6" name="content" value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} />
-              </label>
-            </div>
-            <div className="form-actions">
-              <button type="button" className="secondary-button" onClick={() => setPostFormOpen(false)}>Cancel</button>
-              <button disabled={saving} className="primary-button">{saving ? "Saving…" : "Save Changes"}</button>
-            </div>
-          </form>
-        </div>
-      )}
-
       {/* Glassmorphic Auth Modal for Login */}
       {!token && (
         <GlassAuthModal
@@ -487,7 +345,7 @@ function Dinosaurs({ rows, compact, onRemove, onEdit }) {
   );
 }
 
-function ResearchList({ rows, compact, onEdit, onRemove }) {
+function ResearchList({ rows, compact, onRemove }) {
   return (
     <div className="records-table">
       <div className="record-head">
@@ -506,7 +364,6 @@ function ResearchList({ rows, compact, onEdit, onRemove }) {
           <span><em className={`status ${row.status}`}>{row.status}</em></span>
           {!compact && (
             <span>
-              <button className="edit-record" onClick={() => onEdit(row)} aria-label={`Edit ${row.title}`}><Edit3 size={16}/></button>
               <button className="delete-record" onClick={() => onRemove(row)} aria-label={`Delete ${row.title}`}><Trash2 size={16}/></button>
             </span>
           )}
@@ -516,11 +373,11 @@ function ResearchList({ rows, compact, onEdit, onRemove }) {
   );
 }
 
-function ResearchSection({ rows, comments, onEdit, onRemove, onRemoveComment }) {
+function ResearchSection({ rows, comments, onRemove, onRemoveComment }) {
   return (
     <>
       <div className="records-card">
-        <ResearchList rows={rows} onEdit={onEdit} onRemove={onRemove} />
+        <ResearchList rows={rows} onRemove={onRemove} />
       </div>
 
       <h2 className="comment-section-heading">Research Comments Moderation</h2>
@@ -544,7 +401,7 @@ function ResearchSection({ rows, comments, onEdit, onRemove, onRemoveComment }) 
   );
 }
 
-function CommunitySection({ rows, comments, onEdit, onRemove, onRemoveComment }) {
+function CommunitySection({ rows, comments, onRemove, onRemoveComment }) {
   return (
     <>
       <div className="records-card">
@@ -564,7 +421,6 @@ function CommunitySection({ rows, comments, onEdit, onRemove, onRemoveComment })
               <span>{row.author}</span>
               <span><em>{row.votes} votes</em></span>
               <span>
-                <button className="edit-record" onClick={() => onEdit(row)} aria-label={`Edit ${row.title}`}><Edit3 size={16}/></button>
                 <button className="delete-record" onClick={() => onRemove(row)} aria-label={`Delete ${row.title}`}><Trash2 size={16}/></button>
               </span>
             </div>
@@ -593,163 +449,4 @@ function CommunitySection({ rows, comments, onEdit, onRemove, onRemoveComment })
 
 function UsersPanel({ count }) {
   return <section className="users-panel"><span><Users size={30}/></span><div><p>REGISTERED EXPLORERS</p><strong>{count}</strong><h2>Member management is tied to your authentication backend.</h2><p>User accounts are displayed here as they are created through the current sign-up flow.</p></div></section>
-}
-
-function DinosaurForm({ form, change, save, saving, close, isEditing }) {
-  return (
-    <div className="modal-backdrop">
-      <form className="dino-form" onSubmit={save} style={{ width: "min(840px, 95%)" }}>
-        <div className="modal-heading">
-          <div>
-            <p className="eyebrow">{isEditing ? "EDIT RECORD IN ARCHIVE" : "PUBLIC DATABASE ENTRY"}</p>
-            <h2>{isEditing ? "Edit Dinosaur Details" : "Add Dinosaur Record"}</h2>
-          </div>
-          <button type="button" onClick={close}><X size={20}/></button>
-        </div>
-
-        <div className="form-sections-container">
-          
-          <h3 className="field-section-title">1. Basic Identification</h3>
-          <div className="field-grid">
-            <label>Display Name *
-              <input required type="text" name="name" value={form.name} onChange={change} placeholder="e.g. Tyrannosaurus Rex" />
-            </label>
-            <label>Scientific Name
-              <input type="text" name="scientific_name" value={form.scientific_name} onChange={change} placeholder="e.g. Tyrannosaurus rex" />
-            </label>
-            <label>Slug (auto-generated if empty)
-              <input type="text" name="slug" value={form.slug} onChange={change} placeholder="e.g. tyrannosaurus-rex" />
-            </label>
-            <label>Geological Era / Period *
-              <input required type="text" name="period" value={form.period} onChange={change} placeholder="e.g. Late Cretaceous" />
-            </label>
-            <label>Dietary Category *
-              <select name="diet" value={form.diet} onChange={change}>
-                <option value="Herbivore">Herbivore</option>
-                <option value="Carnivore">Carnivore</option>
-                <option value="Omnivore">Omnivore</option>
-              </select>
-            </label>
-            <label>Threat Level
-              <select name="threat" value={form.threat} onChange={change}>
-                <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
-                <option value="High">High</option>
-              </select>
-            </label>
-            <label>Habitat / Discovery Continent
-              <input type="text" name="habitat" value={form.habitat} onChange={change} placeholder="e.g. North America" />
-            </label>
-            <label>Million Years Ago
-              <input type="number" name="million_years_ago" value={form.million_years_ago} onChange={change} placeholder="e.g. 66" step="any" />
-            </label>
-          </div>
-
-          <h3 className="field-section-title">2. Physical Dimensions & Metrics</h3>
-          <div className="field-grid">
-            <label>Length (meters)
-              <input type="number" name="length_m" value={form.length_m} onChange={change} placeholder="e.g. 12.3" step="any" />
-            </label>
-            <label>Weight (tons)
-              <input type="number" name="weight_tons" value={form.weight_tons} onChange={change} placeholder="e.g. 8.4" step="any" />
-            </label>
-            <label>Height (meters)
-              <input type="number" name="height_m" value={form.height_m} onChange={change} placeholder="e.g. 4.0" step="any" />
-            </label>
-            <label>Speed (km/h)
-              <input type="number" name="speed_kmph" value={form.speed_kmph} onChange={change} placeholder="e.g. 27" step="any" />
-            </label>
-            <label className="span-two">Bite Force (PSI)
-              <input type="number" name="bite_force_psi" value={form.bite_force_psi} onChange={change} placeholder="e.g. 12800" step="any" />
-            </label>
-          </div>
-
-          <h3 className="field-section-title">3. Scientific Classification (Taxonomy)</h3>
-          <div className="field-grid">
-            <label>Kingdom
-              <input type="text" name="class_kingdom" value={form.class_kingdom} onChange={change} />
-            </label>
-            <label>Phylum
-              <input type="text" name="class_phylum" value={form.class_phylum} onChange={change} />
-            </label>
-            <label>Class
-              <input type="text" name="class_class" value={form.class_class} onChange={change} />
-            </label>
-            <label>Order
-              <input type="text" name="class_order" value={form.class_order} onChange={change} placeholder="e.g. Saurischia" />
-            </label>
-            <label>Family
-              <input type="text" name="class_family" value={form.class_family} onChange={change} placeholder="e.g. Tyrannosauridae" />
-            </label>
-            <label>Genus
-              <input type="text" name="class_genus" value={form.class_genus} onChange={change} placeholder="e.g. Tyrannosaurus" />
-            </label>
-            <label className="span-two">Species
-              <input type="text" name="class_species" value={form.class_species} onChange={change} placeholder="e.g. rex" />
-            </label>
-          </div>
-
-          <h3 className="field-section-title">4. Discovery & Fossil Evidence</h3>
-          <div className="field-grid">
-            <label>Year of Discovery
-              <input type="text" name="fossil_discovery_year" value={form.fossil_discovery_year} onChange={change} placeholder="e.g. 1902" />
-            </label>
-            <label>Excavation Location
-              <input type="text" name="fossil_discovery_location" value={form.fossil_discovery_location} onChange={change} placeholder="e.g. Hell Creek, Montana" />
-            </label>
-            <label className="span-two">Discovered By
-              <input type="text" name="fossil_discovered_by" value={form.fossil_discovered_by} onChange={change} placeholder="e.g. Barnum Brown" />
-            </label>
-            <label className="span-two">Fossil Discovery Summary
-              <textarea name="fossil_summary" value={form.fossil_summary} onChange={change} placeholder="Description of the excavated fossils and cataloging details..." rows="3" />
-            </label>
-          </div>
-
-          <h3 className="field-section-title">5. DNA Lab Genomics & Behavior</h3>
-          <div className="field-grid">
-            <label>DNA Sequence Integrity Status
-              <input type="text" name="dna_status" value={form.dna_status} onChange={change} placeholder="e.g. 98.7% Sequenced" />
-            </label>
-            <label className="span-two">Genomics Summary Note
-              <textarea name="dna_summary" value={form.dna_summary} onChange={change} placeholder="Details about protein retrieval, genetic completeness, etc..." rows="2" />
-            </label>
-            <label>Hunting / Foraging Style
-              <input type="text" name="behaviour_hunting_style" value={form.behaviour_hunting_style} onChange={change} placeholder="e.g. Pack hunter / browser" />
-            </label>
-            <label>Social Behavior
-              <input type="text" name="behaviour_social_behavior" value={form.behaviour_social_behavior} onChange={change} placeholder="e.g. Solitary, highly territorial" />
-            </label>
-            <label className="span-two">Cognitive Intelligence Rating Description
-              <input type="text" name="behaviour_intelligence" value={form.behaviour_intelligence} onChange={change} placeholder="e.g. High tactical agility" />
-            </label>
-            <label className="span-two">Target Prey (comma-separated values)
-              <input type="text" name="behaviour_prey" value={form.behaviour_prey} onChange={change} placeholder="e.g. Hadrosaurs, Ceratopsians" />
-            </label>
-            <label className="span-two">Competitors & Predators (comma-separated values)
-              <input type="text" name="behaviour_predators" value={form.behaviour_predators} onChange={change} placeholder="e.g. T-Rex, Raptors" />
-            </label>
-          </div>
-
-          <h3 className="field-section-title">6. Media & Overview</h3>
-          <div className="field-grid">
-            <label>Image URL / Source Path
-              <input type="text" name="image" value={form.image} onChange={change} placeholder="e.g. /src/assets/Dinosaurs_Images/trex.png" />
-            </label>
-            <label>YouTube Video URL (Embed format)
-              <input type="text" name="video" value={form.video} onChange={change} placeholder="e.g. https://www.youtube.com/embed/aYV3DkMvW0E" />
-            </label>
-            <label className="span-two">Brief Overview Description
-              <textarea name="description" value={form.description} onChange={change} placeholder="Apex predator description, behavioral quirks, and lore..." rows="3" />
-            </label>
-          </div>
-
-        </div>
-
-        <div className="form-actions">
-          <button type="button" className="secondary-button" onClick={close}>Cancel</button>
-          <button disabled={saving} className="primary-button">{saving ? "Saving…" : (isEditing ? "Save changes" : "Add dinosaur")}</button>
-        </div>
-      </form>
-    </div>
-  );
 }

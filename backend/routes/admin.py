@@ -228,22 +228,6 @@ def delete_dinosaur(dinosaur_id: str):
 
 # --- Research Endpoints ---
 
-@router.put("/research/{research_id}")
-def update_research(research_id: str, payload: ResearchUpdate):
-    try:
-        object_id = ObjectId(research_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid research id")
-
-    result = research_collection.update_one(
-        {"_id": object_id},
-        {"$set": {"title": payload.title, "author": payload.author, "species": payload.species, "status": payload.status}}
-    )
-    if not result.matched_count:
-        raise HTTPException(status_code=404, detail="Research post not found")
-    return {"message": "Research post updated successfully"}
-
-
 @router.delete("/research/{research_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_research(research_id: str):
     try:
@@ -271,21 +255,6 @@ def delete_research_comment(comment_id: str):
 
 
 # --- Community Posts Endpoints ---
-
-@router.put("/community/posts/{post_id}")
-def update_community_post(post_id: str, payload: CommunityPostUpdate):
-    try:
-        object_id = ObjectId(post_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid post id")
-
-    result = community_post_collection.update_one(
-        {"_id": object_id},
-        {"$set": {"title": payload.title, "author": payload.author, "content": payload.content}}
-    )
-    if not result.matched_count:
-        raise HTTPException(status_code=404, detail="Community post not found")
-    return {"message": "Community post updated successfully"}
 
 
 @router.delete("/community/posts/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
