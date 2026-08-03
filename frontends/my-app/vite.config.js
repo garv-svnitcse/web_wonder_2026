@@ -8,7 +8,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5001',
+        // FastAPI is served on port 5000 (see backend startup command).
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/api/, '')
