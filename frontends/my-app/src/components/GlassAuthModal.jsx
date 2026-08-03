@@ -52,9 +52,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const strengthIndex = Math.max(0, Math.min(4, validPasswordCount - 1));
   const strengthLabel = strengthLabels[strengthIndex];
   const strengthColor = strengthColors[strengthIndex];
-  const canSubmit = emailIsValid && passwordIsValid && !loading;
-
-  if (!isOpen) return null;
+  const canSubmit = emailIsValid && (isLogin ? password.length > 0 : passwordIsValid) && !loading;
 
   if (!isOpen) return null;
 
@@ -234,7 +232,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
               required
               style={{
                 background: 'rgba(255, 255, 255, 0.05)',
-                border: `1px solid ${password ? (passwordIsValid ? 'rgba(52, 211, 153, 0.8)' : 'rgba(239, 68, 68, 0.75)') : 'rgba(255, 255, 255, 0.1)'}`,
+                border: `1px solid ${password ? (isLogin || passwordIsValid ? 'rgba(52, 211, 153, 0.8)' : 'rgba(239, 68, 68, 0.75)') : 'rgba(255, 255, 255, 0.1)'}`,
                 borderRadius: '12px',
                 padding: '14px 18px',
                 color: '#ECE4D8',
@@ -264,37 +262,43 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {passwordValidations.map((rule) => (
-                <div
-                  key={rule.label}
-                  style={{
-                    color: rule.valid ? '#34d399' : '#94a3b8',
-                    fontSize: '13px',
-                    textAlign: 'left',
-                  }}
-                >
-                  {rule.valid ? '✓' : '✗'} {rule.label}
+            {!isLogin && (
+              <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {passwordValidations.map((rule) => (
+                    <div
+                      key={rule.label}
+                      style={{
+                        color: rule.valid ? '#34d399' : '#94a3b8',
+                        fontSize: '13px',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {rule.valid ? '✓' : '✗'} {rule.label}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div style={{ width: '100%', height: '8px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-              <div
-                style={{
-                  width: `${((validPasswordCount / passwordRules.length) * 100).toFixed(0)}%`,
-                  height: '100%',
-                  borderRadius: '999px',
-                  background: strengthColor,
-                  transition: 'width 0.35s ease-in-out, background-color 0.35s ease-in-out',
-                }}
-              />
-            </div>
-            <div style={{ color: strengthColor, fontSize: '13px', textAlign: 'left' }}>
-              {strengthLabel}
-            </div>
+                <div style={{ width: '100%', height: '8px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      width: `${((validPasswordCount / passwordRules.length) * 100).toFixed(0)}%`,
+                      height: '100%',
+                      borderRadius: '999px',
+                      background: strengthColor,
+                      transition: 'width 0.35s ease-in-out, background-color 0.35s ease-in-out',
+                    }}
+                  />
+                </div>
+                <div style={{ color: strengthColor, fontSize: '13px', textAlign: 'left' }}>
+                  {strengthLabel}
+                </div>
+              </>
+            )}
           </div>
           {canSubmit ? (
-            <div style={{ color: '#34d399', fontSize: '13px', textAlign: 'left' }}>✓ Ready to Login</div>
+            <div style={{ color: '#34d399', fontSize: '13px', textAlign: 'left' }}>
+              ✓ Ready to {isLogin ? 'Login' : 'Submit'}
+            </div>
           ) : null}
           <button
             type="submit"
