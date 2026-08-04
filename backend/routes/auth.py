@@ -45,13 +45,29 @@ def signup(user: auth.SignUp):
     existing_user = user_collection.find_one({'email': user.email})
     if existing_user: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
+    
+    # Save signup credentials immediately to MongoDB
     data = user.model_dump()
     data['password'] = hash_password(user.password)
     data['role'] = 'user'
-    result = user_collection.insert_one(data)
+    user_collection.insert_one(data)
+    
+    # Generate and store OTP in Redis caching
+    otp = f"{random.randint(100000, 999999)}"
+    try:
+        set_otp(user.email, otp, expire_seconds=600)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Redis connection issue: {e}"
+        )
+        
+    send_otp_email(user.email, otp)
+    
     return {
-        'id': str(result.inserted_id),
-        "message": "Account Created Successfully"
+        "status": "otp_required",
+        "email": user.email,
+        "message": "Account created! A verification code has been sent to your email."
     }
 
 @router.post("/login")
@@ -63,9 +79,8 @@ def login(user: auth.Login):
     if not verify_password(user.password, existing_user['password']):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid Password')
     
-    # Generate OTP
+    # Generate OTP and store in Redis caching
     otp = f"{random.randint(100000, 999999)}"
-    
     try:
         set_otp(user.email, otp, expire_seconds=600)
     except Exception as e:
@@ -91,9 +106,10 @@ def verify_otp(payload: auth.VerifyOTP):
             detail="Invalid or expired verification code."
         )
     
-    # Delete verified OTP
+    # Delete verified OTP from Redis caching
     delete_otp(payload.email)
     
+    # Fetch verified user from MongoDB
     existing_user = user_collection.find_one({'email': payload.email})
     if not existing_user:
         raise HTTPException(
@@ -109,5 +125,5 @@ def verify_otp(payload: auth.VerifyOTP):
         'access_token': token,
         'role': existing_user.get('role', 'user'),
         'token_type': 'bearer',
-        'message': 'Logged in successfully'
+        'message': 'Verification successful'
     }
