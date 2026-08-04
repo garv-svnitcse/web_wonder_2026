@@ -94,7 +94,7 @@ const getDinoImageUrl = (specimen) => {
 
 function prepareSpecimenData(dino) {
   const slug = dino.slug || "";
-  
+
   // Extract or build fields cleanly
   const name = dino.name || "Unknown Giant";
   const scientific_name = dino.scientificName || dino.scientific_name || dino.name || "Unknown";
@@ -112,16 +112,16 @@ function prepareSpecimenData(dino) {
     phylum: "Chordata",
     class: "Reptilia",
     order: slug.includes("rex") || slug.includes("spino") || slug.includes("raptor") || slug.includes("carnotaurus") || slug.includes("allosaurus") ? "Saurischia" : "Ornithischia",
-    family: slug.includes("rex") ? "Tyrannosauridae" : 
-            slug.includes("spino") ? "Spinosauridae" :
-            slug.includes("raptor") ? "Dromaeosauridae" :
-            slug.includes("tricera") ? "Ceratopsidae" :
+    family: slug.includes("rex") ? "Tyrannosauridae" :
+      slug.includes("spino") ? "Spinosauridae" :
+        slug.includes("raptor") ? "Dromaeosauridae" :
+          slug.includes("tricera") ? "Ceratopsidae" :
             slug.includes("stego") ? "Stegosauridae" :
-            slug.includes("brachio") ? "Brachiosauridae" : "Ornithischia",
+              slug.includes("brachio") ? "Brachiosauridae" : "Ornithischia",
     genus: nameWord,
-    species: slug.includes("rex") ? "T. rex" : 
-             slug.includes("horridus") || slug.includes("tricera") ? "T. horridus" :
-             slug.includes("stenops") || slug.includes("stego") ? "S. stenops" : "specimen"
+    species: slug.includes("rex") ? "T. rex" :
+      slug.includes("horridus") || slug.includes("tricera") ? "T. horridus" :
+        slug.includes("stenops") || slug.includes("stego") ? "S. stenops" : "specimen"
   };
 
   // Generate default fossil discoveries
@@ -171,7 +171,7 @@ function prepareSpecimenData(dino) {
 export default function Dinosaur() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  
+
   const [specimen, setSpecimen] = useState(null);
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
@@ -267,10 +267,10 @@ export default function Dinosaur() {
   const documentaryUrl = DOCUMENTARY_VIDEOS[specimen.slug] || "https://www.youtube.com/embed/aYV3DkMvW0E";
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-[#070b09] text-[#e2e8f0] font-sans selection:bg-[#c5a880] selection:text-black relative flex flex-col items-center w-full overflow-x-hidden"
       style={{
-        backgroundImage: `linear-gradient(180deg, rgba(14, 25, 20, 0.88) 0%, rgba(8, 14, 11, 0.98) 100%), url(${jungleBg})`,
+        backgroundImage: `linear-gradient(180deg, rgba(14, 25, 20, 0.70) 0%, rgba(8, 14, 11, 0.80) 100%), url(${jungleBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -281,7 +281,7 @@ export default function Dinosaur() {
 
       {/* Main Container */}
       <div className="relative max-w-7xl mx-auto px-6 py-12 md:py-16 w-full z-20 flex flex-col gap-12">
-        
+
         {/* Back Navigation Link */}
         <div className="w-full flex justify-between items-center">
           <Link to="/research-database" className="text-xs uppercase tracking-[0.25em] text-[#c5a880] hover:text-white transition duration-300 flex items-center gap-2 font-semibold font-mono">
@@ -295,11 +295,11 @@ export default function Dinosaur() {
         </div>
 
         {/* TOP ROW: Specimen details split layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start w-full">
-          
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start w-full">
+
           {/* Left Column: Title, Quick Badges, About Block */}
-          <div className="lg:col-span-4 space-y-6 flex flex-col justify-center">
-            
+          <div className="md:col-span-12 lg:col-span-12 space-y-6 flex flex-col justify-center">
+
             {/* Era & Period Badge Section */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -356,14 +356,14 @@ export default function Dinosaur() {
 
             {/* Premium Interaction Buttons Group */}
             <div className="flex gap-4 pt-3 flex-wrap">
-              <button 
+              <button
                 onClick={() => navigate(`/viewer/${specimen.slug}`)}
                 className="flex items-center gap-2 text-xs uppercase tracking-wider font-semibold border border-[#c5a880]/40 bg-[#c5a880]/10 hover:bg-[#c5a880] hover:text-black transition-all duration-300 px-6 py-3 rounded-sm shadow-md font-mono"
               >
                 <Box size={14} />
                 <span>View In 3D</span>
               </button>
-              <button 
+              <button
                 onClick={() => setDocumentaryModalOpen(true)}
                 className="flex items-center gap-2 text-xs uppercase tracking-wider font-semibold border border-[#c5a880]/40 bg-[#0d1612]/90 hover:bg-white hover:text-black hover:border-white transition-all duration-300 px-6 py-3 rounded-sm shadow-md font-mono"
               >
@@ -375,34 +375,34 @@ export default function Dinosaur() {
           </div>
 
           {/* Middle Column: Scanning Viewfinder image render */}
-          <div className="lg:col-span-5 flex justify-center items-center relative w-full">
+          <div className="md:col-span-8 lg:col-span-8 flex justify-center items-start relative w-full">
             <div className="absolute w-[85%] h-[85%] bg-[#c5a880]/3 blur-[130px] rounded-full pointer-events-none" />
-            
-            {/* Viewfinder scanner container */}
-            <div className="relative group w-full aspect-[4/3] flex items-center justify-center bg-[#121c17]/35 border border-[#c5a880]/20 p-2 rounded-sm shadow-[0_25px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+
+            {/* Viewfinder scanner container - responsive image wrapper */}
+            <div className="relative group w-full flex items-center justify-center bg-[#121c17]/35 border border-[#c5a880]/20 p-2 rounded-lg shadow-[0_25px_50px_rgba(0,0,0,0.8)] overflow-hidden">
               {/* Corner ticks */}
               <div className="absolute top-2 left-2 text-[#c5a880]/50 font-mono text-xs select-none">┌</div>
               <div className="absolute top-2 right-2 text-[#c5a880]/50 font-mono text-xs select-none">┐</div>
               <div className="absolute bottom-2 left-2 text-[#c5a880]/50 font-mono text-xs select-none">└</div>
               <div className="absolute bottom-2 right-2 text-[#c5a880]/50 font-mono text-xs select-none">┘</div>
 
-              <img 
-                src={imageUrl} 
-                alt={`${specimen.name} profile view`}
-                className="object-contain max-h-[380px] drop-shadow-[0_20px_30px_rgba(0,0,0,0.95)] filter contrast-[1.03] brightness-[0.98] group-hover:scale-105 transition-transform duration-700 ease-out cursor-pointer z-10"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
+              <div className="w-full max-w-full h-full flex items-center justify-center overflow-hidden rounded-md">
+                <img
+                  src={imageUrl}
+                  alt={`${specimen.name} profile view`}
+                  className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.95)] filter contrast-[1.03] brightness-[0.98] group-hover:scale-105 transition-transform duration-700 ease-out cursor-pointer z-10"
+                  onError={(e) => { e.currentTarget.src = '/images/placeholder-dino.png'; }}
+                />
+              </div>
             </div>
           </div>
 
           {/* Right Column: Quick Facts vertical list panel */}
-          <div className="lg:col-span-3 bg-[#121c17]/40 border border-white/10 p-6 rounded-sm shadow-xl space-y-6 w-full">
+          <div className="md:col-span-4 lg:col-span-4 self-start sticky top-28 bg-[#121c17]/40 border border-white/10 p-6 rounded-sm shadow-xl space-y-6 w-full h-[min(60vh,520px)] overflow-y-auto">
             <h3 className="text-xs uppercase tracking-[0.2em] text-[#c5a880] font-bold border-b border-white/10 pb-3 font-mono">
               Quick Facts
             </h3>
-            
+
             <div className="space-y-4">
               {/* Stat 1: Length */}
               <div className="flex items-center gap-4 group/stat">
@@ -468,7 +468,7 @@ export default function Dinosaur() {
 
         {/* MIDDLE SECTION: 3-Column Grid Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-          
+
           {/* Card 1: Fossil Evidence */}
           <div className="premium-dossier-card p-6 flex flex-col gap-4 justify-between relative group/card">
             <div className="absolute top-1.5 left-1.5 text-[#c5a880]/30 font-mono text-[9px] select-none pointer-events-none">┌</div>
@@ -485,9 +485,9 @@ export default function Dinosaur() {
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">Fossil Evidence</h4>
               </div>
               <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-[#c5a880]/40 transition-all duration-350">
-                <img 
-                  src="/images/fossil.jpg" 
-                  alt="Fossil Evidence" 
+                <img
+                  src="/images/fossil.jpg"
+                  alt="Fossil Evidence"
                   className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
@@ -496,7 +496,7 @@ export default function Dinosaur() {
                 {specimen.fossil_evidence?.summary.substring(0, 120)}...
               </p>
             </div>
-            <button 
+            <button
               onClick={() => setFossilModalOpen(true)}
               className="text-[9px] uppercase tracking-wider font-semibold border border-[#c5a880]/30 bg-[#0d1612]/90 px-4 py-2.5 rounded-sm text-[#c5a880] hover:bg-[#c5a880] hover:text-black hover:border-transparent transition-all duration-300 mt-2 self-start flex items-center gap-1 shadow-lg font-mono"
             >
@@ -521,9 +521,9 @@ export default function Dinosaur() {
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">DNA Insights</h4>
               </div>
               <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-cyan-500/40 transition-all duration-350">
-                <img 
-                  src="/images/dna.jpg" 
-                  alt="DNA Insights" 
+                <img
+                  src="/images/dna.jpg"
+                  alt="DNA Insights"
                   className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
@@ -532,7 +532,7 @@ export default function Dinosaur() {
                 Advanced structural analysis of genetic materials revealing details about species growth parameters.
               </p>
             </div>
-            <button 
+            <button
               onClick={() => setDnaModalOpen(true)}
               className="text-[9px] uppercase tracking-wider font-semibold border border-[#c5a880]/30 bg-[#0d1612]/90 px-4 py-2.5 rounded-sm text-[#c5a880] hover:bg-[#c5a880] hover:text-black hover:border-transparent transition-all duration-300 mt-2 self-start flex items-center gap-1 shadow-lg font-mono"
             >
@@ -557,9 +557,9 @@ export default function Dinosaur() {
                 <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-bold font-mono">Behavior & Lifestyle</h4>
               </div>
               <div className="w-full h-36 overflow-hidden rounded-sm border border-white/10 bg-black/70 shadow-inner relative group-hover/card:border-amber-500/40 transition-all duration-350">
-                <img 
-                  src="/images/behaviour.jpg" 
-                  alt="Behavior & Lifestyle" 
+                <img
+                  src="/images/behaviour.jpg"
+                  alt="Behavior & Lifestyle"
                   className="w-full h-full object-contain opacity-80 group-hover/card:opacity-100 group-hover/card:scale-102 transition-all duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
@@ -568,7 +568,7 @@ export default function Dinosaur() {
                 Ecosystem mapping, hunting profile, pack structure, and territorial behavioral dossier.
               </p>
             </div>
-            <button 
+            <button
               onClick={() => setBehaviourModalOpen(true)}
               className="text-[9px] uppercase tracking-wider font-semibold border border-[#c5a880]/30 bg-[#0d1612]/90 px-4 py-2.5 rounded-sm text-[#c5a880] hover:bg-[#c5a880] hover:text-black hover:border-transparent transition-all duration-300 mt-2 self-start flex items-center gap-1 shadow-lg font-mono"
             >
@@ -581,7 +581,7 @@ export default function Dinosaur() {
 
         {/* BOTTOM ROW: Fun Fact, Classification, Conservation Status */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-full">
-          
+
           {/* Panel 1: Fun Fact */}
           <div className="lg:col-span-4 premium-dossier-card p-6 flex items-start gap-4 shadow-xl">
             <span className="text-2xl text-[#c5a880] bg-[#0d1511]/85 w-12 h-12 rounded-sm flex items-center justify-center border border-[#c5a880]/20 shrink-0 shadow-inner glow-gold">
@@ -592,11 +592,11 @@ export default function Dinosaur() {
                 <h5 className="text-[10px] uppercase tracking-wider text-[#c5a880] font-bold font-mono">Fun Fact</h5>
               </div>
               <p className="text-xs text-white/70 leading-relaxed pt-1.5">
-                {specimen.slug.includes("rex") 
+                {specimen.slug.includes("rex")
                   ? "T. rex's bite was so powerful that it could crush bone with ease, exercising over 12,000 pounds of pressure!"
                   : specimen.slug.includes("tricera")
-                  ? "Triceratops horns grew up to 3 feet long and were used for defense, territorial disputes, and mating displays."
-                  : "Dinosaur profiles indicate specialized adaptive mechanisms suited to their distinct prehistoric biomes."
+                    ? "Triceratops horns grew up to 3 feet long and were used for defense, territorial disputes, and mating displays."
+                    : "Dinosaur profiles indicate specialized adaptive mechanisms suited to their distinct prehistoric biomes."
                 }
               </p>
             </div>
@@ -653,16 +653,16 @@ export default function Dinosaur() {
               {related.map((item, idx) => {
                 const relatedImg = getDinoImageUrl(item);
                 return (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className="premium-dossier-card p-4 flex flex-col justify-between gap-4 cursor-pointer relative group/related transition-all duration-300 hover:border-[#c5a880]/40"
                     onClick={() => navigate(`/dinosaur/${item.slug}`)}
                   >
-                    <div className="w-full aspect-[4/3] bg-[#121c17]/35 border border-white/5 rounded-sm overflow-hidden flex items-center justify-center p-4">
-                      <img 
-                        src={relatedImg} 
-                        alt={item.name} 
-                        className="object-contain max-h-[160px] drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] group-hover/related:scale-105 transition-transform duration-500 ease-out" 
+                    <div className="w-full aspect-[3/3] bg-[#121c17]/35 border border-white/5 rounded-sm overflow-hidden flex items-center justify-center p-4">
+                      <img
+                        src={relatedImg}
+                        alt={item.name}
+                        className="object-contain max-h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] group-hover/related:scale-105 transition-transform duration-500 ease-out"
                       />
                     </div>
                     <div>
@@ -672,7 +672,7 @@ export default function Dinosaur() {
                       </div>
                       <h3 className="text-lg font-serif text-white uppercase tracking-wide mt-2">{item.name}</h3>
                     </div>
-                    <button 
+                    <button
                       className="text-[9px] uppercase tracking-wider font-semibold border border-[#c5a880]/30 bg-[#0d1612]/90 w-full py-2.5 rounded-sm text-[#c5a880] group-hover/related:bg-[#c5a880] group-hover/related:text-black transition-all duration-300 font-mono"
                     >
                       Explore Species
@@ -689,11 +689,11 @@ export default function Dinosaur() {
       {/* Watch Documentary Modal Popup */}
       {documentaryModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-4 py-6">
-          <div 
+          <div
             className="border border-[#c5a880]/30 max-w-4xl w-full p-4 rounded-sm relative shadow-[0_25px_60px_rgba(0,0,0,0.95)] flex flex-col gap-4 animate-scale-in bg-[#070b09]"
           >
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setDocumentaryModalOpen(false)}
               className="absolute -top-12 right-0 text-[#c5a880] hover:text-white transition duration-300 font-mono text-sm border border-[#c5a880]/20 bg-[#0d1612]/80 w-8 h-8 flex items-center justify-center rounded-sm shadow-md"
             >
@@ -721,9 +721,9 @@ export default function Dinosaur() {
       {/* Fossil Evidence Modal Popup */}
       {fossilModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4 py-6">
-          <div 
+          <div
             className="border border-[#c5a880]/30 max-w-lg w-full p-6 md:p-8 rounded-sm relative shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(197,168,128,0.15)] flex flex-col gap-4 animate-scale-in"
-            style={{ 
+            style={{
               background: 'radial-gradient(circle at 10% 10%, rgba(197, 168, 128, 0.12) 0%, rgba(15, 23, 19, 0.8) 50%, rgba(7, 12, 10, 0.95) 100%)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)'
@@ -736,7 +736,7 @@ export default function Dinosaur() {
             <div className="absolute bottom-2 right-2 text-[#c5a880]/40 font-mono text-xs select-none pointer-events-none">┘</div>
 
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setFossilModalOpen(false)}
               className="absolute top-4 right-4 text-[#c5a880]/70 hover:text-white transition duration-300 font-mono text-sm border border-[#c5a880]/20 bg-[#0d1612]/80 w-7 h-7 flex items-center justify-center rounded-sm shadow-md"
             >
@@ -772,9 +772,9 @@ export default function Dinosaur() {
       {/* DNA Report Modal Popup */}
       {dnaModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4 py-6">
-          <div 
+          <div
             className="border border-cyan-500/30 max-w-lg w-full p-6 md:p-8 rounded-sm relative shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(34,211,238,0.15)] flex flex-col gap-4 animate-scale-in"
-            style={{ 
+            style={{
               background: 'radial-gradient(circle at 10% 10%, rgba(34, 211, 238, 0.12) 0%, rgba(15, 23, 19, 0.8) 50%, rgba(7, 12, 10, 0.95) 100%)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)'
@@ -787,7 +787,7 @@ export default function Dinosaur() {
             <div className="absolute bottom-2 right-2 text-cyan-400/40 font-mono text-xs select-none pointer-events-none">┘</div>
 
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setDnaModalOpen(false)}
               className="absolute top-4 right-4 text-cyan-400/70 hover:text-white transition duration-300 font-mono text-sm border border-cyan-500/20 bg-[#0d1612]/80 w-7 h-7 flex items-center justify-center rounded-sm shadow-md"
             >
@@ -813,8 +813,8 @@ export default function Dinosaur() {
               <div className="text-[9px] uppercase font-mono tracking-widest text-cyan-400/60 font-mono">Live Sequencing Grid Feed</div>
               <div className="font-mono text-[9px] tracking-widest text-cyan-400 bg-black/45 p-4 rounded-sm border border-cyan-500/20 max-h-24 overflow-hidden relative leading-tight select-none">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/75 pointer-events-none font-mono" />
-                A T T C G G A T C C G G T A A T C G G A T T C G A T T C G A T C G G A T T C G A T T C G<br/>
-                C G T T A G C C G T T A A C G T T A A C C G G T A A C G C G T C C A A T T G G C C G T C<br/>
+                A T T C G G A T C C G G T A A T C G G A T T C G A T T C G A T C G G A T T C G A T T C G<br />
+                C G T T A G C C G T T A A C G T T A A C C G G T A A C G C G T C C A A T T G G C C G T C<br />
                 G C G C T T A G C G A T C G A T C G A T C G A T C G A T C G A T C G A T C G A T C G T T
               </div>
             </div>
@@ -825,9 +825,9 @@ export default function Dinosaur() {
       {/* Behavior & Lifestyle Modal Popup */}
       {behaviourModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4 py-6">
-          <div 
+          <div
             className="border border-amber-500/30 max-w-lg w-full p-6 md:p-8 rounded-sm relative shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(245,158,11,0.15)] flex flex-col gap-4 animate-scale-in"
-            style={{ 
+            style={{
               background: 'radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 19, 0.8) 50%, rgba(7, 12, 10, 0.95) 100%)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)'
@@ -840,7 +840,7 @@ export default function Dinosaur() {
             <div className="absolute bottom-2 right-2 text-amber-500/40 font-mono text-xs select-none pointer-events-none">┘</div>
 
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setBehaviourModalOpen(false)}
               className="absolute top-4 right-4 text-amber-500/70 hover:text-white transition duration-300 font-mono text-sm border border-amber-500/20 bg-[#0d1612]/80 w-7 h-7 flex items-center justify-center rounded-sm shadow-md"
             >
