@@ -34,6 +34,8 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [otp, setOtp] = useState('');
 
   const trimmedEmail = email.trim();
   const emailIsValid = emailPattern.test(trimmedEmail);
@@ -97,6 +99,12 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         throw new Error(data.detail || data.message || `Authentication failed (${response.status})`);
       }
 
+      if (data.status === 'otp_required') {
+        setOtpRequired(true);
+        setError('');
+        return;
+      }
+
       if (isLogin) {
         if (!data.access_token) {
           throw new Error('Login could not be completed. Please try again.');
@@ -115,6 +123,234 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
       setLoading(false);
     }
   };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const url = apiUrl('/auth/verify-otp');
+    const body = {
+      email,
+      otp,
+      purpose: isLogin ? 'login' : 'signup'
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const responseText = await response.text();
+      let data = {};
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          if (!response.ok) {
+            throw new Error(`Verification service returned ${response.status}. Please try again.`);
+          }
+          throw new Error('Verification service returned an invalid response. Please try again.');
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(data.detail || data.message || `Verification failed (${response.status})`);
+      }
+
+      if (!data.access_token) {
+        throw new Error('Verification succeeded but could not establish session. Please try again.');
+      }
+      localStorage.setItem('access_token', data.access_token);
+      onAuthSuccess?.(data.access_token);
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setError('');
+    setLoading(true);
+    const url = apiUrl(isLogin ? '/auth/login' : '/auth/signup');
+    const body = isLogin 
+      ? { email, password } 
+      : { email, password, name: name || 'Explorer' };
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const responseText = await response.text();
+      let data = {};
+      if (responseText) {
+        try { data = JSON.parse(responseText); } catch {}
+      }
+      if (!response.ok) {
+        throw new Error(data.detail || data.message || "Failed to resend code.");
+      }
+      setError("A new verification code has been sent!");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (otpRequired) {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(10px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999,
+        fontFamily: 'Outfit, sans-serif'
+      }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '24px',
+          padding: '40px',
+          width: '100%',
+          maxWidth: '420px',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          boxSizing: 'border-box',
+          color: '#ECE4D8',
+          textAlign: 'center',
+          position: 'relative'
+        }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: '28px',
+            color: '#D6A14B',
+            marginBottom: '8px',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+          }}>
+            Verify Identity
+          </h2>
+          <p style={{
+            fontSize: '14px',
+            color: '#BBBBBB',
+            marginBottom: '24px',
+            lineHeight: '1.5'
+          }}>
+            A 6-digit verification code was sent to <strong style={{ color: '#ECE4D8' }}>{email}</strong>
+          </p>
+
+          {error && (
+            <div style={{
+              background: error.includes('sent') ? 'rgba(46, 204, 113, 0.15)' : 'rgba(231, 76, 60, 0.15)',
+              border: error.includes('sent') ? '1px solid rgba(46, 204, 113, 0.3)' : '1px solid rgba(231, 76, 60, 0.3)',
+              borderRadius: '12px',
+              padding: '12px',
+              fontSize: '13px',
+              color: error.includes('sent') ? '#2ECC71' : '#E74C3C',
+              marginBottom: '20px',
+              textAlign: 'left'
+            }}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <input
+              type="text"
+              placeholder="6-Digit Code"
+              maxLength={6}
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+              required
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                padding: '16px',
+                color: '#ECE4D8',
+                fontSize: '24px',
+                fontWeight: '700',
+                letterSpacing: '8px',
+                textAlign: 'center',
+                outline: 'none',
+                transition: 'all 0.3s'
+              }}
+            />
+
+            <button
+              type="submit"
+              disabled={otp.length !== 6 || loading}
+              style={{
+                background: 'linear-gradient(135deg, #D6A14B, #AF7B28)',
+                color: '#111111',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '16px',
+                fontSize: '15px',
+                fontWeight: '700',
+                cursor: otp.length === 6 && !loading ? 'pointer' : 'not-allowed',
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                marginTop: '10px',
+                opacity: otp.length === 6 && !loading ? 1 : 0.5,
+                transition: 'all 0.2s',
+              }}
+            >
+              {loading ? 'Verifying...' : 'Verify & Enter'}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '24px', fontSize: '13px', color: '#BBBBBB' }}>
+            Didn't receive code?{' '}
+            <span
+              onClick={handleResendOtp}
+              style={{
+                color: '#D6A14B',
+                cursor: 'pointer',
+                fontWeight: 600,
+                textDecoration: 'underline'
+              }}
+            >
+              Resend Code
+            </span>
+          </div>
+
+          <div style={{ marginTop: '18px' }}>
+            <span
+              onClick={() => {
+                setOtpRequired(false);
+                setOtp('');
+                setError('');
+              }}
+              style={{
+                color: '#aaaaaa',
+                cursor: 'pointer',
+                fontSize: '13px',
+                textDecoration: 'underline',
+                transition: 'color 0.2s'
+              }}
+            >
+              Back to Sign In
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{

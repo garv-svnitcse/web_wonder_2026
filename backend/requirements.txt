@@ -12,8 +12,4 @@ passlib[argon2]
 python-jose[cryptography]
 google-genai
 scikit-learn
-<<<<<<< HEAD
-cloudinary
-python-multipart
-=======
->>>>>>> 1aa52082a3b8ce34ce9760acb6fb369783a11eaa
+redis
