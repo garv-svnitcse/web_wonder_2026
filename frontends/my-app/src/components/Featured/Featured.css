@@ -436,6 +436,10 @@
 
     }
 
+    .featuredOverlay {
+        background: linear-gradient(to top, rgba(8, 17, 11, 0.98) 35%, rgba(8, 17, 11, 0.6) 75%, rgba(8, 17, 11, 0.25) 100%);
+    }
+
     .featuredContent {
 
         left: 24px;
@@ -500,8 +504,25 @@
 
     .featuredStats {
 
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 20px;
 
+    }
+
+    .statBox {
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+
+    .statBox h4 {
+        font-size: 9px;
+        margin-bottom: 4px;
+        letter-spacing: 1px;
+    }
+
+    .statBox p {
+        font-size: 13px;
     }
 
     .featuredContent h2 {

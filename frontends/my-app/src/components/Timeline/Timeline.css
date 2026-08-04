@@ -468,8 +468,25 @@
 
     .timelineFacts {
 
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 25px;
 
+    }
+
+    .fact {
+        padding: 14px 10px;
+        border-radius: 12px;
+    }
+
+    .fact h4 {
+        font-size: 10px;
+        margin-bottom: 4px;
+        letter-spacing: 1px;
+    }
+
+    .fact p {
+        font-size: 14px;
     }
 
 }
@@ -518,6 +535,26 @@
 
     }
 
+}
+
+@media(max-width:600px) {
+    .timelineFacts {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .fact {
+        padding: 8px 6px;
+        border-radius: 8px;
+    }
+    .fact h4 {
+        font-size: 8px;
+        margin-bottom: 2px;
+        letter-spacing: 0.5px;
+    }
+    .fact p {
+        font-size: 11px;
+    }
 }
 
 @media(max-width:500px) {
