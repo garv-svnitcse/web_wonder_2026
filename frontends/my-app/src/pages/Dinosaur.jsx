@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Compass, Radio, ChevronDown, Lightbulb, Shield, Dna, Hourglass, Flame, Ruler, ArrowUp, Scale, Gauge, Play, Box } from 'lucide-react';
@@ -185,7 +186,7 @@ export default function Dinosaur() {
     const fetchSpecimen = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/dinosaurs/${slug}`);
+        const response = await fetch(`${API_URL}/dinosaurs/${slug}`);
         if (!response.ok) {
           throw new Error('Dinosaur not found');
         }
@@ -208,7 +209,7 @@ export default function Dinosaur() {
     const fetchRelated = async () => {
       if (!specimen) return;
       try {
-        const response = await fetch(`/api/dinosaurs`);
+        const response = await fetch(`${API_URL}/dinosaurs`);
         const allDinos = await response.json();
         if (Array.isArray(allDinos)) {
           const filtered = allDinos.filter(d => d.slug !== slug);

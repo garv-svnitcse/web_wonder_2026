@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
@@ -16,7 +17,7 @@ export default function Viewer() {
     // Fetch dinosaur details to get the 3D model URL
     useEffect(() => {
         let isMounted = true;
-        fetch(`/api/dinosaurs/${slug}`)
+        fetch(`${API_URL}/dinosaurs/${slug}`)
             .then(res => {
                 if (!res.ok) throw new Error("HTTP error " + res.status);
                 return res.json();

@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import React, { useMemo, useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useSignIn, useSignUp, useAuth } from '@clerk/clerk-react';
@@ -39,6 +40,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loading, setLoading] = useState(false);
   const [otpRequired, setOtpRequired] = useState(false);
   const [otp, setOtp] = useState('');
+  const [isMfaRequired, setIsMfaRequired] = useState(false);
 
   const trimmedEmail = email.trim();
   const emailIsValid = emailPattern.test(trimmedEmail);
@@ -90,7 +92,15 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
           const token = await getToken();
           localStorage.setItem('access_token', token);
           onAuthSuccess?.(token);
-          onClose();
+        } else if (result.status === "needs_second_factor") {
+          const secondFactor = result.supportedSecondFactors?.find(
+            (f) => f.strategy === 'email_code' || f.strategy === 'phone_code'
+          );
+          if (secondFactor) {
+            await signIn.prepareSecondFactor(secondFactor);
+          }
+          setIsMfaRequired(true);
+          setOtpRequired(true);
         } else {
           throw new Error(`Login state is ${result.status}. Contact administrator.`);
         }
@@ -123,16 +133,22 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
 
     try {
       if (isLogin) {
-        const completeSignIn = await signIn.attemptFirstFactor({
-          strategy: 'email_code',
-          code: otp,
-        });
+        let completeSignIn;
+        if (isMfaRequired) {
+          completeSignIn = await signIn.attemptSecondFactor({
+            code: otp,
+          });
+        } else {
+          completeSignIn = await signIn.attemptFirstFactor({
+            strategy: 'email_code',
+            code: otp,
+          });
+        }
         if (completeSignIn.status === 'complete') {
           await setSignInActive({ session: completeSignIn.createdSessionId });
           const token = await getToken();
           localStorage.setItem('access_token', token);
           onAuthSuccess?.(token);
-          onClose();
         } else {
           throw new Error(`Verification state is ${completeSignIn.status}`);
         }
@@ -147,7 +163,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
 
           // Sync user to backend database immediately
           try {
-            await fetch('/api/auth/me', {
+            await fetch(`${API_URL}/auth/me`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
           } catch (syncErr) {
@@ -155,7 +171,6 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
           }
 
           onAuthSuccess?.(token);
-          onClose();
         } else {
           throw new Error(`Verification state is ${completeSignUp.status}`);
         }
@@ -205,14 +220,14 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         await signIn.authenticateWithRedirect({
           strategy: provider,
           redirectUrl: window.location.origin + '/sso-callback',
-          redirectUrlComplete: '/quiz'
+          redirectUrlComplete: window.location.pathname + window.location.search
         });
       } else {
         if (!isSignUpLoaded) return;
         await signUp.authenticateWithRedirect({
           strategy: provider,
           redirectUrl: window.location.origin + '/sso-callback',
-          redirectUrlComplete: '/quiz'
+          redirectUrlComplete: window.location.pathname + window.location.search
         });
       }
     } catch (err) {
@@ -260,7 +275,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             textTransform: 'uppercase',
             letterSpacing: '2px'
           }}>
-            Verify Identity
+            {isMfaRequired ? '2FA Code Required' : 'Verify Identity'}
           </h2>
           <p style={{
             fontSize: '14px',
@@ -268,7 +283,9 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             marginBottom: '24px',
             lineHeight: '1.5'
           }}>
-            A 6-digit verification code was sent to <strong style={{ color: '#ECE4D8' }}>{email}</strong>
+            {isMfaRequired 
+              ? 'Enter the 6-digit verification code from your authenticator app or email.'
+              : <>A 6-digit verification code was sent to <strong style={{ color: '#ECE4D8' }}>{email}</strong></>}
           </p>
 
           {error && (

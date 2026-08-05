@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
@@ -201,7 +202,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/api/quiz/dashboard', {
+            const res = await fetch(`${API_URL}/quiz/dashboard`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -227,7 +228,7 @@ export default function QuizPage() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/api/quiz/leaderboard', {
+            const res = await fetch(`${API_URL}/quiz/leaderboard`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -264,7 +265,7 @@ export default function QuizPage() {
         setChatLoading(false);
         setChatError(null);
         try {
-            const res = await fetch('/api/quiz/start', {
+            const res = await fetch(`${API_URL}/quiz/start`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -304,7 +305,7 @@ export default function QuizPage() {
         };
 
         try {
-            const res = await fetch('/api/quiz/submit', {
+            const res = await fetch(`${API_URL}/quiz/submit`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -357,7 +358,7 @@ export default function QuizPage() {
         };
 
         try {
-            const res = await fetch('/api/quiz/ai_chat', {
+            const res = await fetch(`${API_URL}/quiz/ai_chat`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

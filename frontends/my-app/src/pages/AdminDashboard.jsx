@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
   const fetchOverview = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/overview", { headers: tokenHeaders() });
+      const res = await fetch(`${API_URL}/admin/overview`, { headers: tokenHeaders() });
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
           setToken(null);
@@ -80,7 +81,7 @@ export default function AdminDashboard() {
 
   const fetchDinosaurs = async () => {
     try {
-      const res = await fetch("/api/admin/dinosaurs", { headers: tokenHeaders() });
+      const res = await fetch(`${API_URL}/admin/dinosaurs`, { headers: tokenHeaders() });
       if (res.ok) setDinosaurs(await res.json());
     } catch (err) { console.error(err); }
   };
@@ -88,8 +89,8 @@ export default function AdminDashboard() {
   const fetchResearchData = async () => {
     try {
       const [resPapers, resComments] = await Promise.all([
-        fetch("/api/admin/research", { headers: tokenHeaders() }),
-        fetch("/api/admin/research-comments", { headers: tokenHeaders() })
+        fetch(`${API_URL}/admin/research`, { headers: tokenHeaders() }),
+        fetch(`${API_URL}/admin/research-comments`, { headers: tokenHeaders() })
       ]);
       if (resPapers.ok) setResearch(await resPapers.json());
       if (resComments.ok) setResearchComments(await resComments.json());
@@ -99,8 +100,8 @@ export default function AdminDashboard() {
   const fetchCommunityData = async () => {
     try {
       const [resPosts, resComments] = await Promise.all([
-        fetch("/api/admin/community/posts", { headers: tokenHeaders() }),
-        fetch("/api/admin/community-comments", { headers: tokenHeaders() })
+        fetch(`${API_URL}/admin/community/posts`, { headers: tokenHeaders() }),
+        fetch(`${API_URL}/admin/community-comments`, { headers: tokenHeaders() })
       ]);
       if (resPosts.ok) setPosts(await resPosts.json());
       if (resComments.ok) setCommunityComments(await resComments.json());
@@ -170,7 +171,7 @@ export default function AdminDashboard() {
     );
 
     const isEdit = !!editingDinoId;
-    const url = isEdit ? `/api/admin/dinosaurs/${editingDinoId}` : "/api/admin/dinosaurs";
+    const url = isEdit ? `${API_URL}/admin/dinosaurs/${editingDinoId}` : `${API_URL}/admin/dinosaurs`;
     const method = isEdit ? "PUT" : "POST";
 
     try {
@@ -192,7 +193,7 @@ export default function AdminDashboard() {
   const removeDinosaur = async (dinosaur) => {
     if (!window.confirm(`Remove ${dinosaur.name} from the database?`)) return;
     try {
-      const response = await fetch(`/api/admin/dinosaurs/${dinosaur.id}`, { method: "DELETE", headers: tokenHeaders() });
+      const response = await fetch(`${API_URL}/admin/dinosaurs/${dinosaur.id}`, { method: "DELETE", headers: tokenHeaders() });
       if (!response.ok) throw new Error("Could not remove this dinosaur.");
       setMessage(`${dinosaur.name} was removed from the database.`);
       fetchOverview();
@@ -204,7 +205,7 @@ export default function AdminDashboard() {
   const removeResearch = async (research) => {
     if (!window.confirm(`Are you sure you want to delete research "${research.title}"?`)) return;
     try {
-      const response = await fetch(`/api/admin/research/${research.id}`, {
+      const response = await fetch(`${API_URL}/admin/research/${research.id}`, {
         method: "DELETE",
         headers: tokenHeaders()
       });
@@ -218,7 +219,7 @@ export default function AdminDashboard() {
   const removeResearchComment = async (comment) => {
     if (!window.confirm(`Delete comment from ${comment.author}?`)) return;
     try {
-      const response = await fetch(`/api/admin/research-comments/${comment.id}`, {
+      const response = await fetch(`${API_URL}/admin/research-comments/${comment.id}`, {
         method: "DELETE",
         headers: tokenHeaders()
       });
@@ -233,7 +234,7 @@ export default function AdminDashboard() {
   const removePost = async (post) => {
     if (!window.confirm(`Delete post "${post.title}"?`)) return;
     try {
-      const response = await fetch(`/api/admin/community/posts/${post.id}`, {
+      const response = await fetch(`${API_URL}/admin/community/posts/${post.id}`, {
         method: "DELETE",
         headers: tokenHeaders()
       });
@@ -247,7 +248,7 @@ export default function AdminDashboard() {
   const removeCommunityComment = async (comment) => {
     if (!window.confirm(`Delete comment by ${comment.author}?`)) return;
     try {
-      const response = await fetch(`/api/admin/community/comments/${comment.id}`, {
+      const response = await fetch(`${API_URL}/admin/community/comments/${comment.id}`, {
         method: "DELETE",
         headers: tokenHeaders()
       });

@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";
 import { FaMicroscope, FaClock, FaCheckCircle, FaUsers } from "react-icons/fa";
 
@@ -12,7 +13,7 @@ export default function ResearchStats() {
   const [data, setData] = useState(DEFAULT_STATS);
 
   useEffect(() => {
-    fetch("/api/research/stats")
+    fetch(`${API_URL}/research/stats`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("HTTP error " + res.status);

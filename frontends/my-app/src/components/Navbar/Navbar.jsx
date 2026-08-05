@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 import GlassAuthModal from "../GlassAuthModal";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk, useAuth } from "@clerk/clerk-react";
 
 import {
     FaBars,
@@ -82,24 +82,10 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
 
     const [visible, setVisible] = useState(true);
 
-    const getStoredToken = () => {
-        const val = localStorage.getItem('access_token');
-        if (!val) return '';
-        const clean = val.trim();
-        const parts = clean.split('.');
-        if (parts.length !== 3) {
-            return '';
-        }
-        return clean;
-    };
-
-    const [isLoggedIn, setIsLoggedIn] = useState(!!getStoredToken());
-
-    useEffect(() => {
-        setIsLoggedIn(propIsLoggedIn !== undefined ? propIsLoggedIn : !!getStoredToken());
-    }, [propIsLoggedIn]);
-
     const { signOut } = useClerk();
+    const { isSignedIn } = useAuth();
+    const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : isSignedIn;
+
     const handleLogout = async () => {
         try {
             await signOut();
@@ -107,7 +93,6 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
             console.error("Clerk signOut failed:", err);
         }
         localStorage.removeItem('access_token');
-        setIsLoggedIn(false);
         navigate('/');
         window.location.reload();
     };

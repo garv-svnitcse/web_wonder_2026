@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { FaQuoteLeft, FaAward, FaFlask, FaBookOpen } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
@@ -21,7 +22,7 @@ export default function FeaturedResearcher() {
     let active = true;
     async function fetchLeading() {
       try {
-        const response = await fetch("/api/research/leading");
+        const response = await fetch(`${API_URL}/research/leading`);
         if (response.ok) {
           const data = await response.json();
           if (active) {

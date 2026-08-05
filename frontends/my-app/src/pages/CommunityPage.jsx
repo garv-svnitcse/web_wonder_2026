@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
@@ -78,7 +79,7 @@ export default function CommunityPage() {
     setLoading(true);
     setError(null);
     try {
-      let url = `/api/community/posts?sort=${sortBy}`;
+      let url = `${API_URL}/community/posts?sort=${sortBy}`;
       if (searchQuery.trim()) {
         url += `&search=${encodeURIComponent(searchQuery.trim())}`;
       }
@@ -111,7 +112,8 @@ export default function CommunityPage() {
 
     function connectWebSocket() {
       try {
-        ws = new WebSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/community/ws`);
+        const wsBase = API_URL.startsWith("http") ? API_URL.replace(/^http/, "ws") : `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}${API_URL}`;
+        ws = new WebSocket(`${wsBase}/community/ws`);
         wsRef.current = ws;
 
         ws.onopen = () => {
@@ -215,7 +217,7 @@ export default function CommunityPage() {
     );
 
     try {
-      await fetch(`/api/community/posts/${postId}/vote`, {
+      await fetch(`${API_URL}/community/posts/${postId}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ direction }),
@@ -235,7 +237,7 @@ export default function CommunityPage() {
     setExpandedCommentsPostId(postId);
     if (!postCommentsMap[postId]) {
       try {
-        const res = await fetch(`/api/community/posts/${postId}`);
+        const res = await fetch(`${API_URL}/community/posts/${postId}`);
         if (res.ok) {
           const data = await res.json();
           setPostCommentsMap((prev) => ({
@@ -273,7 +275,7 @@ export default function CommunityPage() {
 
     setSubmittingCommentId(postId);
     try {
-      const res = await fetch(`/api/community/posts/${postId}/comments`, {
+      const res = await fetch(`${API_URL}/community/posts/${postId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -330,7 +332,7 @@ export default function CommunityPage() {
 
     setSubmittingPost(true);
     try {
-      const res = await fetch("/api/community/posts", {
+      const res = await fetch(`${API_URL}/community/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPost),

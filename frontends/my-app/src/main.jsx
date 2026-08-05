@@ -1,3 +1,4 @@
+import { API_URL } from "./config/api";
 import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
@@ -17,7 +18,7 @@ function SyncClerkToken() {
           if (token) {
             localStorage.setItem('access_token', token);
             // Trigger automatic sync of the user token with the database
-            fetch('/api/auth/me', {
+            fetch(`${API_URL}/auth/me`, {
               headers: { 'Authorization': `Bearer ${token}` }
             }).catch(err => console.warn("Failed to auto-sync user profile:", err));
           }
