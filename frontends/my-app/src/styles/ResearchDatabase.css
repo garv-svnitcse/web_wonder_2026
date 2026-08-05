@@ -1,0 +1,495 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root{
+
+    --gold:#D6A14B;
+
+    --goldDark:#AF7B28;
+
+    --bg:#07100B;
+
+    --card:#101814;
+
+    --text:#ECE4D8;
+
+    --muted:#BBBBBB;
+
+}
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+body{
+
+    font-family:"Inter",sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+}
+.databasePage{
+    position: relative;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top,#12331e 0%,#07100B 45%);
+}
+
+/* ========================= */
+
+.databaseHero{
+
+    width:min(1400px,92%);
+
+    margin:auto;
+
+    padding:170px 0 90px;
+
+    text-align:center;
+
+}
+
+.databaseHero h1{
+
+    font-family:"Cinzel",serif;
+
+    font-size:clamp(55px,7vw,95px);
+
+    margin-bottom:25px;
+
+    line-height:1.1;
+
+}
+
+.databaseHero p{
+
+    max-width:850px;
+
+    margin:auto;
+
+    color:var(--muted);
+
+    font-size:18px;
+
+    line-height:2;
+
+}
+
+/* ========================= */
+
+.searchSection{
+
+    width:min(1500px,92%);
+
+    margin:auto;
+
+}
+
+/* ========================= */
+
+.searchBar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    height:78px;
+
+    border-radius:60px;
+
+    padding:0 30px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:.35s;
+
+}
+
+.searchBar:hover{
+
+    border-color:rgba(214,161,75,.35);
+
+}
+
+.searchBar svg{
+
+    font-size:24px;
+
+    color:var(--gold);
+
+}
+
+.searchBar input{
+
+    flex:1;
+
+    border:none;
+
+    outline:none;
+
+    background:none;
+
+    color:white;
+
+    font-size:18px;
+
+}
+
+.searchBar input::placeholder{
+
+    color:#888;
+
+}
+
+/* ========================= */
+
+.filters{
+
+    margin-top:35px;
+
+    display:grid;
+
+    grid-template-columns:220px repeat(3,1fr);
+
+    gap:25px;
+
+}
+
+.filterTitle{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:14px;
+
+    border-radius:18px;
+
+    background:rgba(214,161,75,.12);
+
+    color:var(--gold);
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+}
+
+.filters select{
+
+    height:60px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:18px;
+
+    padding:0 18px;
+
+    background:var(--card);
+
+    color:white;
+
+    cursor:pointer;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    transition:.35s;
+
+}
+
+.filters select:hover{
+
+    border-color:rgba(214,161,75,.35);
+
+}
+
+/* ===========================================================
+   RESULTS
+=========================================================== */
+
+.resultsSection{
+
+    width:min(1500px,92%);
+
+    margin:80px auto 140px;
+
+}
+
+.resultsHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:40px;
+
+}
+
+.resultsHeader h3{
+
+    font-family:"Cinzel",serif;
+
+    font-size:34px;
+
+    color:var(--gold);
+
+    letter-spacing:2px;
+
+}
+
+/* ===========================================================
+   DATABASE GRID
+=========================================================== */
+
+.databaseGrid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+    gap:35px;
+
+}
+
+/* ===========================================================
+   LOADING SKELETON
+=========================================================== */
+
+.loadingGrid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+    gap:35px;
+
+}
+
+.skeletonCard{
+
+    height:500px;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    background:#101814;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+.skeletonImage{
+
+    height:72%;
+
+    background:linear-gradient(
+
+        90deg,
+
+        #111,
+
+        #222,
+
+        #111
+
+    );
+
+    animation:loading 1.3s infinite;
+
+}
+
+.skeletonText{
+
+    width:80%;
+
+    height:18px;
+
+    border-radius:12px;
+
+    margin:28px;
+
+    background:linear-gradient(
+
+        90deg,
+
+        #111,
+
+        #222,
+
+        #111
+
+    );
+
+    animation:loading 1.3s infinite;
+
+}
+
+.skeletonText.short{
+
+    width:45%;
+
+    margin-top:0;
+
+}
+
+@keyframes loading{
+
+    0%{
+
+        background-position:-400px;
+
+    }
+
+    100%{
+
+        background-position:400px;
+
+    }
+
+}
+
+/* ===========================================================
+   NO RESULTS
+=========================================================== */
+
+.noResults{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:120px 0;
+
+    text-align:center;
+
+}
+
+.noResults h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:54px;
+
+    margin-bottom:18px;
+
+}
+
+.noResults p{
+
+    color:var(--muted);
+
+    font-size:18px;
+
+}
+
+/* ===========================================================
+   FOOTER
+=========================================================== */
+
+.databaseFooter{
+
+    width:100%;
+
+    padding:60px 0 120px;
+
+}
+
+.footerCard{
+
+    width:min(1200px,92%);
+
+    margin:auto;
+
+    text-align:center;
+
+    padding:70px;
+
+    border-radius:35px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            rgba(214,161,75,.08),
+
+            rgba(255,255,255,.03)
+
+        );
+
+    border:1px solid rgba(214,161,75,.12);
+
+}
+
+.footerCard span{
+
+    color:var(--gold);
+
+    letter-spacing:8px;
+
+    font-size:13px;
+
+}
+
+.footerCard h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:58px;
+
+    margin:25px 0;
+
+}
+
+.footerCard p{
+
+    max-width:760px;
+
+    margin:auto;
+
+    color:var(--muted);
+
+    line-height:2;
+
+}
+
+.databasePage canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+}
+
+.databasePage > *:not(canvas){
+    position:relative;
+    z-index:2;
+}

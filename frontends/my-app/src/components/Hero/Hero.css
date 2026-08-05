@@ -1,0 +1,897 @@
+/* =======================================================
+   HERO ROOT
+======================================================= */
+
+.hero {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    background: #08110B;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+/* =======================================================
+   BACKGROUND
+======================================================= */
+
+.heroBackground {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(rgba(6, 10, 8, .45),
+
+            rgba(6, 10, 8, .72)),
+
+        url("/images/jungle-bg.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    will-change: transform;
+
+    transition: transform .15s linear;
+
+}
+
+/* =======================================================
+   DARK GRADIENT
+======================================================= */
+
+.heroGradient {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(to bottom,
+
+            rgba(0, 0, 0, .25),
+
+            rgba(0, 0, 0, .35),
+
+            rgba(8, 17, 11, .96));
+
+}
+
+/* =======================================================
+   GLOW
+======================================================= */
+
+.heroGlow {
+
+    position: absolute;
+
+    width: 900px;
+
+    height: 900px;
+
+    border-radius: 50%;
+
+    left: -220px;
+
+    top: -260px;
+
+    background:
+
+        radial-gradient(circle,
+
+            rgba(214, 161, 75, .22),
+
+            transparent 70%);
+
+    filter: blur(140px);
+
+    animation: glowMove 12s ease-in-out infinite;
+
+}
+
+@keyframes glowMove {
+
+    0% {
+
+        transform: translate(0, 0);
+
+    }
+
+    50% {
+
+        transform: translate(120px, 60px);
+
+    }
+
+    100% {
+
+        transform: translate(0, 0);
+
+    }
+
+}
+
+/* =======================================================
+   FOG
+======================================================= */
+
+.heroFog {
+
+    position: absolute;
+
+    width: 180%;
+
+    left: -40%;
+
+    height: 320px;
+
+    filter: blur(70px);
+
+}
+
+.heroFogOne {
+
+    bottom: -40px;
+
+    background:
+
+        linear-gradient(rgba(255, 255, 255, .12),
+
+            transparent);
+
+    animation: fogOne 22s linear infinite;
+
+}
+
+.heroFogTwo {
+
+    bottom: 180px;
+
+    opacity: .45;
+
+    background:
+
+        linear-gradient(rgba(255, 255, 255, .06),
+
+            transparent);
+
+    animation: fogTwo 30s linear infinite;
+
+}
+
+@keyframes fogOne {
+
+    from {
+
+        transform: translateX(0);
+
+    }
+
+    to {
+
+        transform: translateX(-180px);
+
+    }
+
+}
+
+@keyframes fogTwo {
+
+    from {
+
+        transform: translateX(-120px);
+
+    }
+
+    to {
+
+        transform: translateX(120px);
+
+    }
+
+}
+
+/* =======================================================
+   NOISE
+======================================================= */
+
+.heroNoise {
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .05;
+
+    background-image:
+
+        radial-gradient(circle, #fff 1px, transparent 1px);
+
+    background-size: 4px 4px;
+
+}
+
+/* =======================================================
+   VIGNETTE
+======================================================= */
+
+.heroVignette {
+
+    position: absolute;
+
+    inset: 0;
+
+    box-shadow:
+
+        inset 0 0 220px rgba(0, 0, 0, .95);
+
+}
+
+/* =======================================================
+   CONTAINER
+======================================================= */
+
+.heroContainer {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: min(1500px, 92%);
+
+    display: grid;
+
+    grid-template-columns: 1.1fr .9fr;
+
+    align-items: center;
+
+    gap: 60px;
+
+    padding-top: 130px;
+
+}
+
+/* =======================================================
+   LEFT
+======================================================= */
+
+.heroContent {
+
+    max-width: 760px;
+
+}
+
+.heroTag {
+
+    display: inline-block;
+
+    color: #D6A14B;
+
+    letter-spacing: 7px;
+
+    font-size: 13px;
+
+    margin-bottom: 26px;
+
+}
+
+.heroTitle {
+
+    font-family: "Cinzel", serif;
+
+    font-size: clamp(70px, 9vw, 150px);
+
+    line-height: .9;
+
+    color: #ECE4D8;
+
+    letter-spacing: 5px;
+
+    margin-bottom: 35px;
+
+}
+
+.heroDescription {
+
+    color: #cfcfcf;
+
+    line-height: 2;
+
+    font-size: 18px;
+
+    max-width: 620px;
+
+}
+
+/* =======================================================
+   BUTTONS
+======================================================= */
+
+.heroButtons {
+
+    display: flex;
+
+    gap: 22px;
+
+    margin-top: 50px;
+
+}
+
+.primaryHeroButton {
+
+    padding: 18px 38px;
+
+    border: none;
+
+    cursor: pointer;
+
+    border-radius: 50px;
+
+    background: #D6A14B;
+
+    color: #111;
+
+    font-weight: 700;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    transition: .35s;
+
+}
+
+.primaryHeroButton:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow:
+
+        0 18px 35px rgba(214, 161, 75, .45);
+
+}
+
+.secondaryHeroButton {
+
+    padding: 18px 38px;
+
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    color: white;
+
+    border: 1px solid rgba(255, 255, 255, .12);
+
+    background: rgba(255, 255, 255, .05);
+
+    backdrop-filter: blur(10px);
+
+    transition: .35s;
+
+}
+
+.secondaryHeroButton:hover {
+
+    background: rgba(255, 255, 255, .12);
+
+}
+
+/* =======================================================
+   RIGHT SIDE
+======================================================= */
+
+.heroRight {
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 700px;
+
+}
+
+/* =======================================================
+   DINOSAUR
+======================================================= */
+
+.dinosaurSilhouette {
+
+    position: relative;
+
+    width: min(700px, 90%);
+
+    animation: floatTrex 8s ease-in-out infinite;
+
+    z-index: 5;
+
+}
+
+.dinosaurSilhouette img {
+
+    width: 100%;
+
+    display: block;
+
+    user-select: none;
+
+    pointer-events: none;
+
+    filter:
+
+        drop-shadow(0 0 35px rgba(214, 161, 75, .18)) brightness(.95);
+
+}
+
+@keyframes floatTrex {
+
+    0% {
+
+        transform: translateY(0px);
+
+    }
+
+    50% {
+
+        transform: translateY(-18px);
+
+    }
+
+    100% {
+
+        transform: translateY(0px);
+
+    }
+
+}
+
+/* =======================================================
+   GLOW CIRCLE
+======================================================= */
+
+.shadowCircle {
+
+    position: absolute;
+
+    width: 520px;
+
+    height: 520px;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(circle,
+
+            rgba(214, 161, 75, .22),
+
+            transparent 70%);
+
+    filter: blur(80px);
+
+    animation: shadowPulse 6s ease-in-out infinite;
+
+}
+
+@keyframes shadowPulse {
+
+    0% {
+
+        transform: translate(-50%, -50%) scale(.9);
+
+    }
+
+    50% {
+
+        transform: translate(-50%, -50%) scale(1.08);
+
+    }
+
+    100% {
+
+        transform: translate(-50%, -50%) scale(.9);
+
+    }
+
+}
+
+/* =======================================================
+   STATS
+======================================================= */
+
+.heroStats {
+
+    margin-top: 90px;
+
+    display: flex;
+
+    gap: 55px;
+
+}
+
+.stat {
+
+    position: relative;
+
+}
+
+.stat::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: -18px;
+
+    top: 6px;
+
+    width: 3px;
+
+    height: 58px;
+
+    border-radius: 30px;
+
+    background: #D6A14B;
+
+}
+
+.stat h2 {
+
+    font-family: "Cinzel", serif;
+
+    font-size: 40px;
+
+    color: #ECE4D8;
+
+    margin-bottom: 10px;
+
+}
+
+.stat span {
+
+    color: #bcbcbc;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+}
+
+/* =======================================================
+   SCROLL INDICATOR
+======================================================= */
+
+.scrollIndicator {
+
+    position: absolute;
+
+    bottom: 45px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 12px;
+
+    z-index: 10;
+
+}
+
+.scrollIndicator span {
+
+    color: #bdbdbd;
+
+    font-size: 11px;
+
+    letter-spacing: 5px;
+
+}
+
+.mouse {
+
+    width: 34px;
+
+    height: 56px;
+
+    border-radius: 25px;
+
+    border: 2px solid rgba(255, 255, 255, .35);
+
+    display: flex;
+
+    justify-content: center;
+
+    padding-top: 8px;
+
+}
+
+.wheel {
+
+    width: 5px;
+
+    height: 12px;
+
+    border-radius: 20px;
+
+    background: #D6A14B;
+
+    animation: wheelMove 1.6s infinite;
+
+}
+
+@keyframes wheelMove {
+
+    0% {
+
+        transform: translateY(0);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform: translateY(18px);
+
+        opacity: 0;
+
+    }
+
+}
+
+/* =======================================================
+   PARTICLES
+======================================================= */
+
+.particles {
+
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+}
+
+.particle {
+
+    position: absolute;
+
+    bottom: -20px;
+
+    width: 5px;
+
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 245, 210, .75);
+
+    box-shadow:
+
+        0 0 12px rgba(255, 240, 180, .65);
+
+    animation: particleFloat linear infinite;
+
+}
+
+@keyframes particleFloat {
+
+    from {
+
+        transform: translateY(0) scale(.7);
+
+        opacity: 0;
+
+    }
+
+    15% {
+
+        opacity: 1;
+
+    }
+
+    85% {
+
+        opacity: 1;
+
+    }
+
+    to {
+
+        transform: translateY(-120vh) scale(1.2);
+
+        opacity: 0;
+
+    }
+
+}
+
+/* =======================================================
+   BOTTOM FADE
+======================================================= */
+
+.heroBottomFade {
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 0;
+
+    width: 100%;
+
+    height: 220px;
+
+    background:
+
+        linear-gradient(transparent,
+
+            #08110B);
+
+    z-index: 4;
+
+}
+
+/* =======================================================
+   RESPONSIVE
+======================================================= */
+
+@media(max-width:1200px) {
+
+    .heroContainer {
+
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+    }
+
+    .heroContent {
+
+        margin: auto;
+
+    }
+
+    .heroDescription {
+
+        margin: auto;
+
+    }
+
+    .heroButtons {
+
+        justify-content: center;
+
+    }
+
+    .heroStats {
+
+        justify-content: center;
+
+    }
+
+    .heroRight {
+
+        min-height: 500px;
+
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .hero {
+
+        padding-top: 120px;
+
+    }
+
+    .heroContainer {
+
+        padding-top: 0;
+
+    }
+
+    .heroTitle {
+
+        font-size: 72px;
+
+    }
+
+    .heroButtons {
+
+        flex-direction: column;
+
+    }
+
+    .primaryHeroButton,
+
+    .secondaryHeroButton {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
+    .heroStats {
+
+        flex-direction: column;
+
+        gap: 30px;
+
+    }
+
+    .heroRight {
+
+        display: none;
+
+    }
+
+}
+
+@media(max-width:500px) {
+
+    .heroTag {
+
+        font-size: 11px;
+
+    }
+
+    .heroDescription {
+
+        font-size: 15px;
+
+        line-height: 1.8;
+
+    }
+
+    .heroTitle {
+
+        font-size: 56px;
+
+    }
+
+    .scrollIndicator {
+
+        display: none;
+
+    }
+
+}

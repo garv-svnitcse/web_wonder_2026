@@ -1,0 +1,278 @@
+.dinosaurCard{
+
+    position:relative;
+
+    height:540px;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    cursor:pointer;
+
+    background:#101814;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    transition:.45s;
+
+}
+
+.dinosaurCard:hover{
+
+    transform:translateY(-10px);
+
+    border-color:rgba(214,161,75,.35);
+
+    box-shadow:
+
+        0 30px 60px rgba(0,0,0,.45);
+
+}
+
+.dinosaurCard img{
+
+    position: absolute;
+
+    top: 25px;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 48%; /* Fits nicely in the upper portion of the 540px card */
+
+    object-fit: contain;
+
+    transition: 1.2s;
+
+}
+
+.dinosaurCard:hover img{
+
+    transform:scale(1.12);
+
+}
+
+/* ======================================== */
+
+.cardOverlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    padding:30px;
+
+    background:
+
+    linear-gradient(
+
+        transparent 15%,
+
+        rgba(0,0,0,.25) 40%,
+
+        rgba(0,0,0,.96)
+
+    );
+
+}
+
+/* ======================================== */
+
+.cardBadges{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:20px;
+
+}
+
+.badge{
+
+    padding:6px 12px;
+
+    border-radius:50px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    background:rgba(8, 17, 11, 0.85);
+
+    backdrop-filter:blur(4px);
+
+    border:1px solid rgba(255, 255, 255, 0.1);
+
+}
+
+.badge.era{
+
+    color:#D6A14B;
+
+    border-color:rgba(214,161,75,0.4);
+
+}
+
+.badge.diet{
+
+    color:#ECE4D8;
+
+    border-color:rgba(255,255,255,0.15);
+
+}
+
+.badge.danger{
+
+    color:#FF6B6B;
+
+    background:rgba(123,30,30,0.85);
+
+    border-color:rgba(255,107,107,0.3);
+
+}
+
+/* ======================================== */
+
+.cardOverlay h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:28px;
+
+    line-height:1.2;
+
+    margin-bottom:6px;
+
+    height:34px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+    color:white;
+
+}
+
+.cardOverlay h4{
+
+    color:#D6A14B;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    margin-bottom:15px;
+
+    height:20px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+}
+
+.cardDescription{
+
+    color:#d0d0d0;
+
+    line-height:1.6;
+
+    height:75px;
+
+    margin-bottom:20px;
+
+    display:-webkit-box;
+
+    -webkit-line-clamp:3;
+
+    -webkit-box-orient:vertical;
+
+    overflow:hidden;
+
+}
+
+/* ========================================
+   STATS ROW & ALIGNMENT
+======================================== */
+
+.statsRow {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-left:3px solid #D6A14B;
+    padding-left:15px;
+    margin-bottom:20px;
+    height:38px;
+}
+
+/* Override global .stat style from Hero.css */
+.dinosaurCard .stat {
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:2px;
+    position:relative;
+}
+
+.dinosaurCard .stat::before {
+    display:none !important;
+}
+
+.dinosaurCard .stat span {
+    font-size:10px;
+    color:#888;
+    letter-spacing:1px;
+    font-weight:600;
+    line-height:1;
+}
+
+.dinosaurCard .stat h3 {
+    font-size:14px;
+    color:#ECE4D8;
+    margin:0;
+    font-weight:700;
+    line-height:1.2;
+}
+
+/* Explore Button inside Card */
+.dinosaurCard .exploreButton {
+    width:100%;
+    height:46px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg, #D6A14B, #B98531);
+    color:#111 !important;
+    font-weight:700;
+    font-size:14px;
+    border-radius:30px;
+    letter-spacing:1px;
+    transition:all 0.35s ease;
+    border:none;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.dinosaurCard .exploreButton:hover {
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(214,161,75,0.3);
+}

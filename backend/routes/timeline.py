@@ -1,0 +1,99 @@
+from fastapi import APIRouter,HTTPException
+from schemas.timeline import Timeline
+from db.database import dinosaur_collection
+
+router = APIRouter()
+
+def get_thumbnail_url(url: str) -> str:
+    if url and "drive.google.com/file/d/" in url:
+        try:
+            file_id = url.split("/file/d/")[1].split("/")[0]
+            return f"https://drive.google.com/thumbnail?id={file_id}&sz=w600"
+        except Exception:
+            pass
+    return url
+
+@router.get("/preview")
+def preview_timeline():
+    data = dinosaur_collection.find().sort("million_years_ago", 1).limit(3)
+    dinosaurs = list(data)
+    dinosaurs_list = []
+    for i in dinosaurs:
+        stats = i.get("physical_stats") or {}
+        length_m = stats.get("length_m", 0)
+        weight_tons = stats.get("weight_tons", 0)
+        speed_kmph = stats.get("speed_kmph", 0)
+        
+        # Format weight dynamically
+        if weight_tons and weight_tons < 1.0:
+            weight_str = f"{int(weight_tons * 1000)} kg"
+        else:
+            weight_str = f"{weight_tons} Tons" if weight_tons else "N/A"
+            
+        dinosaurs_list.append({
+            "name": str(i.get("name", "")).upper(),
+            "era": str(i.get("period", i.get("era", ""))),
+            "length": f"{length_m} m" if length_m else "N/A",
+            "weight": weight_str,
+            "speed": f"{speed_kmph} km/h" if speed_kmph else "N/A",
+            "diet": str(i.get("diet", "")),
+            "slug": str(i.get("slug", "")),
+            "video" : get_thumbnail_url(str(i.get("video","")))
+        })
+    return dinosaurs_list
+
+@router.get("")
+def full_timeline():
+    data = dinosaur_collection.find().sort('million_years_ago', 1)
+    dinosaurs = list(data)
+    dinosaurs_list = []
+    for i in dinosaurs:
+        dinosaurs_list.append({
+            "id": str(i.get('_id', '')),
+            "name": str(i.get("name", "")),
+            "slug": str(i.get('slug', '')),
+            "million_years_ago": str(i.get('million_years_ago', '')),
+            "icon": str(i.get('icon_url', i.get('icon', '')))
+        })
+    return dinosaurs_list
+
+@router.post('/search')
+def search(data: Timeline):
+    query = {}
+    if data.keyword:
+        query["name"] = {
+            "$regex": data.keyword,
+            "$options": "i"
+        }
+    if data.habitat:
+        query['habitat'] = data.habitat
+    if data.era:
+        query['era'] = data.era
+    if data.period:
+        query['period'] = data.period
+    if data.diet:
+        query['diet'] = data.diet
+    data = dinosaur_collection.find(query).sort("million_years_ago", 1)
+    dinosaurs = list(data)
+    dinosaurs_list = []
+    for i in dinosaurs:
+        dinosaurs_list.append({
+            "id": str(i.get('_id', '')),
+            "name": str(i.get("name", "")),
+            "slug": str(i.get('slug', '')),
+            "million_years_ago": str(i.get('million_years_ago', '')),
+            "icon": str(i.get('icon_url', i.get('icon', '')))
+        })
+    return dinosaurs_list
+
+@router.get("/{slug}")
+def dinosaur(slug : str) :
+    dinosaur_detail = dinosaur_collection.find_one({
+        "slug":slug
+    })
+    if dinosaur_detail is None :
+        raise HTTPException(status_code=404,detail='Dinosaur Not Found')
+    dinosaur_detail["id"] = str(dinosaur_detail.pop("_id"))
+    if "3d_model_url" not in dinosaur_detail or not dinosaur_detail["3d_model_url"]:
+        dinosaur_detail["3d_model_url"] = f"/models/{slug.split('-')[0]}.glb"
+    return dinosaur_detail

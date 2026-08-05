@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+email-validator
+python-dotenv
+pymongo
+cloudinary
+python-multipart
+google-genai
+scikit-learn
+clerk-backend-api
+

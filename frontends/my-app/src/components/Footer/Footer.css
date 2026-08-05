@@ -1,0 +1,487 @@
+/* ===========================================================
+   FOOTER
+=========================================================== */
+
+.footer {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #061009;
+
+    color: white;
+
+    margin-top: 120px;
+
+}
+
+/* ===========================================================
+   VIDEO BACKGROUND
+=========================================================== */
+
+.footerBackground {
+
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+}
+
+.footerVideo {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    filter: brightness(.45);
+
+}
+
+.footerOverlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(to top,
+
+            #061009,
+
+            rgba(6, 16, 9, .85),
+
+            rgba(6, 16, 9, .55));
+
+}
+
+/* ===========================================================
+   CONTENT
+=========================================================== */
+
+.footerContent {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: min(1550px, 92%);
+
+    margin: auto;
+
+    padding: 120px 0 40px;
+
+}
+
+/* ===========================================================
+   TOP GRID
+=========================================================== */
+
+.footerTop {
+
+    display: grid;
+
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+
+    gap: 60px;
+
+    margin-bottom: 70px;
+
+}
+
+/* ===========================================================
+   LOGO
+=========================================================== */
+
+.footerLogo h2 {
+
+    font-family: "Cinzel", serif;
+
+    font-size: 38px;
+
+    color: #ECE4D8;
+
+    margin-bottom: 25px;
+
+}
+
+.footerLogo p {
+
+    color: #C8C8C8;
+
+    line-height: 2;
+
+    max-width: 520px;
+
+    margin-bottom: 35px;
+
+}
+
+/* ===========================================================
+   SOCIALS
+=========================================================== */
+
+.footerIcons {
+
+    display: flex;
+
+    gap: 18px;
+
+}
+
+.footerIcons a {
+
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    color: white;
+
+    background: rgba(255, 255, 255, .05);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    transition: .35s;
+
+}
+
+.footerIcons a:hover {
+
+    background: #D6A14B;
+
+    color: #111;
+
+    transform: translateY(-5px);
+
+}
+
+/* ===========================================================
+   LINKS
+=========================================================== */
+
+.footerLinks h3 {
+
+    font-family: "Cinzel", serif;
+
+    margin-bottom: 25px;
+
+    color: #ECE4D8;
+
+}
+
+.footerLinks ul {
+
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+.footerLinks li {
+
+    margin-bottom: 16px;
+
+}
+
+.footerLinks a {
+
+    text-decoration: none;
+
+    color: #BEBEBE;
+
+    transition: .3s;
+
+}
+
+.footerLinks a:hover {
+
+    color: #D6A14B;
+
+    padding-left: 8px;
+
+}
+
+/* ===========================================================
+   NEWSLETTER
+=========================================================== */
+
+.footerNewsletter h3 {
+
+    font-family: "Cinzel", serif;
+
+    color: #ECE4D8;
+
+    margin-bottom: 20px;
+
+}
+
+.footerNewsletter p {
+
+    color: #BDBDBD;
+
+    line-height: 1.8;
+
+    margin-bottom: 28px;
+
+}
+
+.newsletterBox {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+.newsletterBox input {
+
+    flex: 1;
+
+    height: 56px;
+
+    border: none;
+
+    outline: none;
+
+    border-radius: 16px;
+
+    padding: 0 18px;
+
+    color: white;
+
+    background: rgba(255, 255, 255, .06);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    backdrop-filter: blur(12px);
+
+}
+
+.newsletterBox input::placeholder {
+
+    color: #888;
+
+}
+
+.newsletterBox button {
+
+    width: 130px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    background: linear-gradient(135deg,
+
+            #D6A14B,
+
+            #AF7B28);
+
+    color: #111;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    transition: .35s;
+
+}
+
+.newsletterBox button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+
+        0 18px 35px rgba(214, 161, 75, .35);
+
+}
+
+/* ===========================================================
+   FOOTER BOTTOM
+=========================================================== */
+
+.footerBottom {
+
+    border-top: 1px solid rgba(255, 255, 255, .08);
+
+    padding-top: 35px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+.footerBottom p {
+
+    color: #999;
+
+    letter-spacing: 1px;
+
+}
+
+/* ===========================================================
+   SCROLL BUTTON
+=========================================================== */
+
+.scrollTop {
+
+    width: 58px;
+
+    height: 58px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #111;
+
+    background: linear-gradient(135deg,
+
+            #D6A14B,
+
+            #AF7B28);
+
+    transition: .35s;
+
+}
+
+.scrollTop:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+
+        0 20px 40px rgba(214, 161, 75, .35);
+
+}
+
+/* ===========================================================
+   RESPONSIVE
+=========================================================== */
+
+@media(max-width:1200px) {
+
+    .footerTop {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 50px;
+
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .footerContent {
+
+        padding: 90px 0 30px;
+
+    }
+
+    .footerTop {
+
+        grid-template-columns: 1fr;
+
+        gap: 40px;
+
+    }
+
+    .newsletterBox {
+
+        flex-direction: column;
+
+    }
+
+    .newsletterBox button {
+
+        width: 100%;
+
+        height: 56px;
+
+    }
+
+    .footerBottom {
+
+        flex-direction: column;
+
+        gap: 25px;
+
+        text-align: center;
+
+    }
+
+}
+
+@media(max-width:500px) {
+
+    .footerLogo h2 {
+
+        font-size: 28px;
+
+    }
+
+    .footerLogo p {
+
+        font-size: 15px;
+
+    }
+
+    .footerIcons {
+
+        flex-wrap: wrap;
+
+    }
+
+    .footerIcons a {
+
+        width: 46px;
+
+        height: 46px;
+
+    }
+
+    .scrollTop {
+
+        width: 52px;
+
+        height: 52px;
+
+    }
+
+}
