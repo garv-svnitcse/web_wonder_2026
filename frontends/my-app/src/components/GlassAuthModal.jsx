@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useSignIn, useSignUp, useAuth } from '@clerk/clerk-react';
-import { apiUrl } from '../config/api';
-
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRules = [
   {
@@ -149,7 +147,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
 
           // Sync user to backend database immediately
           try {
-            await fetch(apiUrl('/auth/me'), {
+            await fetch('/api/auth/me', {
               headers: { 'Authorization': `Bearer ${token}` }
             });
           } catch (syncErr) {
