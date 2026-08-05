@@ -4,6 +4,35 @@ import { FaCloudUploadAlt, FaPaperPlane } from "react-icons/fa";
 import SuccessModal from "./SuccessModal";
 
 export default function SubmitResearchForm() {
+  const getStoredResearcherData = () => {
+    if (typeof window === "undefined") {
+      return {
+        name: "",
+        email: "",
+        specialization: "",
+        awardsWon: "",
+        quote: "",
+      };
+    }
+
+    try {
+      const saved = localStorage.getItem("researcher_profile");
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (err) {
+      console.error("Failed to read saved researcher profile:", err);
+    }
+
+    return {
+      name: "",
+      email: "",
+      specialization: "",
+      awardsWon: "",
+      quote: "",
+    };
+  };
+
   const [formData, setFormData] = useState({
     title: "",
     coResearchers: "",
@@ -20,26 +49,30 @@ export default function SubmitResearchForm() {
   const [evidenceFile, setEvidenceFile] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const [researcherData, setResearcherData] = useState({
-    name: "",
-    email: "",
-    specialization: "",
-    awardsWon: "",
-  });
+  const [researcherData, setResearcherData] = useState(getStoredResearcherData);
   const [avatarName, setAvatarName] = useState("");
   const [avatarFile, setAvatarFile] = useState(null);
+  const [profileFetched, setProfileFetched] = useState(false);
 
   useEffect(() => {
+    localStorage.setItem("researcher_profile", JSON.stringify(researcherData));
+  }, [researcherData]);
+
+  useEffect(() => {
+    if (profileFetched) return;
+
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
+    let isMounted = true;
+
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch("/api/auth/me", {
+        const response = await fetch(`${API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.ok) {
+        if (response.ok && isMounted) {
           const user = await response.json();
           setResearcherData((prev) => ({
             ...prev,
@@ -49,11 +82,19 @@ export default function SubmitResearchForm() {
         }
       } catch (err) {
         console.error("Failed to load user profile:", err);
+      } finally {
+        if (isMounted) {
+          setProfileFetched(true);
+        }
       }
     };
 
     fetchUserProfile();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [profileFetched]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -124,12 +165,12 @@ export default function SubmitResearchForm() {
           references: "",
           notes: "",
         });
-        setResearcherData({
-          name: "",
-          email: "",
+        setResearcherData((prev) => ({
+          ...prev,
           specialization: "",
           awardsWon: "",
-        });
+          quote: "",
+        }));
         setFileName("");
         setAvatarName("");
         setEvidenceFile(null);
@@ -319,7 +360,6 @@ export default function SubmitResearchForm() {
                   placeholder="e.g. Dr. Amelia Hart"
                   value={researcherData.name}
                   onChange={handleResearcherChange}
-                  readOnly={Boolean(researcherData.name)}
                   required
                 />
               </div>
@@ -373,7 +413,6 @@ export default function SubmitResearchForm() {
                   placeholder="e.g. amelia.hart@explorer.org"
                   value={researcherData.email}
                   onChange={handleResearcherChange}
-                  readOnly={Boolean(researcherData.email)}
                   required
                 />
               </div>
