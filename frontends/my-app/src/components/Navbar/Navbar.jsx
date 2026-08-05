@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 import GlassAuthModal from "../GlassAuthModal";
+import { useClerk } from "@clerk/clerk-react";
 
 import {
     FaBars,
@@ -98,7 +99,13 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
         setIsLoggedIn(propIsLoggedIn !== undefined ? propIsLoggedIn : !!getStoredToken());
     }, [propIsLoggedIn]);
 
-    const handleLogout = () => {
+    const { signOut } = useClerk();
+    const handleLogout = async () => {
+        try {
+            await signOut();
+        } catch (err) {
+            console.error("Clerk signOut failed:", err);
+        }
         localStorage.removeItem('access_token');
         setIsLoggedIn(false);
         navigate('/');
@@ -444,22 +451,22 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn }) {
 
                                         </nav>
 
-                                        <div className="mobileBottom">
+                                         <div className="mobileBottom">
 
-                                            {isLoggedIn ? (
-                                                <button
-                                                    className="mobileCTA"
-                                                    onClick={() => {
-                                                        setOpen(false);
-                                                        handleLogout();
-                                                    }}
-                                                    style={{
-                                                        background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
-                                                        color: '#ffffff'
-                                                    }}
-                                                >
-                                                    LOGOUT
-                                                </button>
+                                             {isLoggedIn ? (
+                                                 <button
+                                                     className="mobileCTA"
+                                                     onClick={() => {
+                                                         setOpen(false);
+                                                         handleLogout();
+                                                     }}
+                                                     style={{
+                                                         background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
+                                                         color: '#ffffff'
+                                                     }}
+                                                 >
+                                                     LOGOUT
+                                                 </button>
                                             ) : (
                                                 <button
                                                     className="mobileCTA"

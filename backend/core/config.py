@@ -14,8 +14,7 @@ API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-raw_redis_uri = (os.getenv("REDIS_URI") or os.getenv("REDIS_URL") or "redis://localhost:6379").strip()
-if "redis-cli -u " in raw_redis_uri:
-    raw_redis_uri = raw_redis_uri.split("redis-cli -u ")[1].strip()
-REDIS_URL = raw_redis_uri
+CLERK_SECRET_KEY = os.getenv("CLERK_SECRET_KEY") or "mock_secret_key"
+CLERK_JWT_KEY = os.getenv("CLERK_JWT_KEY") or ""
+
 

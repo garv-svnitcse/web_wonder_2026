@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 
 import Home from "./pages/Home";
 import ResearchDatabase from "./pages/ResearchDatabase";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
       </Routes>
     </BrowserRouter>
   );

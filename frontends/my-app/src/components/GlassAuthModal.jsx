@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useSignIn, useSignUp, useAuth } from '@clerk/clerk-react';
 import { apiUrl } from '../config/api';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +28,10 @@ const passwordRules = [
 ];
 
 export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
+  const { isLoaded: isSignInLoaded, signIn, setActive: setSignInActive } = useSignIn();
+  const { isLoaded: isSignUpLoaded, signUp, setActive: setSignUpActive } = useSignUp();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,70 +60,59 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const strengthLabel = strengthLabels[strengthIndex];
   const strengthColor = strengthColors[strengthIndex];
   const canSubmit = emailIsValid && (isLogin ? password.length > 0 : passwordIsValid) && !loading;
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      getToken().then((token) => {
+        if (token) {
+          localStorage.setItem('access_token', token);
+          onAuthSuccess?.(token);
+        }
+      });
+    }
+  }, [isLoaded, isSignedIn, getToken, onAuthSuccess]);
 
   if (!isOpen) return null;
+  if (isLoaded && isSignedIn) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // Keep auth on the same configured backend origin as the rest of the app.
-    // Calling `/api/...` directly only works while the Vite development proxy is
-    // running and can otherwise return an empty HTML/response body.
-    const url = apiUrl(isLogin ? '/auth/login' : '/auth/signup');
-    
-    const body = isLogin 
-      ? { email, password } 
-      : { email, password, name: name || 'Explorer' };
-
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
+      if (isLogin) {
+        if (!isSignInLoaded) return;
+        const result = await signIn.create({
+          identifier: email,
+          password: password,
+        });
 
-      // Error responses are not guaranteed to be JSON (for example, a reverse
-      // proxy can return an empty 502 response). Parse defensively so users see
-      // a useful authentication error instead of a JSON parsing exception.
-      const responseText = await response.text();
-      let data = {};
-      if (responseText) {
-        try {
-          data = JSON.parse(responseText);
-        } catch {
-          if (!response.ok) {
-            throw new Error(`Authentication service returned ${response.status}. Please try again.`);
-          }
-          throw new Error('Authentication service returned an invalid response. Please try again.');
+        if (result.status === "complete") {
+          await setSignInActive({ session: result.createdSessionId });
+          const token = await getToken();
+          localStorage.setItem('access_token', token);
+          onAuthSuccess?.(token);
+          onClose();
+        } else {
+          throw new Error(`Login state is ${result.status}. Contact administrator.`);
         }
-      }
+      } else {
+        if (!isSignUpLoaded) return;
+        await signUp.create({
+          emailAddress: email,
+          password: password,
+          firstName: name || 'Explorer',
+        });
 
-      if (!response.ok) {
-        throw new Error(data.detail || data.message || `Authentication failed (${response.status})`);
-      }
+        await signUp.prepareEmailAddressVerification({
+          strategy: 'email_code',
+        });
 
-      if (data.status === 'otp_required') {
         setOtpRequired(true);
         setError('');
-        return;
-      }
-
-      if (isLogin) {
-        if (!data.access_token) {
-          throw new Error('Login could not be completed. Please try again.');
-        }
-        localStorage.setItem('access_token', data.access_token);
-        onAuthSuccess?.(data.access_token);
-        onClose();
-      } else {
-        // After signup, switch to login mode with message
-        setIsLogin(true);
-        setError('Account created successfully! Please log in.');
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.errors?.[0]?.message || err.message || "Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -129,45 +123,47 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
     setError('');
     setLoading(true);
 
-    const url = apiUrl('/auth/verify-otp');
-    const body = {
-      email,
-      otp,
-      purpose: isLogin ? 'login' : 'signup'
-    };
-
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
+      if (isLogin) {
+        const completeSignIn = await signIn.attemptFirstFactor({
+          strategy: 'email_code',
+          code: otp,
+        });
+        if (completeSignIn.status === 'complete') {
+          await setSignInActive({ session: completeSignIn.createdSessionId });
+          const token = await getToken();
+          localStorage.setItem('access_token', token);
+          onAuthSuccess?.(token);
+          onClose();
+        } else {
+          throw new Error(`Verification state is ${completeSignIn.status}`);
+        }
+      } else {
+        const completeSignUp = await signUp.attemptEmailAddressVerification({
+          code: otp,
+        });
+        if (completeSignUp.status === 'complete') {
+          await setSignUpActive({ session: completeSignUp.createdSessionId });
+          const token = await getToken();
+          localStorage.setItem('access_token', token);
 
-      const responseText = await response.text();
-      let data = {};
-      if (responseText) {
-        try {
-          data = JSON.parse(responseText);
-        } catch {
-          if (!response.ok) {
-            throw new Error(`Verification service returned ${response.status}. Please try again.`);
+          // Sync user to backend database immediately
+          try {
+            await fetch(apiUrl('/auth/me'), {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+          } catch (syncErr) {
+            console.error("Failed to sync user to database:", syncErr);
           }
-          throw new Error('Verification service returned an invalid response. Please try again.');
+
+          onAuthSuccess?.(token);
+          onClose();
+        } else {
+          throw new Error(`Verification state is ${completeSignUp.status}`);
         }
       }
-
-      if (!response.ok) {
-        throw new Error(data.detail || data.message || `Verification failed (${response.status})`);
-      }
-
-      if (!data.access_token) {
-        throw new Error('Verification succeeded but could not establish session. Please try again.');
-      }
-      localStorage.setItem('access_token', data.access_token);
-      onAuthSuccess?.(data.access_token);
-      onClose();
     } catch (err) {
-      setError(err.message);
+      setError(err.errors?.[0]?.message || err.message || "Verification failed");
     } finally {
       setLoading(false);
     }
@@ -177,28 +173,52 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
     if (e && e.preventDefault) e.preventDefault();
     setError('');
     setLoading(true);
-    const url = apiUrl(isLogin ? '/auth/login' : '/auth/signup');
-    const body = isLogin 
-      ? { email, password } 
-      : { email, password, name: name || 'Explorer' };
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const responseText = await response.text();
-      let data = {};
-      if (responseText) {
-        try { data = JSON.parse(responseText); } catch {}
-      }
-      if (!response.ok) {
-        throw new Error(data.detail || data.message || "Failed to resend code.");
+      if (isLogin) {
+        const emailCodeFactor = signIn.supportedFirstFactors.find(
+          (f) => f.strategy === 'email_code'
+        );
+        if (!emailCodeFactor) {
+          throw new Error("Email verification is not supported for this account.");
+        }
+        await signIn.prepareFirstFactor({
+          strategy: 'email_code',
+          emailAddressId: emailCodeFactor.emailAddressId,
+        });
+      } else {
+        await signUp.prepareEmailAddressVerification({
+          strategy: 'email_code',
+        });
       }
       setError("A new verification code has been sent!");
     } catch (err) {
-      setError(err.message);
+      setError(err.errors?.[0]?.message || err.message || "Failed to resend code.");
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider) => {
+    try {
+      setError('');
+      setLoading(true);
+      if (isLogin) {
+        if (!isSignInLoaded) return;
+        await signIn.authenticateWithRedirect({
+          strategy: provider,
+          redirectUrl: window.location.origin + '/sso-callback',
+          redirectUrlComplete: '/quiz'
+        });
+      } else {
+        if (!isSignUpLoaded) return;
+        await signUp.authenticateWithRedirect({
+          strategy: provider,
+          redirectUrl: window.location.origin + '/sso-callback',
+          redirectUrlComplete: '/quiz'
+        });
+      }
+    } catch (err) {
+      setError(err.errors?.[0]?.message || err.message || "Social login failed");
       setLoading(false);
     }
   };
@@ -558,6 +578,58 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             {loading ? 'Authenticating...' : isLogin ? 'Enter' : 'Create Account'}
           </button>
         </form>
+
+        <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <span style={{ padding: '0 15px', color: '#bbbbbb', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Or</span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('oauth_google')}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '14px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(255,255,255,0.05)',
+              color: '#ece4d8',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '14px',
+              fontWeight: '600',
+              transition: 'all 0.3s ease',
+              opacity: loading ? 0.7 : 1
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.borderColor = 'rgba(214,161,75,0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+              }
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+        </div>
 
         <div style={{ marginTop: '24px', fontSize: '13px', color: '#BBBBBB' }}>
           {isLogin ? "New explorer?" : "Already registered?"}{' '}
