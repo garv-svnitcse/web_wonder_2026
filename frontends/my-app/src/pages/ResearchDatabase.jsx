@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -60,7 +61,7 @@ export default function ResearchDatabase() {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `/api/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
+                    `${API_URL}/dinosaurs?search=${search}&era=${era}&diet=${diet}&sort=${sort}`
                 );
                 const data = await response.json();
                 if (active) {

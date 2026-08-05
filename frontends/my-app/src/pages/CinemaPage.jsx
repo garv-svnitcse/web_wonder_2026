@@ -573,10 +573,10 @@ export default function CinemaPage() {
                     <section className="cinema-movies-section" style={{ borderTop: "1px solid rgba(214, 161, 75, 0.15)", paddingTop: "40px", marginTop: "20px" }}>
                         <div className="cinema-section-heading">
                             <h2>
-                                <FaGlobe style={{ color: "#D6A14B" }} /> Wikipedia Dino Film Registry (Live API)
+                                <FaFilm style={{ color: "#D6A14B" }} /> Trending Dinosaur Movies
                             </h2>
                             <div className="cinema-api-badge" style={{ background: "rgba(214, 161, 75, 0.15)", border: "1px solid #D6A14B", color: "#D6A14B" }}>
-                                Wikipedia API
+                                Live Feed
                             </div>
                         </div>
 
@@ -608,11 +608,11 @@ export default function CinemaPage() {
                                             />
                                             <div className="cinema-card-glow" />
                                             <div className="cinema-card-overlay" />
-                                            <div className="cinema-badge" style={{ backgroundColor: "#3498db", borderColor: "#2980b9", color: "#ffffff" }}>
-                                                WIKIPEDIA API
+                                            <div className="cinema-badge" style={{ backgroundColor: "#D6A14B", borderColor: "#C1903E", color: "#ffffff" }}>
+                                                PLAYABLE TRAILER
                                             </div>
-                                            <div className="cinema-play-hover-btn" style={{ background: "#3498db", boxShadow: "0 0 25px rgba(52, 152, 219, 0.6)", opacity: 1, transform: "translate(-50%, -50%) scale(1)" }}>
-                                                <FaInfoCircle style={{ color: "#ffffff" }} />
+                                            <div className="cinema-play-hover-btn" style={{ background: "#D6A14B", boxShadow: "0 0 25px rgba(214, 161, 75, 0.6)", opacity: 1, transform: "translate(-50%, -50%) scale(1)" }}>
+                                                <FaPlay style={{ color: "#ffffff" }} />
                                             </div>
                                         </div>
 
@@ -626,7 +626,7 @@ export default function CinemaPage() {
                                                     <span className="cinema-card-meta-item">
                                                         <FaClock /> {movie.duration}
                                                     </span>
-                                                    <span className="cinema-card-meta-item" style={{ color: "#3498db" }}>
+                                                    <span className="cinema-card-meta-item" style={{ color: "#D6A14B" }}>
                                                         <FaStar /> {movie.rating}
                                                     </span>
                                                 </div>
@@ -637,8 +637,8 @@ export default function CinemaPage() {
                                                 <span className="cinema-card-director">
                                                     Source: <strong>Wikipedia</strong>
                                                 </span>
-                                                <button className="cinema-card-more-btn" style={{ color: "#3498db" }}>
-                                                    Read Article <FaChevronRight />
+                                                <button className="cinema-card-more-btn" style={{ color: "#D6A14B" }}>
+                                                    Play Trailer <FaChevronRight />
                                                 </button>
                                             </div>
                                         </div>
@@ -758,46 +758,15 @@ export default function CinemaPage() {
 
                             <div className="cinema-projector-beam" />
 
-                            {/* Cinema Screen (Video Player Viewport) */}
+                             {/* Cinema Screen (Video Player Viewport) */}
                             <div className="cinema-video-screen">
-                                {activeMovie.isWiki ? (
-                                    <div style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        width: "100%",
-                                        height: "100%",
-                                        background: "radial-gradient(circle, #0e1e14 0%, #040906 100%)",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        padding: "40px",
-                                        textAlign: "center"
-                                    }}>
-                                        <GiDinosaurRex style={{ fontSize: "60px", color: "#D6A14B", marginBottom: "15px" }} />
-                                        <h3 style={{ fontFamily: "Cinzel", marginBottom: "10px" }}>{activeMovie.title}</h3>
-                                        <p style={{ color: "#BBBBBB", maxWidth: "600px", fontSize: "14px", marginBottom: "20px" }}>
-                                            Wikipedia files retrieved successfully. Click below to view full archival literature.
-                                        </p>
-                                        <a
-                                            href={activeMovie.videoUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="cinema-btn-primary"
-                                        >
-                                            OPEN WIKIPEDIA DOSSIER
-                                        </a>
-                                    </div>
-                                ) : (
-                                    <iframe
-                                        className="cinema-iframe"
-                                        src={activeMovie.videoUrl}
-                                        title={`${activeMovie.title} Trailer`}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowFullScreen
-                                    />
-                                )}
+                                <iframe
+                                    className="cinema-iframe"
+                                    src={activeMovie.isWiki ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1&mute=1` : activeMovie.videoUrl}
+                                    title={`${activeMovie.title} Trailer`}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                />
                             </div>
 
                             {/* Detailed Information Panels */}

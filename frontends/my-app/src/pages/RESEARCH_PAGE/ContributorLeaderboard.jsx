@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { FaTrophy, FaMedal } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
@@ -52,7 +53,7 @@ export default function ContributorLeaderboard() {
     let active = true;
     async function fetchLeaderboard() {
       try {
-        const response = await fetch("/api/research/leaderboard");
+        const response = await fetch(`${API_URL}/research/leaderboard`);
         if (response.ok) {
           const data = await response.json();
           if (active && Array.isArray(data) && data.length > 0) {

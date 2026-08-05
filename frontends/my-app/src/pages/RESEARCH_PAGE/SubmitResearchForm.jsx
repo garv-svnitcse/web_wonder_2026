@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { useState } from "react";
 import { FaCloudUploadAlt, FaPaperPlane } from "react-icons/fa";
 import SuccessModal from "./SuccessModal";
@@ -78,7 +79,7 @@ export default function SubmitResearchForm() {
     }
 
     try {
-      const response = await fetch("/api/research/research", {
+      const response = await fetch(`${API_URL}/research/research`, {
         method: "POST",
         body: submitData,
       });

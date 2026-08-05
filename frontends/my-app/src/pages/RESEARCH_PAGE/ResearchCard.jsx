@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { FaEye, FaComment, FaBookmark, FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -45,7 +46,7 @@ export default function ResearchCard({ item }) {
 
   const handleOpenDossier = async () => {
     try {
-      await fetch(`/api/research/view?title=${encodeURIComponent(item.title)}`, {
+      await fetch(`${API_URL}/research/view?title=${encodeURIComponent(item.title)}`, {
         method: "PUT",
       });
     } catch (err) {

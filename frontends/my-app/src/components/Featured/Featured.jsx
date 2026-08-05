@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -82,7 +83,7 @@ export default function Featured() {
     const [dinosaurs, setDinosaurs] = useState(STATIC_DINOSAURS);
 
     useEffect(() => {
-        fetch("/api/timeline/preview")
+        fetch(`${API_URL}/timeline/preview`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("HTTP error " + res.status);

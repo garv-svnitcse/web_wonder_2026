@@ -1,3 +1,4 @@
+import { API_URL } from "../../config/api";
 import ParticleBackground from "./ParticleBackground";
 import ResearchHero from "./ResearchHero";
 import ResearchStats from "./ResearchStats";
@@ -44,7 +45,7 @@ export default function Research() {
     let active = true;
     async function loadPreview() {
       try {
-        const response = await fetch(`/api/research/preview?limit=${visibleCount}`);
+        const response = await fetch(`${API_URL}/research/preview?limit=${visibleCount}`);
         if (response.ok) {
           const data = await response.json();
           if (active && Array.isArray(data) && data.length > 0) {
