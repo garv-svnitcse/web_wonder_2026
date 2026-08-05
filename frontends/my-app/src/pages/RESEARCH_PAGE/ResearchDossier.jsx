@@ -11,7 +11,7 @@ import {
   FaBookmark,
   FaCalendar,
 } from "react-icons/fa";
-import { database } from "./researchData";
+import { database } from "./ResearchData";
 import ParticleBackground from "./ParticleBackground";
 import "./Research.css";
 

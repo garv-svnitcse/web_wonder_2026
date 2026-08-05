@@ -15,7 +15,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import GlassAuthModal from "../../components/GlassAuthModal";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { database } from "./researchData";
+import { database } from "./ResearchData";
 
 import "./Research.css";
 
