@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCloudUploadAlt, FaPaperPlane } from "react-icons/fa";
 import SuccessModal from "./SuccessModal";
 
@@ -27,6 +27,32 @@ export default function SubmitResearchForm() {
   });
   const [avatarName, setAvatarName] = useState("");
   const [avatarFile, setAvatarFile] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch("/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          setResearcherData((prev) => ({
+            ...prev,
+            name: user.name || prev.name,
+            email: user.email || prev.email,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to load user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -292,6 +318,7 @@ export default function SubmitResearchForm() {
                   placeholder="e.g. Dr. Amelia Hart"
                   value={researcherData.name}
                   onChange={handleResearcherChange}
+                  readOnly={Boolean(researcherData.name)}
                   required
                 />
               </div>
@@ -345,6 +372,7 @@ export default function SubmitResearchForm() {
                   placeholder="e.g. amelia.hart@explorer.org"
                   value={researcherData.email}
                   onChange={handleResearcherChange}
+                  readOnly={Boolean(researcherData.email)}
                   required
                 />
               </div>
