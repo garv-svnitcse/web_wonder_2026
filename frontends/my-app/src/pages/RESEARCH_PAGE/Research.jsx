@@ -145,7 +145,7 @@ export default function Research() {
       {!token && (
         <GlassAuthModal
           isOpen={true}
-          onClose={() => navigate('/')}
+          onClose={() => navigate('/research')}
           onAuthSuccess={(newToken) => setToken(newToken)}
         />
       )}

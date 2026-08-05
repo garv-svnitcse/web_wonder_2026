@@ -133,7 +133,7 @@ export default function ResearchDossier() {
         {!token && (
           <GlassAuthModal
             isOpen={true}
-            onClose={() => navigate('/')}
+            onClose={() => navigate('/research')}
             onAuthSuccess={(newToken) => setToken(newToken)}
           />
         )}
@@ -179,7 +179,7 @@ export default function ResearchDossier() {
         {!token && (
           <GlassAuthModal
             isOpen={true}
-            onClose={() => navigate('/')}
+            onClose={() => navigate('/research')}
             onAuthSuccess={(newToken) => setToken(newToken)}
           />
         )}
@@ -341,7 +341,7 @@ export default function ResearchDossier() {
       {!token && (
         <GlassAuthModal
           isOpen={true}
-          onClose={() => navigate('/')}
+          onClose={() => navigate('/research')}
           onAuthSuccess={(newToken) => setToken(newToken)}
         />
       )}

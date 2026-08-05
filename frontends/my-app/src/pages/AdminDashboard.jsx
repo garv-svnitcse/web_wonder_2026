@@ -295,7 +295,7 @@ export default function AdminDashboard() {
       {!token && (
         <GlassAuthModal
           isOpen={true}
-          onClose={() => navigate("/")}
+          onClose={() => navigate("/admin")}
           onAuthSuccess={handleAuthSuccess}
         />
       )}

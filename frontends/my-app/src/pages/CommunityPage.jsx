@@ -684,7 +684,7 @@ export default function CommunityPage() {
       {!token && (
         <GlassAuthModal
           isOpen={true}
-          onClose={() => navigate('/')}
+          onClose={() => navigate('/community')}
           onAuthSuccess={(newToken) => setToken(newToken)}
         />
       )}

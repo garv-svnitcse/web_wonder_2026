@@ -2933,7 +2933,7 @@ export default function QuizPage() {
             {!token && (
                 <GlassAuthModal
                     isOpen={true}
-                    onClose={() => navigate('/')}
+                    onClose={() => navigate('/quiz')}
                     onAuthSuccess={(newToken) => setToken(newToken)}
                 />
             )}
