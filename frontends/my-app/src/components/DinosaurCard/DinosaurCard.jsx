@@ -2,21 +2,47 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./DinosaurCard.css";
 
+import trexImg from "../../assets/Dinosaurs_Images/Tyrannosaurus rex.png";
+import triceratopsImg from "../../assets/Dinosaurs_Images/Triceratops.png";
+import velociraptorImg from "../../assets/Dinosaurs_Images/Velociraptor.png";
+import spinosaurusImg from "../../assets/Dinosaurs_Images/Spinosaurus.png";
+import brachiosaurusImg from "../../assets/Dinosaurs_Images/Brachiosaurus.png";
+import stegosaurusImg from "../../assets/Dinosaurs_Images/Stegosaurus.png";
+import ankylosaurusImg from "../../assets/Dinosaurs_Images/Ankylosaurus.png";
+import allosaurusImg from "../../assets/Dinosaurs_Images/Allosaurus.png";
+import parasaurolophusImg from "../../assets/Dinosaurs_Images/Parasaurolophus.png";
+import carnotaurusImg from "../../assets/Dinosaurs_Images/Carnotaurus.png";
+
 const LOCAL_IMAGES = {
-    "tyrannosaurus-rex": "/src/assets/Dinosaurs_Images/Tyrannosaurus rex.png",
-    "triceratops-horridus": "/src/assets/Dinosaurs_Images/Triceratops.png",
-    "velociraptor-mongoliensis": "/src/assets/Dinosaurs_Images/Velociraptor.png",
-    "spinosaurus-aegyptiacus": "/src/assets/Dinosaurs_Images/Spinosaurus.png",
-    "brachiosaurus-altithorax": "/src/assets/Dinosaurs_Images/Brachiosaurus.png",
-    "stegosaurus-stenops": "/src/assets/Dinosaurs_Images/Stegosaurus.png",
-    "diplodocus-carnegii": "/src/assets/Dinosaurs_Images/Diplodocus.png",
-    "ankylosaurus-magniventris": "/src/assets/Dinosaurs_Images/Ankylosaurus.png",
-    "allosaurus-fragilis": "/src/assets/Dinosaurs_Images/Allosaurus.png",
-    "parasaurolophus-walkeri": "/src/assets/Dinosaurs_Images/Parasaurolophus.png"
+    "tyrannosaurus-rex": trexImg,
+    "triceratops-horridus": triceratopsImg,
+    "velociraptor-mongoliensis": velociraptorImg,
+    "spinosaurus-aegyptiacus": spinosaurusImg,
+    "brachiosaurus-altithorax": brachiosaurusImg,
+    "stegosaurus-stenops": stegosaurusImg,
+    "ankylosaurus-magniventris": ankylosaurusImg,
+    "allosaurus-fragilis": allosaurusImg,
+    "parasaurolophus-walkeri": parasaurolophusImg,
+    "carnotaurus": carnotaurusImg
 };
 
 const getCardImageUrl = (dino) => {
     if (!dino) return "";
+
+    // 1. Prioritize backend-provided image (parse Drive link if needed)
+    const rawUrl = dino.thumbnail || dino.image || "";
+    if (rawUrl) {
+        if (rawUrl.includes("drive.google.com/file/d/")) {
+            const parts = rawUrl.split("drive.google.com/file/d/");
+            if (parts.length > 1) {
+                const id = parts[1].split("/")[0].split("?")[0];
+                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+            }
+        }
+        return rawUrl;
+    }
+
+    // 2. Fallback to whitelisted compiled local images
     const slug = dino.slug || "";
     if (LOCAL_IMAGES[slug]) {
         return LOCAL_IMAGES[slug];
@@ -26,15 +52,7 @@ const getCardImageUrl = (dino) => {
             return LOCAL_IMAGES[key];
         }
     }
-    const rawUrl = dino.thumbnail || dino.image || "";
-    if (rawUrl.includes("drive.google.com/file/d/")) {
-        const parts = rawUrl.split("drive.google.com/file/d/");
-        if (parts.length > 1) {
-            const id = parts[1].split("/")[0].split("?")[0];
-            return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-        }
-    }
-    return rawUrl || "/images/trex.webp";
+    return "/images/trex.webp";
 };
 
 export default function DinosaurCard({ dinosaur }) {

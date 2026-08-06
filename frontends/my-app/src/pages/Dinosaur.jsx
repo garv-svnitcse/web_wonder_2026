@@ -4,6 +4,17 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Compass, Radio, ChevronDown, Lightbulb, Shield, Dna, Hourglass, Flame, Ruler, ArrowUp, Scale, Gauge, Play, Box } from 'lucide-react';
 import jungleBg from '../assets/prehistoric_jungle_bg.png';
 
+import trexImg from '../assets/Dinosaurs_Images/Tyrannosaurus rex.png';
+import triceratopsImg from '../assets/Dinosaurs_Images/Triceratops.png';
+import velociraptorImg from '../assets/Dinosaurs_Images/Velociraptor.png';
+import spinosaurusImg from '../assets/Dinosaurs_Images/Spinosaurus.png';
+import brachiosaurusImg from '../assets/Dinosaurs_Images/Brachiosaurus.png';
+import stegosaurusImg from '../assets/Dinosaurs_Images/Stegosaurus.png';
+import ankylosaurusImg from '../assets/Dinosaurs_Images/Ankylosaurus.png';
+import parasaurolophusImg from '../assets/Dinosaurs_Images/Parasaurolophus.png';
+import carnotaurusImg from '../assets/Dinosaurs_Images/Carnotaurus.png';
+import allosaurusImg from '../assets/Dinosaurs_Images/Allosaurus.png';
+
 // Local specimen database for fallback offline mode
 const LOCAL_SPECIMENS = {
   'tyrannosaurus-rex': {
@@ -57,16 +68,16 @@ const LOCAL_SPECIMENS = {
 };
 
 const LOCAL_IMAGES = {
-  "tyrannosaurus-rex": "/src/assets/Dinosaurs_Images/Tyrannosaurus rex.png",
-  "triceratops": "/src/assets/Dinosaurs_Images/Triceratops.png",
-  "velociraptor": "/src/assets/Dinosaurs_Images/Velociraptor.png",
-  "spinosaurus": "/src/assets/Dinosaurs_Images/Spinosaurus.png",
-  "brachiosaurus": "/src/assets/Dinosaurs_Images/Brachiosaurus.png",
-  "stegosaurus": "/src/assets/Dinosaurs_Images/Stegosaurus.png",
-  "ankylosaurus": "/src/assets/Dinosaurs_Images/Ankylosaurus.png",
-  "parasaurolophus": "/src/assets/Dinosaurs_Images/Parasaurolophus.png",
-  "carnotaurus": "/src/assets/Dinosaurs_Images/Carnotaurus.png",
-  "allosaurus": "/src/assets/Dinosaurs_Images/Allosaurus.png",
+  "tyrannosaurus-rex": trexImg,
+  "triceratops": triceratopsImg,
+  "velociraptor": velociraptorImg,
+  "spinosaurus": spinosaurusImg,
+  "brachiosaurus": brachiosaurusImg,
+  "stegosaurus": stegosaurusImg,
+  "ankylosaurus": ankylosaurusImg,
+  "parasaurolophus": parasaurolophusImg,
+  "carnotaurus": carnotaurusImg,
+  "allosaurus": allosaurusImg,
 };
 
 const DOCUMENTARY_VIDEOS = {
@@ -80,6 +91,21 @@ const DOCUMENTARY_VIDEOS = {
 
 const getDinoImageUrl = (specimen) => {
   if (!specimen) return "";
+
+  // 1. Prioritize backend-provided image (parse Drive link if needed)
+  const rawUrl = specimen.thumbnail || specimen.image || "";
+  if (rawUrl) {
+    if (rawUrl.includes("drive.google.com/file/d/")) {
+      const parts = rawUrl.split("drive.google.com/file/d/");
+      if (parts.length > 1) {
+        const id = parts[1].split("/")[0].split("?")[0];
+        return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+      }
+    }
+    return rawUrl;
+  }
+
+  // 2. Fallback to whitelisted compiled local images
   const slug = specimen.slug || "";
   if (LOCAL_IMAGES[slug]) {
     return LOCAL_IMAGES[slug];
@@ -90,15 +116,7 @@ const getDinoImageUrl = (specimen) => {
       return LOCAL_IMAGES[key];
     }
   }
-  const rawUrl = specimen.thumbnail || specimen.image || "";
-  if (rawUrl.includes("drive.google.com/file/d/")) {
-    const parts = rawUrl.split("drive.google.com/file/d/");
-    if (parts.length > 1) {
-      const id = parts[1].split("/")[0].split("?")[0];
-      return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-    }
-  }
-  return rawUrl || "/images/trex.webp";
+  return "/images/trex.webp";
 };
 
 function prepareSpecimenData(dino) {
