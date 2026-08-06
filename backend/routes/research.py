@@ -271,6 +271,7 @@ def title_detail(title : str) :
 
 @router.post("/research")
 def research_create(
+    request: Request,
     title: str = Form(...),
     co_researchers: str = Form(""),
     species: str = Form(...),
@@ -372,8 +373,9 @@ def research_create(
     
     import urllib.parse
     encoded_title = urllib.parse.quote(researchData.title)
-    approve_url = f"http://127.0.0.1:5001/research/approve/{encoded_title}"
-    reject_url = f"http://127.0.0.1:5001/research/reject/{encoded_title}"
+    base_url = str(request.base_url)
+    approve_url = f"{base_url}research/approve/{encoded_title}"
+    reject_url = f"{base_url}research/reject/{encoded_title}"
 
     try:
         resend.Emails.send({
