@@ -250,7 +250,9 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 99999,
-        fontFamily: 'Outfit, sans-serif'
+        fontFamily: 'Outfit, sans-serif',
+        overflowY: 'auto',
+        padding: '20px 10px'
       }}>
         <div style={{
           background: 'rgba(255, 255, 255, 0.03)',
@@ -365,22 +367,35 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
           </div>
 
           <div style={{ marginTop: '18px' }}>
-            <span
+            <button
+              type="button"
               onClick={() => {
                 setOtpRequired(false);
                 setOtp('');
                 setError('');
               }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                setOtpRequired(false);
+                setOtp('');
+                setError('');
+              }}
               style={{
+                background: 'none',
+                border: 'none',
                 color: '#aaaaaa',
                 cursor: 'pointer',
                 fontSize: '13px',
                 textDecoration: 'underline',
-                transition: 'color 0.2s'
+                transition: 'color 0.2s',
+                padding: '10px 20px',
+                fontFamily: 'inherit'
               }}
+              onMouseEnter={(e) => { e.target.style.color = '#ECE4D8'; }}
+              onMouseLeave={(e) => { e.target.style.color = '#aaaaaa'; }}
             >
               Back to Sign In
-            </span>
+            </button>
           </div>
         </div>
       </div>
@@ -400,7 +415,9 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 99999,
-      fontFamily: 'Outfit, sans-serif'
+      fontFamily: 'Outfit, sans-serif',
+      overflowY: 'auto',
+      padding: '20px 10px'
     }}>
       <div style={{
         background: 'rgba(255, 255, 255, 0.03)',
@@ -663,21 +680,31 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             {isLogin ? 'Create Credentials' : 'Login Portal'}
           </span>
         </div>
-        <div style={{ marginTop: '18px' }}>
-          <span
+        <div style={{ marginTop: '20px' }}>
+          <button
+            type="button"
             onClick={onClose}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              onClose();
+            }}
             style={{
+              background: 'none',
+              border: 'none',
               color: '#aaaaaa',
               cursor: 'pointer',
-              fontSize: '13px',
+              fontSize: '14px',
               textDecoration: 'none',
-              transition: 'color 0.2s'
+              transition: 'color 0.2s',
+              padding: '10px 20px',
+              outline: 'none',
+              fontFamily: 'inherit'
             }}
             onMouseEnter={(e) => { e.target.style.color = '#ECE4D8'; }}
             onMouseLeave={(e) => { e.target.style.color = '#aaaaaa'; }}
           >
             Cancel & Return to Home
-          </span>
+          </button>
         </div>
       </div>
     </div>
