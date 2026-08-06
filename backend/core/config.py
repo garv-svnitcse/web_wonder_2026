@@ -14,6 +14,7 @@ API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 CLERK_SECRET_KEY = os.getenv("CLERK_SECRET_KEY") or "mock_secret_key"
 CLERK_JWT_KEY = os.getenv("CLERK_JWT_KEY") or ""
 

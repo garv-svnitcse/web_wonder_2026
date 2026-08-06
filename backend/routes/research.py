@@ -10,10 +10,8 @@ from schemas.research import CommentCreate, ResearchDetail
 from pydantic import EmailStr, ValidationError
 from typing import Optional
 from services.cloudinary_service import upload_file_to_cloudinary
-from core.config import RESEND_API_KEY, RECEIVER_EMAIL
-import resend
-
-resend.api_key = RESEND_API_KEY
+from core.config import RECEIVER_EMAIL
+from services.email_service import send_email
 
 router = APIRouter()
 
@@ -377,55 +375,52 @@ def research_create(
     approve_url = f"{base_url}research/approve/{encoded_title}"
     reject_url = f"{base_url}research/reject/{encoded_title}"
 
-    try:
-        resend.Emails.send({
-            "from" : "JurassiVerse <onboarding@resend.dev>",
-            "to" : RECEIVER_EMAIL,
-            "subject" : f"New Research Submitted: {researchData.title}",
-            "html" : f"""
-                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                    <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">New Research Dossier Submitted</h2>
-                    <p style="font-size: 16px;">A new research finding has been logged and is awaiting your verification.</p>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee; width: 120px;">Title:</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.title}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Researcher:</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.researcher_name}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Species:</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.species}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Era:</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.era}</td>
-                        </tr>
-                    </table>
-                    
-                    <h3 style="margin-top: 20px; color: #333;">Key Findings</h3>
-                    <p style="background: #f9f9f9; padding: 12px; border-left: 4px solid #4CAF50; font-style: italic;">{researchData.key_finding}</p>
-                    
-                    <h3 style="margin-top: 20px; color: #333;">Abstract</h3>
-                    <p style="line-height: 1.6; color: #555;">{researchData.abstract}</p>
-                    
-                    <h3 style="margin-top: 20px; color: #333;">References</h3>
-                    <p style="color: #555;">{researchData.reference}</p>
-                    
-                    <h3 style="margin-top: 20px; color: #333;">Additional Notes</h3>
-                    <p style="color: #555;">{notes}</p>
-                    
-                    <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
-                        <a href="{approve_url}" style="background-color: #4CAF50; color: white; padding: 14px 28px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 15px; display: inline-block;">Approve Research</a>
-                        <a href="{reject_url}" style="background-color: #F44336; color: white; padding: 14px 28px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Reject Research</a>
-                    </div>
-                </div>
-                """
-        })
-    except Exception as e:
-        print("WARNING: Failed to send notification email via Resend:", str(e))
+    html_content = f"""
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">New Research Dossier Submitted</h2>
+            <p style="font-size: 16px;">A new research finding has been logged and is awaiting your verification.</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <tr>
+                    <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee; width: 120px;">Title:</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.title}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Researcher:</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.researcher_name}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Species:</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.species}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #eee;">Era:</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{researchData.era}</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-top: 20px; color: #333;">Key Findings</h3>
+            <p style="background: #f9f9f9; padding: 12px; border-left: 4px solid #4CAF50; font-style: italic;">{researchData.key_finding}</p>
+            
+            <h3 style="margin-top: 20px; color: #333;">Abstract</h3>
+            <p style="line-height: 1.6; color: #555;">{researchData.abstract}</p>
+            
+            <h3 style="margin-top: 20px; color: #333;">References</h3>
+            <p style="color: #555;">{researchData.reference}</p>
+            
+            <h3 style="margin-top: 20px; color: #333;">Additional Notes</h3>
+            <p style="color: #555;">{notes}</p>
+            
+            <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
+                <a href="{approve_url}" style="background-color: #4CAF50; color: white; padding: 14px 28px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 15px; display: inline-block;">Approve Research</a>
+                <a href="{reject_url}" style="background-color: #F44336; color: white; padding: 14px 28px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Reject Research</a>
+            </div>
+        </div>
+        """
+    send_email(
+        subject=f"New Research Submitted: {researchData.title}",
+        html_content=html_content,
+        to_email=RECEIVER_EMAIL
+    )
         
     return {"message": "Research and profile submitted successfully"}
 
@@ -456,24 +451,21 @@ def approve_research(title: str):
         
     if researcher_email:
         send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
-        try:
-            resend.Emails.send({
-                "from" : "JurassiVerse <onboarding@resend.dev>",
-                "to" : send_to,
-                "subject" : f"Your Research has been Approved: {title}",
-                "html" : f"""
-                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                        <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">Research Approved &#10003;</h2>
-                        <p style="font-size: 16px;">Dear {researcher_name},</p>
-                        <p style="font-size: 16px; line-height: 1.6;">We are pleased to inform you that your research paper titled <strong>"{title}"</strong> has been approved by the administrators.</p>
-                        <p style="font-size: 16px; line-height: 1.6;">Your credentials and findings are now registered in the explorer archives, and your published studies count has been updated.</p>
-                        <br/>
-                        <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
-                    </div>
-                """
-            })
-        except Exception as e:
-            print("WARNING: Failed to send approval email via Resend:", str(e))
+        html_content = f"""
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">Research Approved &#10003;</h2>
+                <p style="font-size: 16px;">Dear {researcher_name},</p>
+                <p style="font-size: 16px; line-height: 1.6;">We are pleased to inform you that your research paper titled <strong>"{title}"</strong> has been approved by the administrators.</p>
+                <p style="font-size: 16px; line-height: 1.6;">Your credentials and findings are now registered in the explorer archives, and your published studies count has been updated.</p>
+                <br/>
+                <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
+            </div>
+        """
+        send_email(
+            subject=f"Your Research has been Approved: {title}",
+            html_content=html_content,
+            to_email=send_to
+        )
             
     return {"message": "Research approved successfully and researcher notified."}
 
@@ -504,24 +496,21 @@ def reject_research(title: str):
             
     if researcher_email:
         send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
-        try:
-            resend.Emails.send({
-                "from" : "JurassiVerse <onboarding@resend.dev>",
-                "to" : send_to,
-                "subject" : f"Update on Your Research Submission: {title}",
-                "html" : f"""
-                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                        <h2 style="color: #F44336; border-bottom: 2px solid #F44336; padding-bottom: 10px;">Research Declined &#10007;</h2>
-                        <p style="font-size: 16px;">Dear {researcher_name},</p>
-                        <p style="font-size: 16px; line-height: 1.6;">Thank you for submitting your research paper titled <strong>"{title}"</strong> to the JurassiVerse archives.</p>
-                        <p style="font-size: 16px; line-height: 1.6;">Unfortunately, after review, your research submission has been declined at this time. Please feel free to revise and resubmit.</p>
-                        <br/>
-                        <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
-                    </div>
-                """
-            })
-        except Exception as e:
-            print("WARNING: Failed to send rejection email via Resend:", str(e))
+        html_content = f"""
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #F44336; border-bottom: 2px solid #F44336; padding-bottom: 10px;">Research Declined &#10007;</h2>
+                <p style="font-size: 16px;">Dear {researcher_name},</p>
+                <p style="font-size: 16px; line-height: 1.6;">Thank you for submitting your research paper titled <strong>"{title}"</strong> to the JurassiVerse archives.</p>
+                <p style="font-size: 16px; line-height: 1.6;">Unfortunately, after review, your research submission has been declined at this time. Please feel free to revise and resubmit.</p>
+                <br/>
+                <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
+            </div>
+        """
+        send_email(
+            subject=f"Update on Your Research Submission: {title}",
+            html_content=html_content,
+            to_email=send_to
+        )
             
     return {"message": "Research rejected successfully and researcher notified."}
 
