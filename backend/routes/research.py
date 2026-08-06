@@ -455,10 +455,11 @@ def approve_research(title: str):
         )
         
     if researcher_email:
+        send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
         try:
             resend.Emails.send({
                 "from" : "JurassiVerse <onboarding@resend.dev>",
-                "to" : researcher_email,
+                "to" : send_to,
                 "subject" : f"Your Research has been Approved: {title}",
                 "html" : f"""
                     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
@@ -502,10 +503,11 @@ def reject_research(title: str):
             )
             
     if researcher_email:
+        send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
         try:
             resend.Emails.send({
                 "from" : "JurassiVerse <onboarding@resend.dev>",
-                "to" : researcher_email,
+                "to" : send_to,
                 "subject" : f"Update on Your Research Submission: {title}",
                 "html" : f"""
                     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
