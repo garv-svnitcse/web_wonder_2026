@@ -13,6 +13,8 @@ export default function Viewer() {
     const [showOverlay, setShowOverlay] = useState(true);
     const [isPointerLocked, setIsPointerLocked] = useState(false);
     const [dinoData, setDinoData] = useState(null);
+    const keysRef = useRef({ forward: false, backward: false, left: false, right: false, sprint: false });
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Fetch dinosaur details to get the 3D model URL
     useEffect(() => {
@@ -472,13 +474,7 @@ export default function Viewer() {
         const PITCH_MIN = -1.3;
         const PITCH_MAX = 0.7;
 
-        const keys = {
-            forward: false,
-            backward: false,
-            left: false,
-            right: false,
-            sprint: false,
-        };
+        const keys = keysRef.current;
 
         let velocity = new THREE.Vector3();
         const BOUNDARY_X = HALF_W - WALL_THICKNESS - PLAYER_RADIUS - 0.15;
@@ -544,10 +540,34 @@ export default function Viewer() {
             pitch = THREE.MathUtils.clamp(pitch, PITCH_MIN, PITCH_MAX);
         }
 
+        let touchStart = { x: 0, y: 0 };
+        function onTouchStart(e) {
+            if (e.touches.length === 1) {
+                touchStart.x = e.touches[0].clientX;
+                touchStart.y = e.touches[0].clientY;
+            }
+        }
+        function onTouchMove(e) {
+            if (e.target.closest('button')) return;
+            if (e.touches.length === 1) {
+                const deltaX = e.touches[0].clientX - touchStart.x;
+                const deltaY = e.touches[0].clientY - touchStart.y;
+                touchStart.x = e.touches[0].clientX;
+                touchStart.y = e.touches[0].clientY;
+
+                const sensitivity = 0.0035;
+                yaw -= deltaX * sensitivity;
+                pitch -= deltaY * sensitivity;
+                pitch = THREE.MathUtils.clamp(pitch, PITCH_MIN, PITCH_MAX);
+            }
+        }
+
         function onPointerLockChange() {
             const locked = document.pointerLockElement === renderer.domElement;
             setIsPointerLocked(locked);
-            setShowOverlay(!locked);
+            if (!isTouchDevice) {
+                setShowOverlay(!locked);
+            }
             if (!locked) {
                 velocity.set(0, 0, 0);
                 keys.forward = false;
@@ -569,6 +589,8 @@ export default function Viewer() {
         window.addEventListener('mousemove', onMouseMove);
         document.addEventListener('pointerlockchange', onPointerLockChange);
         window.addEventListener('resize', onResize);
+        window.addEventListener('touchstart', onTouchStart, { passive: true });
+        window.addEventListener('touchmove', onTouchMove, { passive: true });
 
         // ANIMATION LOOP
         const clock = new THREE.Clock();
@@ -583,7 +605,7 @@ export default function Viewer() {
             const effectiveDt = Math.max(rawDt, 0.001);
 
             const isLocked = document.pointerLockElement === renderer.domElement;
-            if (isLocked) {
+            if (isLocked || isTouchDevice) {
                 const forwardDir = new THREE.Vector3(-Math.sin(yaw), 0, -Math.cos(yaw)).normalize();
                 const rightDir = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw)).normalize();
                 const moveInput = new THREE.Vector3();
@@ -655,6 +677,8 @@ export default function Viewer() {
             window.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('pointerlockchange', onPointerLockChange);
             window.removeEventListener('resize', onResize);
+            window.removeEventListener('touchstart', onTouchStart);
+            window.removeEventListener('touchmove', onTouchMove);
 
             renderer.domElement.removeEventListener('click', triggerLock);
             cancelAnimationFrame(animationFrameId);
@@ -683,7 +707,13 @@ export default function Viewer() {
             {/* Instruction Panel Overlay */}
             {showOverlay && (
                 <div
-                    onClick={() => containerRef.current?.querySelector('canvas')?.requestPointerLock()}
+                    onClick={() => {
+                        if (isTouchDevice) {
+                            setShowOverlay(false);
+                        } else {
+                            containerRef.current?.querySelector('canvas')?.requestPointerLock();
+                        }
+                    }}
                     className="absolute inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm cursor-pointer transition-opacity duration-300"
                 >
                     <div className="bg-[#0b120f]/95 border border-[#c5a880]/30 p-8 md:p-10 rounded-sm text-center text-white max-w-lg shadow-[0_25px_55px_rgba(0,0,0,0.95)] mx-4">
@@ -691,23 +721,39 @@ export default function Viewer() {
                             Prehistoric Gallery
                         </h2>
 
-                        <div className="flex items-center justify-center gap-4 my-3 text-sm font-mono text-white/80">
-                            <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">W</span>
-                            <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">A</span>
-                            <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">S</span>
-                            <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">D</span>
-                            <span>to move</span>
-                        </div>
+                        {isTouchDevice ? (
+                            <div className="flex flex-col gap-3 my-4 text-sm font-mono text-white/80">
+                                <div>
+                                    <span className="text-[#c5a880] font-bold">Drag Screen</span> to look around
+                                </div>
+                                <div>
+                                    <span className="text-[#c5a880] font-bold">On-screen D-pad</span> to move
+                                </div>
+                                <p className="mt-6 text-xs text-white/40 font-mono tracking-wide leading-relaxed">
+                                    Tap anywhere to enter the gallery.
+                                </p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex items-center justify-center gap-4 my-3 text-sm font-mono text-white/80">
+                                    <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">W</span>
+                                    <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">A</span>
+                                    <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">S</span>
+                                    <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">D</span>
+                                    <span>to move</span>
+                                </div>
 
-                        <div className="flex items-center justify-center gap-2 my-3 text-sm font-mono text-white/80">
-                            <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">Mouse</span>
-                            <span>to look around</span>
-                        </div>
+                                <div className="flex items-center justify-center gap-2 my-3 text-sm font-mono text-white/80">
+                                    <span className="bg-white/10 border border-white/20 px-2.5 py-1 rounded-sm">Mouse</span>
+                                    <span>to look around</span>
+                                </div>
 
-                        <p className="mt-6 text-xs text-white/40 font-mono tracking-wide leading-relaxed">
-                            Click anywhere to lock cursor and enter the virtual room.<br />
-                            Press <span className="text-[#c5a880] font-bold">ESC</span> to release cursor controls.
-                        </p>
+                                <p className="mt-6 text-xs text-white/40 font-mono tracking-wide leading-relaxed">
+                                    Click anywhere to lock cursor and enter the virtual room.<br />
+                                    Press <span className="text-[#c5a880] font-bold">ESC</span> to release cursor controls.
+                                </p>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
@@ -722,6 +768,42 @@ export default function Viewer() {
             {statusText && (
                 <div className="fixed left-6 bottom-6 z-20 max-w-[420px] px-4 py-2.5 border border-[#c5a880]/30 rounded-sm bg-black/90 text-white/80 font-mono text-xs shadow-lg leading-relaxed">
                     {statusText}
+                </div>
+            )}
+
+            {/* Mobile Controls D-pad */}
+            {isTouchDevice && !showOverlay && (
+                <div className="absolute bottom-6 right-6 z-20 flex flex-col items-center gap-2 select-none">
+                    <button 
+                        onTouchStart={() => { keysRef.current.forward = true; }}
+                        onTouchEnd={() => { keysRef.current.forward = false; }}
+                        className="w-14 h-14 bg-black/80 active:bg-[#c5a880] active:text-black border border-[#c5a880]/30 rounded-full text-[#c5a880] flex items-center justify-center font-bold text-lg select-none shadow-lg active:scale-95 transition-all"
+                    >
+                        ▲
+                    </button>
+                    <div className="flex gap-2">
+                        <button 
+                            onTouchStart={() => { keysRef.current.left = true; }}
+                            onTouchEnd={() => { keysRef.current.left = false; }}
+                            className="w-14 h-14 bg-black/80 active:bg-[#c5a880] active:text-black border border-[#c5a880]/30 rounded-full text-[#c5a880] flex items-center justify-center font-bold text-lg select-none shadow-lg active:scale-95 transition-all"
+                        >
+                            ◀
+                        </button>
+                        <button 
+                            onTouchStart={() => { keysRef.current.backward = true; }}
+                            onTouchEnd={() => { keysRef.current.backward = false; }}
+                            className="w-14 h-14 bg-black/80 active:bg-[#c5a880] active:text-black border border-[#c5a880]/30 rounded-full text-[#c5a880] flex items-center justify-center font-bold text-lg select-none shadow-lg active:scale-95 transition-all"
+                        >
+                            ▼
+                        </button>
+                        <button 
+                            onTouchStart={() => { keysRef.current.right = true; }}
+                            onTouchEnd={() => { keysRef.current.right = false; }}
+                            className="w-14 h-14 bg-black/80 active:bg-[#c5a880] active:text-black border border-[#c5a880]/30 rounded-full text-[#c5a880] flex items-center justify-center font-bold text-lg select-none shadow-lg active:scale-95 transition-all"
+                        >
+                            ▶
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

@@ -20,14 +20,9 @@ else:
     print("WARNING: Cloudinary is not configured in .env. Uploading files will fail at runtime.")
 
 def upload_file_to_cloudinary(file_obj, filename: str) -> str:
-    """
-    Uploads a file directly to Cloudinary.
-    Raises a RuntimeError if Cloudinary is not configured, or if the upload fails.
-    """
     if not CLOUDINARY_CONFIGURED:
         raise RuntimeError("Cloudinary is not configured. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your backend/.env file.")
 
-    # Upload the file stream to Cloudinary
     response = cloudinary.uploader.upload(
         file_obj.file,
         public_id=f"{int(time.time())}_{os.path.splitext(filename)[0]}",
