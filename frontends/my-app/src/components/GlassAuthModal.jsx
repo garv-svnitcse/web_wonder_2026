@@ -1,5 +1,6 @@
 import { API_URL } from "../config/api";
 import React, { useMemo, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useSignIn, useSignUp, useAuth } from '@clerk/clerk-react';
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +28,7 @@ const passwordRules = [
 ];
 
 export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
+  const navigate = useNavigate();
   const { isLoaded: isSignInLoaded, signIn, setActive: setSignInActive } = useSignIn();
   const { isLoaded: isSignUpLoaded, signUp, setActive: setSignUpActive } = useSignUp();
   const { getToken, isLoaded, isSignedIn } = useAuth();
@@ -683,10 +685,10 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         <div style={{ marginTop: '20px' }}>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => navigate('/')}
             onTouchEnd={(e) => {
               e.preventDefault();
-              onClose();
+              navigate('/');
             }}
             style={{
               background: 'none',
