@@ -39,3 +39,9 @@ app.include_router(quiz.router, prefix='/quiz', tags=['Quiz'])
 app.include_router(dinosaur.router, prefix='/dinosaurs', tags=['Dinosaur'])
 app.include_router(community_redit.router, prefix='/community', tags=['Community'])
 app.include_router(admin.router, prefix='/admin', tags=['Admin'])
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.getenv("PORT", "5001"))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
