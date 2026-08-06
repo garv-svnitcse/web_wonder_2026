@@ -127,18 +127,19 @@ export default function SubmitResearchForm() {
 
     const submitData = new FormData();
     submitData.append("title", formData.title);
-    submitData.append("co_researchers", formData.coResearchers);
+    submitData.append("co_researchers", formData.coResearchers || "");
     submitData.append("species", formData.species);
     submitData.append("era", formData.era);
     submitData.append("key_findings", formData.keyFindings);
     submitData.append("abstract", formData.abstract);
-    submitData.append("references", formData.references);
-    submitData.append("notes", formData.notes);
+    submitData.append("references", formData.references || "");
+    submitData.append("notes", formData.notes || "");
 
     submitData.append("researcher_name", researcherData.name);
     submitData.append("researcher_email", researcherData.email);
     submitData.append("researcher_specialization", researcherData.specialization);
-    submitData.append("researcher_awards", researcherData.awardsWon);
+    submitData.append("researcher_awards", researcherData.awardsWon || 0);
+    submitData.append("researcher_quote", researcherData.quote || "Seeking secrets in the bones of time.");
 
     submitData.append("evidence_document", evidenceFile);
     if (avatarFile) {
