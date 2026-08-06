@@ -90,7 +90,15 @@ const getDinoImageUrl = (specimen) => {
       return LOCAL_IMAGES[key];
     }
   }
-  return specimen.thumbnail || specimen.image || "/images/trex.webp";
+  const rawUrl = specimen.thumbnail || specimen.image || "";
+  if (rawUrl.includes("drive.google.com/file/d/")) {
+    const parts = rawUrl.split("drive.google.com/file/d/");
+    if (parts.length > 1) {
+      const id = parts[1].split("/")[0].split("?")[0];
+      return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+    }
+  }
+  return rawUrl || "/images/trex.webp";
 };
 
 function prepareSpecimenData(dino) {
