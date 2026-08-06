@@ -4,10 +4,18 @@ from db.database import dinosaur_collection
 router = APIRouter()
 
 def get_thumbnail_url(url: str) -> str:
-    if url and "drive.google.com/file/d/" in url:
+    if not url:
+        return ""
+    if "drive.google.com/file/d/" in url:
         try:
-            file_id = url.split("/file/d/")[1].split("/")[0]
-            return f"https://drive.google.com/thumbnail?id={file_id}&sz=w600"
+            file_id = url.split("/file/d/")[1].split("/")[0].split("?")[0]
+            return f"https://lh3.googleusercontent.com/d/{file_id}=w1000"
+        except Exception:
+            pass
+    elif "drive.google.com/thumbnail?id=" in url:
+        try:
+            file_id = url.split("id=")[1].split("&")[0]
+            return f"https://lh3.googleusercontent.com/d/{file_id}=w1000"
         except Exception:
             pass
     return url

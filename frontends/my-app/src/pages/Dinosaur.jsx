@@ -99,7 +99,20 @@ const getDinoImageUrl = (specimen) => {
       const parts = rawUrl.split("drive.google.com/file/d/");
       if (parts.length > 1) {
         const id = parts[1].split("/")[0].split("?")[0];
-        return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+        return `https://lh3.googleusercontent.com/d/${id}=w1000`;
+      }
+    }
+    if (rawUrl.includes("drive.google.com/thumbnail?id=")) {
+      const parts = rawUrl.split("id=");
+      if (parts.length > 1) {
+        const id = parts[1].split("&")[0];
+        return `https://lh3.googleusercontent.com/d/${id}=w1000`;
+      }
+    }
+    if (rawUrl.includes("drive.google.com/thumbnail?sz=")) {
+      const match = rawUrl.match(/id=([^&]+)/);
+      if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
       }
     }
     return rawUrl;
