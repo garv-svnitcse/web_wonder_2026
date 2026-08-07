@@ -120,31 +120,31 @@ export default function Footer() {
 
                         <div className="footerIcons">
 
-                            <a href="#">
+                            <a href="https://www.instagram.com/">
 
                                 <FaInstagram />
 
                             </a>
 
-                            <a href="#">
+                            <a href="https://github.com/garv-svnitcse/web_wonder_2026">
 
                                 <FaGithub />
 
                             </a>
 
-                            <a href="#">
+                            <a href="https://www.linkedin.com/in/">
 
                                 <FaLinkedin />
 
                             </a>
 
-                            <a href="#">
+                            <a href="https://www.youtube.com/">
 
                                 <FaYoutube />
 
                             </a>
 
-                            <a href="#">
+                            <a href="https://www.discord.com/">
 
                                 <FaDiscord />
 
