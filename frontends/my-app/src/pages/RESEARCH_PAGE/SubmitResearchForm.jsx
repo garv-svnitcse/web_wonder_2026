@@ -48,6 +48,7 @@ export default function SubmitResearchForm() {
   const [fileName, setFileName] = useState("");
   const [evidenceFile, setEvidenceFile] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [researcherData, setResearcherData] = useState(getStoredResearcherData);
   const [avatarName, setAvatarName] = useState("");
@@ -120,33 +121,35 @@ export default function SubmitResearchForm() {
 
   const handleUnifiedSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!evidenceFile) {
       alert("Please upload an evidence document.");
       return;
     }
 
-    const submitData = new FormData();
-    submitData.append("title", formData.title);
-    submitData.append("co_researchers", formData.coResearchers || "");
-    submitData.append("species", formData.species);
-    submitData.append("era", formData.era);
-    submitData.append("key_findings", formData.keyFindings);
-    submitData.append("abstract", formData.abstract);
-    submitData.append("references", formData.references || "");
-    submitData.append("notes", formData.notes || "");
-
-    submitData.append("researcher_name", researcherData.name);
-    submitData.append("researcher_email", researcherData.email);
-    submitData.append("researcher_specialization", researcherData.specialization);
-    submitData.append("researcher_awards", researcherData.awardsWon || 0);
-    submitData.append("researcher_quote", researcherData.quote || "Seeking secrets in the bones of time.");
-
-    submitData.append("evidence_document", evidenceFile);
-    if (avatarFile) {
-      submitData.append("researcher_avatar", avatarFile);
-    }
-
+    setIsSubmitting(true);
     try {
+      const submitData = new FormData();
+      submitData.append("title", formData.title);
+      submitData.append("co_researchers", formData.coResearchers || "");
+      submitData.append("species", formData.species);
+      submitData.append("era", formData.era);
+      submitData.append("key_findings", formData.keyFindings);
+      submitData.append("abstract", formData.abstract);
+      submitData.append("references", formData.references || "");
+      submitData.append("notes", formData.notes || "");
+
+      submitData.append("researcher_name", researcherData.name);
+      submitData.append("researcher_email", researcherData.email);
+      submitData.append("researcher_specialization", researcherData.specialization);
+      submitData.append("researcher_awards", researcherData.awardsWon || 0);
+      submitData.append("researcher_quote", researcherData.quote || "Seeking secrets in the bones of time.");
+
+      submitData.append("evidence_document", evidenceFile);
+      if (avatarFile) {
+        submitData.append("researcher_avatar", avatarFile);
+      }
+
       const response = await fetch(`${API_URL}/research/research`, {
         method: "POST",
         body: submitData,
@@ -187,6 +190,8 @@ export default function SubmitResearchForm() {
     } catch (err) {
       console.error("Submission error:", err);
       alert("Network error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -436,8 +441,19 @@ export default function SubmitResearchForm() {
 
         {/* Centered Unified Submit Button */}
         <div className="srfUnifiedSubmitRow" style={{ display: "flex", justifyContent: "center", marginTop: "30px", width: "100%" }}>
-          <button type="submit" className="srfSubmitBtn" style={{ minWidth: "250px", padding: "14px 30px" }}>
-            Submit Research & Profile <FaPaperPlane style={{ marginLeft: "8px" }} />
+          <button 
+            type="submit" 
+            className="srfSubmitBtn" 
+            disabled={isSubmitting} 
+            style={{ minWidth: "250px", padding: "14px 30px" }}
+          >
+            {isSubmitting ? (
+              "Submitting Research..."
+            ) : (
+              <>
+                Submit Research & Profile <FaPaperPlane style={{ marginLeft: "8px" }} />
+              </>
+            )}
           </button>
         </div>
       </form>

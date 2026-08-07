@@ -837,9 +837,16 @@
   transition: 0.35s;
 }
 
-.srfSubmitBtn:hover {
+.srfSubmitBtn:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(93, 255, 160, 0.3);
+}
+
+.srfSubmitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Responsive */

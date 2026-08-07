@@ -15,6 +15,7 @@
     "framer-motion": "^12.42.2",
     "gsap": "^3.15.0",
     "lucide-react": "^0.542.0",
+    "phaser": "^4.2.1",
     "react": "^19.2.7",
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.7",

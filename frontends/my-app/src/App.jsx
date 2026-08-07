@@ -14,6 +14,7 @@ import CommunityPage from "./pages/CommunityPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CinemaPage from "./pages/CinemaPage";
+// import DinoGame from "./pages/DinoGame";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        {/* <Route path="/dino-runner" element={<DinoGame />} /> */}
         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
       </Routes>
     </BrowserRouter>
