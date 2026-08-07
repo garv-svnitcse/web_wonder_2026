@@ -13,8 +13,7 @@ import {
     FaUsers,
     FaQuestionCircle,
     FaCommentAlt,
-    FaFilm,
-    FaGamepad
+    FaFilm
 } from "react-icons/fa";
 
 import { GiDinosaurBones, GiDna2 } from "react-icons/gi";
@@ -70,12 +69,6 @@ const navItems = [
         title: "Community",
         icon: <FaUsers />,
         path: "/community"
-    },
-
-    {
-        title: "Dino Game",
-        icon: <FaGamepad />,
-        path: "/dino-runner"
     }
 
 ];
