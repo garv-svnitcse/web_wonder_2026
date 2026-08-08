@@ -156,9 +156,9 @@ export default function ResearchDatabase() {
                     </select>
 
                     <select className="filterSelect filterSort" value={sort} onChange={(e) => setSort(e.target.value)}>
-                        <option value="name">Alphabetical</option>
-                        <option value="era">Era</option>
-                        <option value="danger">Danger</option>
+                        <option value="name">Sort by: Name</option>
+                        <option value="era">Sort by: Era</option>
+                        <option value="danger">Sort by: Danger Level</option>
                     </select>
                 </div>
             </section>

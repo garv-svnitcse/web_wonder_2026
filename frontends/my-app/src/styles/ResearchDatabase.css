@@ -500,7 +500,7 @@ body{
 
 @media (max-width: 900px) {
     .filters {
-        grid-template-columns: 180px repeat(3, 1fr);
+        grid-template-columns: 160px repeat(3, 1fr);
         gap: 15px;
     }
 }
@@ -529,26 +529,36 @@ body{
     }
 
     .filters {
-        grid-template-columns: 120px 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
         margin-top: 20px;
     }
 
-    .filterDiet,
-    .filterSort {
-        display: none;
-    }
-
     .filterTitle {
+        grid-column: 1 / -1;
+        height: 44px;
         font-size: 14px;
         border-radius: 14px;
         gap: 8px;
     }
 
+    .filterEra,
+    .filterDiet,
+    .filterSort {
+        display: block !important;
+        width: 100%;
+    }
+
+    .filterSort {
+        grid-column: 1 / -1;
+    }
+
     .filters select {
-        height: 52px;
+        height: 50px;
         font-size: 14px;
         border-radius: 14px;
+        padding: 0 14px;
     }
 
     .resultsSection {
@@ -571,12 +581,19 @@ body{
 
 @media (max-width: 480px) {
     .filters {
-        grid-template-columns: 105px 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
     .filterTitle {
+        height: 40px;
         font-size: 13px;
         gap: 6px;
+    }
+
+    .filters select {
+        height: 46px;
+        font-size: 13px;
+        padding: 0 10px;
     }
 }
