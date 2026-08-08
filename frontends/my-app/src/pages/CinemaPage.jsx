@@ -416,12 +416,29 @@ export default function CinemaPage() {
                             <button
                                 className="cinema-btn-primary"
                                 onClick={() => {
-                                    setActiveMovie(featuredMovie);
+                                    setActiveMovie({
+                                        ...featuredMovie,
+                                        videoUrl: "https://www.youtube.com/embed/f7kvwp9aIyM?si=_HGzgNpi1qrxycCR&controls=0"
+                                    });
                                     setModalTab("overview");
                                 }}
                             >
                                 <FaPlay /> ENTER THEATER
                             </button>
+
+                            <button
+                                className="cinema-btn-alt"
+                                onClick={() => {
+                                    setActiveMovie({
+                                        ...featuredMovie,
+                                        videoUrl: "https://www.youtube.com/embed/eKQ3uQqAgSM?si=suWWZkNjrCgkkmJy&controls=0"
+                                    });
+                                    setModalTab("overview");
+                                }}
+                            >
+                                <FaPlay /> ALT TRAILER
+                            </button>
+
                             <button
                                 className="cinema-btn-secondary"
                                 onClick={() => {
@@ -758,15 +775,75 @@ export default function CinemaPage() {
 
                             <div className="cinema-projector-beam" />
 
-                             {/* Cinema Screen (Video Player Viewport) */}
+                            {/* Cinema Screen (Video Player Viewport) */}
                             <div className="cinema-video-screen">
-                                <iframe
-                                    className="cinema-iframe"
-                                    src={activeMovie.isWiki ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1&mute=1` : activeMovie.videoUrl}
-                                    title={`${activeMovie.title} Trailer`}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                />
+                                {(() => {
+                                    const url = activeMovie.videoUrl || "";
+                                    const isFile = /\.(mp4|webm|ogg)$/i.test(url);
+
+                                    const getYouTubeEmbed = (u) => {
+                                        if (!u) return "";
+                                        // Already an embed URL or Vimeo
+                                        if (u.includes("youtube.com/embed") || u.includes("player.vimeo.com")) {
+                                            return u.includes("?") ? `${u}&autoplay=1&mute=1` : `${u}?autoplay=1&mute=1`;
+                                        }
+                                        // Try to extract YouTube ID (11 chars) from common formats
+                                        const idMatch = u.match(/(?:youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{11})/);
+                                        if (idMatch && idMatch[1]) {
+                                            return `https://www.youtube.com/embed/${idMatch[1]}?autoplay=1&rel=0&mute=1`;
+                                        }
+                                        // Try query param v= fallback
+                                        try {
+                                            const urlObj = new URL(u);
+                                            const v = urlObj.searchParams.get('v');
+                                            if (v) return `https://www.youtube.com/embed/${v}?autoplay=1&rel=0&mute=1`;
+                                        } catch (e) {
+                                            // not a valid URL, fall through
+                                        }
+                                        // Last resort: return original URL (may still work)
+                                        return u;
+                                    };
+
+                                    const src = activeMovie.isWiki
+                                        ? getYouTubeEmbed("https://youtu.be/vnoNeMlNeD0")
+                                        : isFile
+                                            ? null
+                                            : getYouTubeEmbed(url);
+
+                                    // Debugging info
+                                    // eslint-disable-next-line no-console
+                                    console.log("Cinema modal videoUrl:", url, "computed src:", src, "isFile:", isFile, "isWiki:", activeMovie.isWiki);
+
+                                    if (isFile) {
+                                        return (
+                                            <video
+                                                className="cinema-video-player"
+                                                src={url}
+                                                controls
+                                                playsInline
+                                            />
+                                        );
+                                    }
+
+                                    if (!src) {
+                                        return (
+                                            <div style={{ color: '#ECE4D8', padding: 24 }}>
+                                                Trailer unavailable for this item.
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <iframe
+                                            key={src}
+                                            className="cinema-iframe"
+                                            src={src}
+                                            title={`${activeMovie.title} Trailer`}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; autoplay"
+                                            allowFullScreen
+                                        />
+                                    );
+                                })()}
                             </div>
 
                             {/* Detailed Information Panels */}
