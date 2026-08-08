@@ -164,9 +164,9 @@
 
     background: linear-gradient(
         to top,
-        rgba(4, 9, 6, 0.96) 0%,
-        rgba(4, 9, 6, 0.65) 50%,
-        rgba(4, 9, 6, 0.25) 100%
+        rgba(3, 8, 5, 0.98) 0%,
+        rgba(3, 8, 5, 0.75) 50%,
+        rgba(3, 8, 5, 0.3) 100%
     );
 
     z-index: 2;
@@ -181,27 +181,27 @@
 
     position: absolute;
 
-    left: 30px;
+    left: 24px;
 
-    right: 30px;
+    right: 24px;
 
-    bottom: 30px;
+    bottom: 24px;
 
     z-index: 10;
 
     padding: 24px 28px;
 
-    border-radius: 20px;
+    border-radius: 24px;
 
-    background: rgba(6, 14, 9, 0.68);
+    background: rgba(4, 10, 6, 0.85);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
 
-    -webkit-backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(16px);
 
-    border: 1px solid rgba(214, 161, 75, 0.25);
+    border: 1px solid rgba(214, 161, 75, 0.35);
 
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
 
     transition: transform 0.45s ease, border-color 0.45s ease, background 0.45s ease;
 
@@ -209,9 +209,11 @@
 
 .expeditionCard:hover .cardContent {
 
-    border-color: rgba(214, 161, 75, 0.55);
+    transform: translateY(-6px);
 
-    background: rgba(6, 14, 9, 0.82);
+    border-color: rgba(214, 161, 75, 0.65);
+
+    background: rgba(4, 10, 6, 0.94);
 
 }
 
@@ -219,17 +221,27 @@
 
     display: inline-block;
 
-    color: #F5C86B;
+    color: #FFE066;
 
-    letter-spacing: 4px;
+    background: rgba(0, 0, 0, 0.55);
 
-    font-size: 12px;
+    padding: 5px 14px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255, 224, 102, 0.35);
+
+    letter-spacing: 3px;
+
+    font-size: 11px;
 
     font-weight: 700;
 
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    text-transform: uppercase;
+
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
 
 }
 
@@ -239,23 +251,25 @@
 
     font-family: "Cinzel", serif;
 
-    font-size: 42px;
+    font-size: 40px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 
     line-height: 1.1;
 
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95);
+    letter-spacing: 1px;
+
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
 
 }
 
 .cardContent p {
 
-    color: #E2E8F0;
+    color: #F1F5F9;
 
-    line-height: 1.7;
+    line-height: 1.6;
 
     max-width: 480px;
 
@@ -263,9 +277,9 @@
 
     font-size: 15px;
 
-    font-weight: 400;
+    font-weight: 500;
 
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
 
 }
 
@@ -400,17 +414,7 @@
 
 }
 
-.expeditionCard:hover .cardContent {
 
-    transform: translateY(-10px);
-
-}
-
-.cardContent {
-
-    transition: .45s;
-
-}
 
 /* ===========================================================
    BOTTOM QUOTE
