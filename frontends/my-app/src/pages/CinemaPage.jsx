@@ -69,7 +69,7 @@ const curatedMovies = [
         category: "classics",
         description: "A pragmatic paleontologist touring an almost complete theme park on an island in Central America is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.",
         poster: tyrannosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/QWBKeehUdfY?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/QWBKeehUdfY?autoplay=1&rel=0",
         cast: "Sam Neill, Laura Dern, Jeff Goldblum, Richard Attenborough",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -93,7 +93,7 @@ const curatedMovies = [
         category: "documentaries",
         description: "Travel back 66 million years to when majestic dinosaurs and extraordinary creatures roamed the lands, seas, and skies, depicted with state-of-the-art CGI and narrated by Sir David Attenborough.",
         poster: triceratopsImg,
-        videoUrl: "https://www.youtube.com/embed/wLd8k2g_yD0?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/wLd8k2g_yD0?autoplay=1&rel=0",
         cast: "David Attenborough (Narrator)",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -115,7 +115,7 @@ const curatedMovies = [
         category: "classics",
         description: "A new theme park, built on the original site of Jurassic Park, creates a genetically modified hybrid dinosaur, the Indominus Rex, which escapes containment and forces the park into a struggle for survival.",
         poster: spinosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/RFinNxS5KN4?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/RFinNxS5KN4?autoplay=1&rel=0",
         cast: "Chris Pratt, Bryce Dallas Howard, Irrfan Khan, Vincent D'Onofrio",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -137,7 +137,7 @@ const curatedMovies = [
         category: "animations",
         description: "An orphaned brontosaurus named Littlefoot sets off in search of the legendary Great Valley, a land of lush vegetation where dinosaurs can thrive and co-exist in peace. Along the way, he meets four other young dinosaurs.",
         poster: brachiosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/cM4L40uJk8M?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/cM4L40uJk8M?autoplay=1&rel=0",
         cast: "Gabriel Damon, Candace Hutson, Judith Barsi, Will Ryan",
         dinosaurs: [
             { name: "Brachiosaurus", slug: "brachiosaurus" },
@@ -160,7 +160,7 @@ const curatedMovies = [
         category: "documentaries",
         description: "The ground-breaking BBC documentary series that uses state-of-the-art computer effects and animatronics to recreate the Mesozoic Era, presenting dinosaurs as if they were filmed in their natural habitats.",
         poster: stegosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/d6101p4j64s?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/d6101p4j64s?autoplay=1&rel=0",
         cast: "Kenneth Branagh (Narrator)",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -184,7 +184,7 @@ const curatedMovies = [
         category: "animations",
         description: "An iguanodon raised by a family of lemurs joins an arduous trek to a sanctuary grounds after a devastating meteor shower destroys their island paradise.",
         poster: carnotaurusImg,
-        videoUrl: "https://www.youtube.com/embed/37i45M1gK8E?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/37i45M1gK8E?autoplay=1&rel=0",
         cast: "D.B. Sweeney, Alfre Woodard, Ossie Davis, Samuel E. Wright",
         dinosaurs: [
             { name: "Carnotaurus", slug: "carnotaurus" },
@@ -205,7 +205,7 @@ const curatedMovies = [
         category: "vintage",
         description: "The classic silent film based on Arthur Conan Doyle's novel. A crew of explorers led by Professor Challenger discover a remote plateau in South America where prehistoric creatures still roam.",
         poster: allosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/T0053C2H3rM?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/T0053C2H3rM?autoplay=1&rel=0",
         isArchive: true,
         cast: "Bessie Love, Lewis Stone, Wallace Beery",
         dinosaurs: [
@@ -229,7 +229,7 @@ const curatedMovies = [
         category: "vintage",
         description: "Winsor McCay's historic short film, widely regarded as the first keyframe animated film and the first cartoon to feature a dinosaur with a distinct personality.",
         poster: parasaurolophusImg,
-        videoUrl: "https://www.youtube.com/embed/TGXC8gXOPoU?autoplay=1&rel=0",
+        videoUrl: "https://www.youtube-nocookie.com/embed/TGXC8gXOPoU?autoplay=1&rel=0",
         isArchive: true,
         cast: "Winsor McCay",
         dinosaurs: [
@@ -805,9 +805,10 @@ export default function CinemaPage() {
                             <div className="cinema-video-screen">
                                 <iframe
                                     className="cinema-iframe"
-                                    src={activeMovie.isWiki ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1` : activeMovie.videoUrl}
+                                    src={activeMovie.isWiki ? `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1` : activeMovie.videoUrl}
                                     title={`${activeMovie.title} Trailer`}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerPolicy="strict-origin-when-cross-origin"
                                     allowFullScreen
                                 />
                             </div>
@@ -815,9 +816,36 @@ export default function CinemaPage() {
                             {/* Detailed Information Panels */}
                             <div className="cinema-modal-details">
                                 <div className="cinema-modal-header">
-                                    <div className="cinema-modal-title-area">
-                                        <h2 className="cinema-modal-title">{activeMovie.title}</h2>
-                                        <div className="cinema-modal-meta-grid">
+                                    <div className="cinema-modal-title-area" style={{ width: "100%" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", gap: "15px", flexWrap: "wrap" }}>
+                                            <h2 className="cinema-modal-title" style={{ margin: 0 }}>{activeMovie.title}</h2>
+                                            <a
+                                                href={
+                                                    activeMovie.videoUrl?.includes("embed/")
+                                                        ? `https://www.youtube.com/watch?v=${activeMovie.videoUrl.split("embed/")[1]?.split("?")[0]}`
+                                                        : activeMovie.videoUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(activeMovie.title + ' trailer')}`
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    display: "inline-flex",
+                                                    alignItems: "center",
+                                                    gap: "8px",
+                                                    background: "#FF0000",
+                                                    color: "#FFFFFF",
+                                                    padding: "8px 18px",
+                                                    borderRadius: "20px",
+                                                    fontSize: "12px",
+                                                    fontWeight: "600",
+                                                    textDecoration: "none",
+                                                    boxShadow: "0 4px 15px rgba(255, 0, 0, 0.4)",
+                                                    transition: "transform 0.2s, background 0.2s"
+                                                }}
+                                            >
+                                                <FaPlay style={{ fontSize: "10px" }} /> Watch on YouTube
+                                            </a>
+                                        </div>
+                                        <div className="cinema-modal-meta-grid" style={{ marginTop: "12px" }}>
                                             <span className="cinema-modal-meta-tag">Dir: {activeMovie.director}</span>
                                             <span className="cinema-modal-meta-tag">Released: {activeMovie.year}</span>
                                             <span className="cinema-modal-meta-tag">Length: {activeMovie.duration}</span>
