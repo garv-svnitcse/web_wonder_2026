@@ -94,10 +94,10 @@ import GlassAuthModal from '../components/GlassAuthModal';
  */
 
 const formatDecimal = (val, decimals = 2) => {
-    if (val === null || val === undefined || val === "" || isNaN(val)) return "--";
+    if (val === null || val === undefined || val === "") return "--";
     const num = Number(val);
     if (isNaN(num)) return val;
-    return num % 1 === 0 ? num.toString() : num.toFixed(decimals);
+    return Math.abs(num % 1) < 0.00001 ? Math.round(num).toString() : num.toFixed(decimals);
 };
 
 export default function QuizPage() {
@@ -817,20 +817,24 @@ export default function QuizPage() {
                                         background: "rgba(13,23,17,.92)",
                                         border: "1px solid rgba(214,161,75,.08)",
                                         borderRadius: "28px",
-                                        padding: "35px",
+                                        padding: "28px 20px",
                                         backdropFilter: "blur(18px)",
                                         transition: ".3s",
                                         boxShadow: "0 18px 40px rgba(0,0,0,.25)",
+                                        overflow: "hidden",
                                     }}
                                 >
 
                                     <div
                                         style={{
                                             color: "#777",
-                                            letterSpacing: "3px",
-                                            fontSize: "12px",
-                                            marginBottom: "18px",
+                                            letterSpacing: "2px",
+                                            fontSize: "11px",
+                                            marginBottom: "14px",
                                             textTransform: "uppercase",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                         }}
                                     >
                                         {card.title}
@@ -838,9 +842,13 @@ export default function QuizPage() {
 
                                     <div
                                         style={{
-                                            fontFamily: "Cinzel",
-                                            fontSize: "48px",
+                                            fontFamily: "Cinzel, serif",
+                                            fontSize: "clamp(24px, 2.8vw, 38px)",
                                             color: card.color,
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            lineHeight: 1.1,
                                         }}
                                     >
                                         {card.value}
@@ -1952,18 +1960,22 @@ export default function QuizPage() {
                                     key={index}
                                     style={{
                                         background: "rgba(13,23,17,.92)",
-                                        padding: "35px",
+                                        padding: "28px 20px",
                                         borderRadius: "30px",
                                         border: "1px solid rgba(214,161,75,.08)",
+                                        overflow: "hidden",
                                     }}
                                 >
 
                                     <div
                                         style={{
-                                            fontSize: "12px",
-                                            letterSpacing: "3px",
+                                            fontSize: "11px",
+                                            letterSpacing: "2px",
                                             color: "#888",
-                                            marginBottom: "18px",
+                                            marginBottom: "14px",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                         }}
                                     >
                                         {item.title}
@@ -1971,10 +1983,14 @@ export default function QuizPage() {
 
                                     <div
                                         style={{
-                                            fontSize: "46px",
-                                            fontFamily: "Cinzel",
+                                            fontSize: "clamp(24px, 2.8vw, 38px)",
+                                            fontFamily: "Cinzel, serif",
                                             color: item.color,
                                             textTransform: "capitalize",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            lineHeight: 1.1,
                                         }}
                                     >
                                         {item.value}
