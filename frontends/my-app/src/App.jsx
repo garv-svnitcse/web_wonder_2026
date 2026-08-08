@@ -16,6 +16,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CinemaPage from "./pages/CinemaPage";
 import AboutPage from "./pages/AboutPage";
 import GreetingToast from "./components/GreetingToast";
+import Privacy from "./components/Footer/Elements/Privacy";
+import Terms from "./components/Footer/Elements/Terms";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         {/* <Route path="/dino-runner" element={<DinoGame />} /> */}
         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
       </Routes>
