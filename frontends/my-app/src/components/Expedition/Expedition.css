@@ -164,12 +164,15 @@
 
     background: linear-gradient(
         to top,
-        rgba(3, 8, 5, 0.98) 0%,
-        rgba(3, 8, 5, 0.75) 50%,
-        rgba(3, 8, 5, 0.3) 100%
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 0, 0, 0.45) 45%,
+        rgba(0, 0, 0, 0.1) 80%,
+        transparent 100%
     );
 
     z-index: 2;
+
+    pointer-events: none;
 
 }
 
@@ -181,39 +184,33 @@
 
     position: absolute;
 
-    left: 24px;
+    left: 40px;
 
-    right: 24px;
+    right: 40px;
 
-    bottom: 24px;
+    bottom: 40px;
 
     z-index: 10;
 
-    padding: 24px 28px;
+    padding: 0;
 
-    border-radius: 24px;
+    background: none;
 
-    background: rgba(4, 10, 6, 0.85);
+    border: none;
 
-    backdrop-filter: blur(16px);
+    box-shadow: none;
 
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: none;
 
-    border: 1px solid rgba(214, 161, 75, 0.35);
+    -webkit-backdrop-filter: none;
 
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
-
-    transition: transform 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+    transition: transform 0.45s ease;
 
 }
 
 .expeditionCard:hover .cardContent {
 
-    transform: translateY(-6px);
-
-    border-color: rgba(214, 161, 75, 0.65);
-
-    background: rgba(4, 10, 6, 0.94);
+    transform: translateY(-8px);
 
 }
 
@@ -221,27 +218,19 @@
 
     display: inline-block;
 
-    color: #FFE066;
+    color: #FFDA66;
 
-    background: rgba(0, 0, 0, 0.55);
+    letter-spacing: 4px;
 
-    padding: 5px 14px;
-
-    border-radius: 20px;
-
-    border: 1px solid rgba(255, 224, 102, 0.35);
-
-    letter-spacing: 3px;
-
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 700;
 
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 
     text-transform: uppercase;
 
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
+    filter: drop-shadow(0 2px 4px #000) drop-shadow(0 0 10px rgba(0, 0, 0, 0.95));
 
 }
 
@@ -251,35 +240,35 @@
 
     font-family: "Cinzel", serif;
 
-    font-size: 40px;
+    font-size: 46px;
 
     font-weight: 800;
 
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 
     line-height: 1.1;
 
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
+    filter: drop-shadow(0 3px 6px #000) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.95));
 
 }
 
 .cardContent p {
 
-    color: #F1F5F9;
+    color: #F8FAFC;
 
-    line-height: 1.6;
+    line-height: 1.7;
 
     max-width: 480px;
 
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 
-    font-size: 15px;
+    font-size: 16px;
 
     font-weight: 500;
 
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+    filter: drop-shadow(0 2px 5px #000) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.95));
 
 }
 
