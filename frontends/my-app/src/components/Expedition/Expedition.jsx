@@ -40,7 +40,7 @@ const cards = [
 ];
 
 function getDirectVideoUrl(url) {
-    if (!url) return url;
+    if (!url) return "/videos/dna.mp4";
     if (url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
         return "/videos/trex.mp4";
     }
@@ -50,13 +50,11 @@ function getDirectVideoUrl(url) {
     if (url.includes("1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr")) {
         return "/videos/research.mp4";
     }
-    if (url.includes("drive.google.com/file/d/")) {
-        try {
-            const fileId = url.split("/file/d/")[1].split("/")[0];
-            return `https://docs.google.com/uc?export=download&id=${fileId}`;
-        } catch (e) {
-            console.error("Error parsing Google Drive video link", e);
-        }
+    if (url.includes("1l6pcx8VaRXXb9ZF2FhAx34ucQZBLJtH2")) {
+        return "/videos/dna.mp4";
+    }
+    if (url.includes("drive.google.com")) {
+        return "/videos/dna.mp4";
     }
     return url;
 }
