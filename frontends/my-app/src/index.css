@@ -14,22 +14,19 @@ scroll-behavior:smooth;
 
 }
 
-body{
-
-background:#08110b;
-
-font-family:'Inter',sans-serif;
-
-color:white;
-
-overflow-x:hidden;
-
+body {
+  background: #08110b;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: white;
+  overflow-x: hidden;
 }
 
-button{
+button, input, select, textarea {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
 
-font-family:inherit;
-
+h1, h2, h3 {
+  font-family: "Cinzel", serif;
 }
 
 img{

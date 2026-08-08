@@ -425,7 +425,7 @@ export default function QuizPage() {
                 background:
                     "radial-gradient(circle at top,#1b3522 0%,#0a120d 55%,#050705 100%)",
                 color: "#ECE4D8",
-                fontFamily: "Poppins, sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 overflowX: "hidden",
                 position: "relative",
                 paddingBottom: "100px",

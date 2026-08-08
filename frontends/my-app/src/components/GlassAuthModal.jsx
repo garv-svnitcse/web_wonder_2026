@@ -261,7 +261,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 99999,
-        fontFamily: 'Outfit, sans-serif',
+        fontFamily: "'Inter', sans-serif",
         overflowY: 'auto',
         padding: '20px 10px'
       }}>
@@ -426,7 +426,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 99999,
-      fontFamily: 'Outfit, sans-serif',
+      fontFamily: "'Inter', sans-serif",
       overflowY: 'auto',
       padding: '20px 10px'
     }}>
