@@ -14,6 +14,7 @@ import CommunityPage from "./pages/CommunityPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CinemaPage from "./pages/CinemaPage";
+import AboutPage from "./pages/AboutPage";
 import GreetingToast from "./components/GreetingToast";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         {/* <Route path="/dino-runner" element={<DinoGame />} /> */}
         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
