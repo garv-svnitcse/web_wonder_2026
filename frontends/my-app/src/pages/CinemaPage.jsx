@@ -69,7 +69,7 @@ const curatedMovies = [
         category: "classics",
         description: "A pragmatic paleontologist touring an almost complete theme park on an island in Central America is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.",
         poster: tyrannosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/QWBKeehUdfY?autoplay=1&mute=1",
+        videoUrl: "https://www.youtube.com/embed/QWBKeehUdfY?autoplay=1&rel=0",
         cast: "Sam Neill, Laura Dern, Jeff Goldblum, Richard Attenborough",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -93,7 +93,7 @@ const curatedMovies = [
         category: "documentaries",
         description: "Travel back 66 million years to when majestic dinosaurs and extraordinary creatures roamed the lands, seas, and skies, depicted with state-of-the-art CGI and narrated by Sir David Attenborough.",
         poster: triceratopsImg,
-        videoUrl: "https://www.youtube.com/embed/wLd8k2g_yD0?autoplay=1&mute=1",
+        videoUrl: "https://www.youtube.com/embed/wLd8k2g_yD0?autoplay=1&rel=0",
         cast: "David Attenborough (Narrator)",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -107,6 +107,28 @@ const curatedMovies = [
     },
     {
         id: "m3",
+        title: "Jurassic World",
+        year: 2015,
+        duration: "124 min",
+        director: "Colin Trevorrow",
+        rating: 7.0,
+        category: "classics",
+        description: "A new theme park, built on the original site of Jurassic Park, creates a genetically modified hybrid dinosaur, the Indominus Rex, which escapes containment and forces the park into a struggle for survival.",
+        poster: spinosaurusImg,
+        videoUrl: "https://www.youtube.com/embed/RFinNxS5KN4?autoplay=1&rel=0",
+        cast: "Chris Pratt, Bryce Dallas Howard, Irrfan Khan, Vincent D'Onofrio",
+        dinosaurs: [
+            { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
+            { name: "Velociraptor", slug: "velociraptor" },
+            { name: "Ankylosaurus", slug: "ankylosaurus" }
+        ],
+        trivia: [
+            "Chris Pratt's character, Owen Grady, was trained by real animal behaviorists to interact convincingly with velociraptors.",
+            "Jurassic World became the first film in history to generate over $500 million globally in a single opening weekend."
+        ]
+    },
+    {
+        id: "m4",
         title: "The Land Before Time",
         year: 1988,
         duration: "69 min",
@@ -115,7 +137,7 @@ const curatedMovies = [
         category: "animations",
         description: "An orphaned brontosaurus named Littlefoot sets off in search of the legendary Great Valley, a land of lush vegetation where dinosaurs can thrive and co-exist in peace. Along the way, he meets four other young dinosaurs.",
         poster: brachiosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/cM4L40uJk8M?autoplay=1&mute=1",
+        videoUrl: "https://www.youtube.com/embed/cM4L40uJk8M?autoplay=1&rel=0",
         cast: "Gabriel Damon, Candace Hutson, Judith Barsi, Will Ryan",
         dinosaurs: [
             { name: "Brachiosaurus", slug: "brachiosaurus" },
@@ -129,7 +151,7 @@ const curatedMovies = [
         ]
     },
     {
-        id: "m4",
+        id: "m5",
         title: "Walking with Dinosaurs",
         year: 1999,
         duration: "6 Episodes",
@@ -138,7 +160,7 @@ const curatedMovies = [
         category: "documentaries",
         description: "The ground-breaking BBC documentary series that uses state-of-the-art computer effects and animatronics to recreate the Mesozoic Era, presenting dinosaurs as if they were filmed in their natural habitats.",
         poster: stegosaurusImg,
-        videoUrl: "https://www.youtube.com/embed/d6101p4j64s?autoplay=1&mute=1",
+        videoUrl: "https://www.youtube.com/embed/d6101p4j64s?autoplay=1&rel=0",
         cast: "Kenneth Branagh (Narrator)",
         dinosaurs: [
             { name: "Tyrannosaurus Rex", slug: "tyrannosaurus-rex" },
@@ -153,7 +175,28 @@ const curatedMovies = [
         ]
     },
     {
-        id: "m5",
+        id: "m6",
+        title: "Disney's Dinosaur",
+        year: 2000,
+        duration: "82 min",
+        director: "Ralph Zondag, Eric Leighton",
+        rating: 6.5,
+        category: "animations",
+        description: "An iguanodon raised by a family of lemurs joins an arduous trek to a sanctuary grounds after a devastating meteor shower destroys their island paradise.",
+        poster: carnotaurusImg,
+        videoUrl: "https://www.youtube.com/embed/37i45M1gK8E?autoplay=1&rel=0",
+        cast: "D.B. Sweeney, Alfre Woodard, Ossie Davis, Samuel E. Wright",
+        dinosaurs: [
+            { name: "Carnotaurus", slug: "carnotaurus" },
+            { name: "Brachiosaurus", slug: "brachiosaurus" }
+        ],
+        trivia: [
+            "The film blended computer-animated prehistoric animals with live-action background scenery filmed in Hawaii and Venezuela.",
+            "At the time of release, it was the most expensive computer-animated feature film ever produced."
+        ]
+    },
+    {
+        id: "m7",
         title: "The Lost World",
         year: 1925,
         duration: "106 min",
@@ -162,7 +205,7 @@ const curatedMovies = [
         category: "vintage",
         description: "The classic silent film based on Arthur Conan Doyle's novel. A crew of explorers led by Professor Challenger discover a remote plateau in South America where prehistoric creatures still roam.",
         poster: allosaurusImg,
-        videoUrl: "https://archive.org/embed/TheLostWorld1925", // Internet Archive embed streamable
+        videoUrl: "https://www.youtube.com/embed/T0053C2H3rM?autoplay=1&rel=0",
         isArchive: true,
         cast: "Bessie Love, Lewis Stone, Wallace Beery",
         dinosaurs: [
@@ -177,7 +220,7 @@ const curatedMovies = [
         ]
     },
     {
-        id: "m6",
+        id: "m8",
         title: "Gertie the Dinosaur",
         year: 1914,
         duration: "12 min",
@@ -186,7 +229,7 @@ const curatedMovies = [
         category: "vintage",
         description: "Winsor McCay's historic short film, widely regarded as the first keyframe animated film and the first cartoon to feature a dinosaur with a distinct personality.",
         poster: parasaurolophusImg,
-        videoUrl: "https://archive.org/embed/gertie_the_dinosaur", // Internet Archive embed streamable
+        videoUrl: "https://www.youtube.com/embed/TGXC8gXOPoU?autoplay=1&rel=0",
         isArchive: true,
         cast: "Winsor McCay",
         dinosaurs: [
@@ -762,7 +805,7 @@ export default function CinemaPage() {
                             <div className="cinema-video-screen">
                                 <iframe
                                     className="cinema-iframe"
-                                    src={activeMovie.isWiki ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1&mute=1` : activeMovie.videoUrl}
+                                    src={activeMovie.isWiki ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(activeMovie.title + ' trailer')}&autoplay=1` : activeMovie.videoUrl}
                                     title={`${activeMovie.title} Trailer`}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
