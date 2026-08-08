@@ -93,6 +93,13 @@ import GlassAuthModal from '../components/GlassAuthModal';
  *    ]
  */
 
+const formatDecimal = (val, decimals = 2) => {
+    if (val === null || val === undefined || val === "" || isNaN(val)) return "--";
+    const num = Number(val);
+    if (isNaN(num)) return val;
+    return num % 1 === 0 ? num.toString() : num.toFixed(decimals);
+};
+
 export default function QuizPage() {
     const navigate = useNavigate();
     const getStoredToken = () => {
@@ -785,8 +792,8 @@ export default function QuizPage() {
                                 },
                                 {
                                     title: "Average Accuracy",
-                                    value: dashboardData
-                                        ? `${dashboardData.average_accuracy}%`
+                                    value: dashboardData?.average_accuracy != null
+                                        ? `${formatDecimal(dashboardData.average_accuracy)}%`
                                         : "--",
                                     color: "#58D68D",
                                 },
@@ -947,7 +954,7 @@ export default function QuizPage() {
                                         </div>
 
                                         <div>
-                                            {dashboardData?.average_score ?? "--"}
+                                            {dashboardData?.average_score != null ? formatDecimal(dashboardData.average_score) : "--"}
                                         </div>
 
                                     </div>
@@ -1211,7 +1218,7 @@ export default function QuizPage() {
                                                                     fontWeight: 600,
                                                                 }}
                                                             >
-                                                                {attempt.accuracy}%
+                                                                {formatDecimal(attempt.accuracy)}%
                                                             </span>
                                                         </div>
                                                     </td>
@@ -1931,7 +1938,7 @@ export default function QuizPage() {
                                 },
                                 {
                                     title: "Accuracy",
-                                    value: `${submitResult.accuracy}%`,
+                                    value: submitResult?.accuracy != null ? `${formatDecimal(submitResult.accuracy)}%` : "--",
                                     color: "#74B9FF"
                                 },
                                 {
@@ -2753,7 +2760,7 @@ export default function QuizPage() {
                                                     color: "#BBBBBB",
                                                 }}
                                             >
-                                                Accuracy : {user.average_accuracy}%
+                                                Accuracy : {formatDecimal(user.average_accuracy)}%
                                             </p>
 
                                             <p
@@ -2892,7 +2899,7 @@ export default function QuizPage() {
                                                         borderBottom: "1px solid rgba(255,255,255,.05)",
                                                     }}
                                                 >
-                                                    {user.average_accuracy}%
+                                                    {formatDecimal(user.average_accuracy)}%
                                                 </td>
 
                                                 <td
