@@ -24,7 +24,7 @@ const cards = [
     {
         title: "TESTIMONIALS",
         subtitle: "Explorer Feedback",
-        video: "/videos/dna.mp4",
+        video: "https://drive.google.com/file/d/1l6pcx8VaRXXb9ZF2FhAx34ucQZBLJtH2/view?usp=sharing",
         description:
             "Read reviews and reflections from our distinguished paleontology experts, engineers, and design directors.",
         link: "/testimonials",
