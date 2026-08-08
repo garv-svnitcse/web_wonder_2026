@@ -41,21 +41,26 @@ const cards = [
 
 function getDirectVideoUrl(url) {
     if (!url) return "/videos/dna.mp4";
-    if (url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
-        return "/videos/trex.mp4";
+
+    let fileId = "";
+    if (url.includes("/file/d/")) {
+        try {
+            fileId = url.split("/file/d/")[1].split("/")[0].split("?")[0];
+        } catch (e) {
+            console.error("Error parsing Google Drive file ID", e);
+        }
+    } else if (url.includes("id=")) {
+        try {
+            fileId = url.split("id=")[1].split("&")[0];
+        } catch (e) {
+            console.error("Error parsing Google Drive file ID", e);
+        }
     }
-    if (url.includes("1GVmN9hgUHKk-b7QUEVv4eCg10omSfqm3")) {
-        return "/videos/timeline.mp4";
+
+    if (fileId) {
+        return `https://drive.usercontent.google.com/download?id=${fileId}&export=download`;
     }
-    if (url.includes("1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr")) {
-        return "/videos/research.mp4";
-    }
-    if (url.includes("1l6pcx8VaRXXb9ZF2FhAx34ucQZBLJtH2")) {
-        return "/videos/dna.mp4";
-    }
-    if (url.includes("drive.google.com")) {
-        return "/videos/dna.mp4";
-    }
+
     return url;
 }
 
@@ -110,6 +115,15 @@ export default function Expedition() {
                             muted
                             loop
                             playsInline
+                            onError={(e) => {
+                                const fallback = card.title === "DINOSAURS" ? "/videos/trex.mp4"
+                                    : card.title === "TIMELINE" ? "/videos/timeline.mp4"
+                                    : card.title === "RESEARCH" ? "/videos/research.mp4"
+                                    : "/videos/dna.mp4";
+                                if (!e.target.src.endsWith(fallback)) {
+                                    e.target.src = fallback;
+                                }
+                            }}
                         />
 
                         <div className="cardOverlay"></div>
