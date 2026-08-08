@@ -14,6 +14,8 @@ import CommunityPage from "./pages/CommunityPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CinemaPage from "./pages/CinemaPage";
+import Privacy from "./components/Footer/Elements/Privacy";
+import Terms from "./components/Footer/Elements/Terms";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
       </Routes>
     </BrowserRouter>
   );
