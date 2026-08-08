@@ -1,11 +1,20 @@
 .greetingToastContainer {
   position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999999;
-  width: min(520px, 92%);
+  bottom: 28px;
+  right: 28px;
+  z-index: 9000;
+  width: min(440px, 90vw);
   pointer-events: auto;
+}
+
+@media (max-width: 600px) {
+  .greetingToastContainer {
+    bottom: 20px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(400px, 92vw);
+  }
 }
 
 .greetingToastCard {

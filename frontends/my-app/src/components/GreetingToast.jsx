@@ -67,10 +67,10 @@ export default function GreetingToast() {
     <AnimatePresence>
       <motion.div
         className="greetingToastContainer"
-        initial={{ opacity: 0, y: -50, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -30, scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        initial={{ opacity: 0, x: 60, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+        exit={{ opacity: 0, x: 40, y: 10, scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 350, damping: 25 }}
       >
         <div className="greetingToastCard">
           <div className="greetingToastIcon">
