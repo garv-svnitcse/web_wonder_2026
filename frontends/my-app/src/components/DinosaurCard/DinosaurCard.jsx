@@ -98,37 +98,34 @@ export default function DinosaurCard({ dinosaur }) {
 
         >
 
+            <div className="cardBadges">
+                {dinosaur.era && (
+                    <span className="badge era">
+                        {dinosaur.era}
+                    </span>
+                )}
+
+                <div className="cardBadgesRight">
+                    {dinosaur.diet && (
+                        <span className="badge diet">
+                            {dinosaur.diet}
+                        </span>
+                    )}
+
+                    {(dinosaur.threat || dinosaur.danger) && (
+                        <span className="badge danger">
+                            {dinosaur.threat || dinosaur.danger}
+                        </span>
+                    )}
+                </div>
+            </div>
+
             <img
-
                 src={getCardImageUrl(dinosaur)}
-
                 alt={dinosaur.name}
-
             />
 
             <div className="cardOverlay">
-
-                <div className="cardBadges">
-
-                    <span className="badge era">
-
-                        {dinosaur.era}
-
-                    </span>
-
-                    <span className="badge diet">
-
-                        {dinosaur.diet}
-
-                    </span>
-
-                    <span className="badge danger">
-
-                        {dinosaur.threat}
-
-                    </span>
-
-                </div>
 
                 <h2>
 
