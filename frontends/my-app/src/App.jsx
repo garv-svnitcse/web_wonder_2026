@@ -14,11 +14,12 @@ import CommunityPage from "./pages/CommunityPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CinemaPage from "./pages/CinemaPage";
-// import DinoGame from "./pages/DinoGame";
+import GreetingToast from "./components/GreetingToast";
 
 function App() {
   return (
     <BrowserRouter>
+      <GreetingToast />
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/login" element={<Login />} /> */}

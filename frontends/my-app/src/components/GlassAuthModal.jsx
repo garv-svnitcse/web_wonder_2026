@@ -62,6 +62,12 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const strengthLabel = strengthLabels[strengthIndex];
   const strengthColor = strengthColors[strengthIndex];
   const canSubmit = emailIsValid && (isLogin ? password.length > 0 : passwordIsValid) && !loading;
+  const triggerAuthGreeting = (type, displayName) => {
+    const payload = { type, name: displayName || name || (email ? email.split('@')[0] : "Explorer") };
+    sessionStorage.setItem("pending_greeting", JSON.stringify(payload));
+    window.dispatchEvent(new CustomEvent("auth_greeting_event", { detail: payload }));
+  };
+
   useEffect(() => {
     if (isLoaded && isSignedIn) {
       getToken().then((token) => {
@@ -93,6 +99,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
           await setSignInActive({ session: result.createdSessionId });
           const token = await getToken();
           localStorage.setItem('access_token', token);
+          triggerAuthGreeting("login", name || email.split('@')[0]);
           onAuthSuccess?.(token);
         } else if (result.status === "needs_second_factor") {
           const secondFactor = result.supportedSecondFactors?.find(
@@ -150,6 +157,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
           await setSignInActive({ session: completeSignIn.createdSessionId });
           const token = await getToken();
           localStorage.setItem('access_token', token);
+          triggerAuthGreeting("login", name || email.split('@')[0]);
           onAuthSuccess?.(token);
         } else {
           throw new Error(`Verification state is ${completeSignIn.status}`);
@@ -172,6 +180,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
             console.error("Failed to sync user to database:", syncErr);
           }
 
+          triggerAuthGreeting("signup", name || email.split('@')[0]);
           onAuthSuccess?.(token);
         } else {
           throw new Error(`Verification state is ${completeSignUp.status}`);
