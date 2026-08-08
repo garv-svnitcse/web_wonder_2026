@@ -1,240 +1,300 @@
-/* AboutPage.css - Jurassic Journey Theme */
+/* =======================================================
+   ABOUT PAGE ROOT - CONSISTENT WITH HOMEPAGE DESIGN SYSTEM
+======================================================= */
 
-.aboutPageContainer {
-    background-color: #07100b;
-    color: #e2e8f0;
+.aboutPage {
+    width: 100%;
     min-height: 100vh;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #08110B;
+    color: #ECE4D8;
+    font-family: "Inter", sans-serif;
     overflow-x: hidden;
 }
 
-/* SECTION CONTAINERS */
-.aboutSectionInner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
+/* =======================================================
+   HERO SECTION - HOMEPAGE PARALLAX & FOG STYLE
+======================================================= */
 
-.sectionHeading {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.sectionHeading .subHeading {
-    display: inline-block;
-    color: #4ade80;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    background: rgba(74, 222, 128, 0.1);
-    padding: 6px 16px;
-    border-radius: 20px;
-    border: 1px solid rgba(74, 222, 128, 0.25);
-}
-
-.sectionHeading h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 16px;
-    background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.sectionHeading p {
-    color: #94a3b8;
-    font-size: 1.1rem;
-    max-width: 650px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* HERO SECTION */
-.aboutHeroSection {
+.aboutHero {
     position: relative;
-    padding: 160px 24px 100px;
-    text-align: center;
-    background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.15) 0%, rgba(7, 16, 11, 0.95) 70%);
-    border-bottom: 1px solid rgba(74, 222, 128, 0.15);
+    width: 100%;
+    min-height: 90vh;
     overflow: hidden;
+    background: #08110B;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 100px;
+}
+
+.aboutHeroBackground {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(6, 10, 8, 0.55),
+            rgba(6, 10, 8, 0.8)),
+        url("/images/jungle-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    transition: transform 0.15s linear;
+}
+
+.aboutHeroGradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.4),
+            rgba(8, 17, 11, 0.98));
+}
+
+.aboutHeroFog {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+.aboutHeroFogOne {
+    background-image: radial-gradient(circle, rgba(214, 161, 75, 0.15), transparent 70%);
+    animation: fogPulse 12s infinite alternate ease-in-out;
+}
+
+.aboutHeroFogTwo {
+    background-image: radial-gradient(circle, rgba(16, 185, 129, 0.1), transparent 60%);
+    animation: fogPulse 16s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes fogPulse {
+    0% { opacity: 0.15; transform: scale(1); }
+    100% { opacity: 0.35; transform: scale(1.15); }
 }
 
 .aboutHeroGlow {
     position: absolute;
-    top: 10%;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-    filter: blur(60px);
+    top: 30%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(214, 161, 75, 0.22), transparent 70%);
     pointer-events: none;
 }
 
-.aboutHeroContent {
+.aboutHeroVignette {
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+}
+
+.aboutHeroContainer {
     position: relative;
     z-index: 2;
-    max-width: 850px;
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.aboutHeroContent {
+    max-width: 900px;
     margin: 0 auto;
 }
 
-.aboutBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 8px 20px;
-    border-radius: 30px;
-    color: #6ee7b7;
-    font-size: 0.85rem;
+.aboutHeroTag {
+    display: inline-block;
+    color: #D6A14B;
+    font-family: "Cinzel", serif;
+    letter-spacing: 6px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 24px;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
-}
-
-.badgeIcon {
-    font-size: 1.1rem;
-    color: #34d399;
+    margin-bottom: 20px;
+    background: rgba(214, 161, 75, 0.1);
+    padding: 8px 24px;
+    border-radius: 30px;
+    border: 1px solid rgba(214, 161, 75, 0.3);
 }
 
 .aboutHeroTitle {
-    font-size: 3.5rem;
-    font-weight: 900;
+    font-family: "Cinzel", serif;
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -1px;
-    color: #ffffff;
+    color: #ECE4D8;
     margin-bottom: 24px;
+    letter-spacing: 2px;
 }
 
-.highlightText {
-    background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(52, 211, 153, 0.3);
+.goldHighlight {
+    color: #D6A14B;
+    text-shadow: 0 0 25px rgba(214, 161, 75, 0.4);
 }
 
-.aboutHeroSubtitle {
-    font-size: 1.25rem;
-    line-height: 1.7;
-    color: #cbd5e1;
-    max-width: 760px;
+.aboutHeroDescription {
+    color: #A8BBA2;
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 50px;
+}
+
+/* HERO STATS BAR - EXACT HOMEPAGE STYLE */
+.aboutHeroStats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+    border-top: 1px solid rgba(214, 161, 75, 0.2);
+}
+
+.statItem {
+    text-align: center;
+    padding: 0 20px;
+}
+
+.statItem h2 {
+    font-family: "Cinzel", serif;
+    font-size: clamp(32px, 4vw, 48px);
+    color: #D6A14B;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.statItem span {
+    color: #ECE4D8;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-family: "Cinzel", serif;
+    opacity: 0.85;
+}
+
+.aboutHeroBottomFade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, #08110B, transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* =======================================================
+   GENERAL SECTION STYLES - CONSISTENT WITH HOMEPAGE
+======================================================= */
+
+.aboutSection {
+    position: relative;
+    padding: 120px 0;
+    background: #08110B;
+}
+
+.aboutContainer {
+    width: min(1280px, 90%);
     margin: 0 auto;
 }
 
-/* MISSION & VISION */
-.aboutMissionSection {
-    padding: 90px 0;
-}
-
-.aboutMissionSection .aboutSectionInner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-}
-
-.missionCard {
-    background: rgba(15, 29, 20, 0.7);
-    border: 1px solid rgba(52, 211, 153, 0.2);
-    border-radius: 20px;
-    padding: 40px;
-    backdrop-filter: blur(12px);
-    transition: all 0.35s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
-
-.missionCard:hover {
-    border-color: rgba(52, 211, 153, 0.5);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
-}
-
-.cardHeader {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.cardIcon {
-    font-size: 1.8rem;
-    color: #34d399;
-    background: rgba(52, 211, 153, 0.12);
-    padding: 12px;
-    border-radius: 14px;
-    box-sizing: content-box;
-}
-
-.cardHeader h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0;
-}
-
-.missionCard p {
-    color: #94a3b8;
-    line-height: 1.75;
-    font-size: 1.05rem;
-}
-
-/* STATS STRIP */
-.aboutStatsSection {
-    padding: 60px 0;
-    background: linear-gradient(180deg, rgba(15, 29, 20, 0.4) 0%, rgba(7, 16, 11, 0.9) 100%);
-    border-top: 1px solid rgba(52, 211, 153, 0.1);
-    border-bottom: 1px solid rgba(52, 211, 153, 0.1);
-}
-
-.statsGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-}
-
-.statBox {
-    background: rgba(10, 22, 15, 0.8);
-    border: 1px solid rgba(52, 211, 153, 0.15);
-    border-radius: 16px;
-    padding: 32px 20px;
+.aboutHeading {
     text-align: center;
-    transition: all 0.3s ease;
+    width: min(850px, 90%);
+    margin: 0 auto 70px;
 }
 
-.statBox:hover {
-    border-color: rgba(52, 211, 153, 0.4);
-    background: rgba(16, 35, 24, 0.9);
+.aboutHeading span {
+    color: #D6A14B;
+    font-family: "Cinzel", serif;
+    letter-spacing: 6px;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 16px;
+    font-weight: 700;
 }
 
-.statIcon {
-    font-size: 2rem;
-    color: #34d399;
-    margin-bottom: 12px;
-}
-
-.statValue {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 6px;
-    letter-spacing: -0.5px;
-}
-
-.statLabel {
-    color: #94a3b8;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
+.aboutHeading h2 {
+    font-family: "Cinzel", serif;
+    color: #ECE4D8;
+    font-size: clamp(34px, 4.5vw, 56px);
+    margin-bottom: 20px;
     letter-spacing: 1px;
 }
 
-/* PLATFORM PILLARS */
-.aboutPillarsSection {
-    padding: 100px 0;
+.aboutHeading p {
+    color: #A8BBA2;
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* =======================================================
+   MISSION & VISION SECTION
+======================================================= */
+
+.missionGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+}
+
+.missionCard {
+    background: rgba(14, 26, 18, 0.85);
+    border: 1px solid rgba(214, 161, 75, 0.25);
+    border-radius: 20px;
+    padding: 45px;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.missionCard:hover {
+    border-color: #D6A14B;
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(214, 161, 75, 0.15);
+}
+
+.cardIconHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.goldIcon {
+    font-size: 2rem;
+    color: #D6A14B;
+    background: rgba(214, 161, 75, 0.12);
+    padding: 12px;
+    border-radius: 12px;
+    box-sizing: content-box;
+}
+
+.cardIconHeader h3 {
+    font-family: "Cinzel", serif;
+    font-size: 1.6rem;
+    color: #ECE4D8;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.missionCard p {
+    color: #A8BBA2;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+/* =======================================================
+   PLATFORM PILLARS SECTION
+======================================================= */
+
+.pillarsSection {
+    background: linear-gradient(180deg, #08110B 0%, rgba(14, 26, 18, 0.5) 50%, #08110B 100%);
+    border-top: 1px solid rgba(214, 161, 75, 0.15);
+    border-bottom: 1px solid rgba(214, 161, 75, 0.15);
 }
 
 .pillarsGrid {
@@ -244,45 +304,43 @@
 }
 
 .pillarCard {
-    background: rgba(15, 29, 20, 0.6);
-    border: 1px solid rgba(52, 211, 153, 0.15);
+    background: rgba(14, 26, 18, 0.7);
+    border: 1px solid rgba(214, 161, 75, 0.2);
     border-radius: 18px;
-    padding: 32px 24px;
-    transition: all 0.3s ease;
+    padding: 36px 26px;
+    transition: all 0.35s ease;
 }
 
 .pillarCard:hover {
-    border-color: #34d399;
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(52, 211, 153, 0.12);
+    border-color: #D6A14B;
+    transform: translateY(-8px);
+    background: rgba(20, 36, 25, 0.85);
+    box-shadow: 0 15px 35px rgba(214, 161, 75, 0.15);
 }
 
-.pillarIcon {
-    font-size: 2.2rem;
-    color: #34d399;
-    margin-bottom: 20px;
+.pillarIconWrapper {
+    font-size: 2.4rem;
+    color: #D6A14B;
+    margin-bottom: 22px;
 }
 
 .pillarCard h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 12px;
+    font-family: "Cinzel", serif;
+    font-size: 1.25rem;
+    color: #ECE4D8;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
 }
 
 .pillarCard p {
-    color: #94a3b8;
+    color: #A8BBA2;
     font-size: 0.95rem;
-    line-height: 1.65;
+    line-height: 1.7;
 }
 
-/* CORE VALUES */
-.aboutValuesSection {
-    padding: 80px 0;
-    background: rgba(10, 22, 15, 0.5);
-    border-top: 1px solid rgba(52, 211, 153, 0.1);
-    border-bottom: 1px solid rgba(52, 211, 153, 0.1);
-}
+/* =======================================================
+   CORE VALUES SECTION
+======================================================= */
 
 .valuesGrid {
     display: grid;
@@ -291,42 +349,43 @@
 }
 
 .valueCard {
-    background: rgba(15, 29, 20, 0.8);
-    border: 1px solid rgba(52, 211, 153, 0.2);
-    border-radius: 18px;
-    padding: 36px 28px;
+    background: rgba(14, 26, 18, 0.8);
+    border: 1px solid rgba(214, 161, 75, 0.25);
+    border-radius: 20px;
+    padding: 40px 30px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
 }
 
 .valueCard:hover {
-    border-color: rgba(52, 211, 153, 0.5);
-    transform: scale(1.02);
+    border-color: #D6A14B;
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(214, 161, 75, 0.15);
 }
 
-.valIcon {
-    font-size: 2.2rem;
-    color: #34d399;
-    margin-bottom: 18px;
+.valIconWrapper {
+    font-size: 2.5rem;
+    color: #D6A14B;
+    margin-bottom: 20px;
 }
 
 .valueCard h3 {
+    font-family: "Cinzel", serif;
     font-size: 1.35rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 12px;
+    color: #ECE4D8;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
 }
 
 .valueCard p {
-    color: #94a3b8;
+    color: #A8BBA2;
     font-size: 0.98rem;
-    line-height: 1.65;
+    line-height: 1.7;
 }
 
-/* TEAM SECTION */
-.aboutTeamSection {
-    padding: 100px 0;
-}
+/* =======================================================
+   TEAM SECTION
+======================================================= */
 
 .teamGrid {
     display: grid;
@@ -335,23 +394,23 @@
 }
 
 .teamCard {
-    background: rgba(15, 29, 20, 0.7);
-    border: 1px solid rgba(52, 211, 153, 0.15);
-    border-radius: 18px;
+    background: rgba(14, 26, 18, 0.85);
+    border: 1px solid rgba(214, 161, 75, 0.2);
+    border-radius: 20px;
     overflow: hidden;
     transition: all 0.35s ease;
 }
 
 .teamCard:hover {
-    border-color: rgba(52, 211, 153, 0.45);
+    border-color: #D6A14B;
     transform: translateY(-8px);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
 }
 
 .teamImageWrapper {
     position: relative;
     width: 100%;
-    height: 240px;
+    height: 250px;
     overflow: hidden;
 }
 
@@ -369,151 +428,148 @@
 .teamImageOverlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 40%, rgba(15, 29, 20, 0.95) 100%);
+    background: linear-gradient(180deg, transparent 40%, rgba(14, 26, 18, 0.98) 100%);
 }
 
 .teamInfo {
-    padding: 20px 20px 28px;
+    padding: 22px 20px 28px;
 }
 
 .teamInfo h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 4px;
+    font-family: "Cinzel", serif;
+    font-size: 1.2rem;
+    color: #ECE4D8;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
 }
 
 .teamRole {
     display: block;
-    color: #34d399;
+    color: #D6A14B;
     font-size: 0.85rem;
     font-weight: 600;
     margin-bottom: 14px;
 }
 
 .teamBio {
-    color: #94a3b8;
+    color: #A8BBA2;
     font-size: 0.88rem;
     line-height: 1.6;
 }
 
-/* QUOTE SECTION */
-.aboutQuoteSection {
-    padding: 70px 0;
-}
+/* =======================================================
+   QUOTE SECTION
+======================================================= */
 
 .quoteCard {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 29, 20, 0.85) 100%);
-    border: 1px solid rgba(52, 211, 153, 0.3);
+    background: linear-gradient(135deg, rgba(214, 161, 75, 0.12) 0%, rgba(14, 26, 18, 0.9) 100%);
+    border: 1px solid rgba(214, 161, 75, 0.35);
     border-radius: 24px;
-    padding: 50px 60px;
+    padding: 60px 70px;
     text-align: center;
-    position: relative;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
 }
 
 .quoteIcon {
-    font-size: 2.8rem;
-    color: rgba(52, 211, 153, 0.4);
-    margin-bottom: 20px;
+    font-size: 3rem;
+    color: rgba(214, 161, 75, 0.4);
+    margin-bottom: 22px;
 }
 
 .quoteText {
-    font-size: 1.4rem;
-    font-style: italic;
-    color: #e2e8f0;
-    line-height: 1.65;
+    font-family: "Cinzel", serif;
+    font-size: 1.45rem;
+    color: #ECE4D8;
+    line-height: 1.7;
     max-width: 900px;
     margin: 0 auto 24px;
 }
 
 .quoteAuthor {
     display: block;
-    color: #34d399;
+    color: #D6A14B;
+    font-family: "Cinzel", serif;
+    font-size: 0.95rem;
     font-weight: 700;
+    letter-spacing: 3px;
     font-style: normal;
-    font-size: 1rem;
-    letter-spacing: 1px;
 }
 
-/* CTA SECTION */
-.aboutCtaSection {
-    padding: 90px 0 120px;
+/* =======================================================
+   CTA SECTION & BUTTONS - HOMEPAGE CONSISTENT
+======================================================= */
+
+.ctaSection {
+    padding: 100px 0 140px;
     text-align: center;
-    background: radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.15) 0%, rgba(7, 16, 11, 1) 70%);
 }
 
-.ctaContent {
+.ctaContainer {
     max-width: 800px;
-}
-
-.ctaContent h2 {
-    font-size: 2.4rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 16px;
-}
-
-.ctaContent p {
-    color: #94a3b8;
-    font-size: 1.1rem;
-    margin-bottom: 36px;
 }
 
 .ctaButtons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 24px;
     flex-wrap: wrap;
 }
 
-.primaryCta {
+.primaryButton {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
+    gap: 12px;
+    background: #D6A14B;
+    color: #08110B;
+    font-family: "Cinzel", serif;
     font-weight: 700;
-    font-size: 1.05rem;
-    padding: 14px 32px;
+    font-size: 15px;
+    letter-spacing: 2px;
+    padding: 16px 36px;
     border-radius: 30px;
     text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    transition: all 0.35s ease;
+    box-shadow: 0 10px 25px rgba(214, 161, 75, 0.35);
 }
 
-.primaryCta:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.45);
+.primaryButton:hover {
+    transform: translateY(-4px);
+    background: #e5b058;
+    box-shadow: 0 14px 35px rgba(214, 161, 75, 0.5);
 }
 
-.secondaryCta {
+.secondaryButton {
     display: inline-flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    background: rgba(214, 161, 75, 0.08);
+    border: 1px solid rgba(214, 161, 75, 0.4);
+    color: #ECE4D8;
+    font-family: "Cinzel", serif;
     font-weight: 700;
-    font-size: 1.05rem;
-    padding: 14px 32px;
+    font-size: 15px;
+    letter-spacing: 2px;
+    padding: 16px 36px;
     border-radius: 30px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
 }
 
-.secondaryCta:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px);
+.secondaryButton:hover {
+    background: rgba(214, 161, 75, 0.18);
+    border-color: #D6A14B;
+    transform: translateY(-4px);
 }
 
-/* RESPONSIVE MEDIA QUERIES */
+/* =======================================================
+   RESPONSIVE LAYOUT
+======================================================= */
+
 @media (max-width: 1024px) {
-    .aboutMissionSection .aboutSectionInner {
+    .missionGrid {
         grid-template-columns: 1fr;
     }
 
-    .statsGrid, .pillarsGrid, .teamGrid {
+    .pillarsGrid, .teamGrid {
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -524,26 +580,18 @@
 
 @media (max-width: 640px) {
     .aboutHeroTitle {
-        font-size: 2.4rem;
+        font-size: 32px;
     }
 
-    .aboutHeroSubtitle {
-        font-size: 1.05rem;
-    }
-
-    .statsGrid, .pillarsGrid, .teamGrid {
+    .pillarsGrid, .teamGrid {
         grid-template-columns: 1fr;
     }
 
     .quoteCard {
-        padding: 30px 20px;
+        padding: 40px 24px;
     }
 
     .quoteText {
         font-size: 1.15rem;
-    }
-
-    .ctaContent h2 {
-        font-size: 1.8rem;
     }
 }
