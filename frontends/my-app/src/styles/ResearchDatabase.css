@@ -493,3 +493,90 @@ body{
     position:relative;
     z-index:2;
 }
+
+/* ===========================================================
+   RESPONSIVE MEDIA QUERIES
+=========================================================== */
+
+@media (max-width: 900px) {
+    .filters {
+        grid-template-columns: 180px repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .databaseHero {
+        padding: 130px 0 40px;
+    }
+
+    .databaseHero h1 {
+        font-size: 38px;
+    }
+
+    .databaseHero p {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .searchBar {
+        height: 60px;
+        padding: 0 20px;
+    }
+
+    .searchBar input {
+        font-size: 15px;
+    }
+
+    .filters {
+        grid-template-columns: 120px 1fr;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .filterDiet,
+    .filterSort {
+        display: none;
+    }
+
+    .filterTitle {
+        font-size: 14px;
+        border-radius: 14px;
+        gap: 8px;
+    }
+
+    .filters select {
+        height: 52px;
+        font-size: 14px;
+        border-radius: 14px;
+    }
+
+    .resultsSection {
+        margin: 50px auto 90px;
+    }
+
+    .resultsHeader h3 {
+        font-size: 24px;
+    }
+
+    .footerCard {
+        padding: 40px 20px;
+        border-radius: 24px;
+    }
+
+    .footerCard h2 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filters {
+        grid-template-columns: 105px 1fr;
+        gap: 10px;
+    }
+
+    .filterTitle {
+        font-size: 13px;
+        gap: 6px;
+    }
+}

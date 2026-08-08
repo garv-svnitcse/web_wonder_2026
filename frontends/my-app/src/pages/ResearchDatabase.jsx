@@ -141,21 +141,21 @@ export default function ResearchDatabase() {
                         Filters
                     </div>
 
-                    <select value={era} onChange={(e) => setEra(e.target.value)}>
+                    <select className="filterSelect filterEra" value={era} onChange={(e) => setEra(e.target.value)}>
                         <option value="">All Eras</option>
                         <option>Triassic</option>
                         <option>Jurassic</option>
                         <option>Cretaceous</option>
                     </select>
 
-                    <select value={diet} onChange={(e) => setDiet(e.target.value)}>
+                    <select className="filterSelect filterDiet" value={diet} onChange={(e) => setDiet(e.target.value)}>
                         <option value="">All Diets</option>
                         <option>Carnivore</option>
                         <option>Herbivore</option>
                         <option>Omnivore</option>
                     </select>
 
-                    <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                    <select className="filterSelect filterSort" value={sort} onChange={(e) => setSort(e.target.value)}>
                         <option value="name">Alphabetical</option>
                         <option value="era">Era</option>
                         <option value="danger">Danger</option>
