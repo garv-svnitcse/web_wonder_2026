@@ -18,6 +18,7 @@ import AboutPage from "./pages/AboutPage";
 import GreetingToast from "./components/GreetingToast";
 import Privacy from "./components/Footer/Elements/Privacy";
 import Terms from "./components/Footer/Elements/Terms";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
