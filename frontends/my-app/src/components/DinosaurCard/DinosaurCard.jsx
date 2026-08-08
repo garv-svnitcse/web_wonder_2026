@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Ruler, Weight, Gauge } from "lucide-react";
 import "./DinosaurCard.css";
 
 import trexImg from "../../assets/Dinosaurs_Images/Tyrannosaurus rex.png";
@@ -29,7 +30,6 @@ const LOCAL_IMAGES = {
 const getCardImageUrl = (dino) => {
     if (!dino) return "";
 
-    // 1. Prioritize backend-provided image (parse Drive link if needed)
     const rawUrl = dino.thumbnail || dino.image || "";
     if (rawUrl) {
         if (rawUrl.includes("drive.google.com/file/d/")) {
@@ -55,7 +55,6 @@ const getCardImageUrl = (dino) => {
         return rawUrl;
     }
 
-    // 2. Fallback to whitelisted compiled local images
     const slug = dino.slug || "";
     if (LOCAL_IMAGES[slug]) {
         return LOCAL_IMAGES[slug];
@@ -69,166 +68,84 @@ const getCardImageUrl = (dino) => {
 };
 
 export default function DinosaurCard({ dinosaur }) {
-
     const navigate = useNavigate();
 
     function openDinosaur() {
-
-        navigate(`/dinosaur/${dinosaur.slug}`);
-
+        if (dinosaur?.slug) {
+            navigate(`/dinosaur/${dinosaur.slug}`);
+        }
     }
 
+    if (!dinosaur) return null;
+
+    const eraText = dinosaur.period || dinosaur.era || "LATE JURASSIC";
+    const dietText = dinosaur.diet || "HERBIVORE";
+    const threatText = dinosaur.threat || dinosaur.danger || "LOW";
+
+    const lengthVal = dinosaur.length || (dinosaur.length_m != null ? `${dinosaur.length_m} m` : "25.0 m");
+    const weightVal = dinosaur.weight || (dinosaur.weight_tons != null ? `${dinosaur.weight_tons} Tons` : "50.0 Tons");
+    const speedVal = dinosaur.speed || (dinosaur.speed_kmph != null ? `${dinosaur.speed_kmph} km/h` : "12 km/h");
+    const sciName = dinosaur.scientificName || dinosaur.scientific_name || (dinosaur.name ? `${dinosaur.name} altithorax` : "");
+
     return (
-
         <motion.div
-
             className="dinosaurCard"
-
-            whileHover={{
-
-                y: -12
-
-            }}
-
-            transition={{
-
-                duration: .35
-
-            }}
-
+            onClick={openDinosaur}
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.3 }}
         >
-
-            <div className="cardBadges">
-                {dinosaur.era && (
-                    <span className="badge era">
-                        {dinosaur.era}
-                    </span>
-                )}
-
-                <div className="cardBadgesRight">
-                    {dinosaur.diet && (
-                        <span className="badge diet">
-                            {dinosaur.diet}
-                        </span>
-                    )}
-
-                    {(dinosaur.threat || dinosaur.danger) && (
-                        <span className="badge danger">
-                            {dinosaur.threat || dinosaur.danger}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            <img
-                src={getCardImageUrl(dinosaur)}
-                alt={dinosaur.name}
-            />
-
-            <div className="cardOverlay">
-
-                <h2>
-
-                    {dinosaur.name}
-
-                </h2>
-
-                <h4>
-
-                    {dinosaur.scientificName}
-
-                </h4>
-
-                <p className="cardDescription">
-
-                    {dinosaur.description}
-
-                </p>
-
-                <div className="statsRow">
-
-                    <div className="stat">
-
-                        <span>
-
-                            LENGTH
-
-                        </span>
-
-                        <h3>
-
-                            {dinosaur.length}
-
-                        </h3>
-
+            {/* Top Image Banner & Badges */}
+            <div className="cardPosterWrapper">
+                <div className="cardBadges">
+                    <span className="badge era">{eraText}</span>
+                    <div className="cardBadgesRight">
+                        <span className={`badge diet ${dietText.toLowerCase()}`}>{dietText}</span>
+                        <span className={`badge threat ${threatText.toLowerCase()}`}>{threatText}</span>
                     </div>
-
-                    <div className="stat">
-
-                        <span>
-
-                            WEIGHT
-
-                        </span>
-
-                        <h3>
-
-                            {dinosaur.weight}
-
-                        </h3>
-
-                    </div>
-
-                    <div className="stat">
-
-                        <span>
-
-                            SPEED
-
-                        </span>
-
-                        <h3>
-
-                            {dinosaur.speed}
-
-                        </h3>
-
-                    </div>
-
                 </div>
 
-                <button
-
-                    className="exploreButton"
-
-                    onClick={openDinosaur}
-
-                >
-
-                    Explore Species
-
-                </button>
-
+                <img
+                    src={getCardImageUrl(dinosaur)}
+                    alt={dinosaur.name}
+                    className="dinoCardImage"
+                />
+                <div className="posterGradientFade" />
             </div>
 
+            {/* Main Content Area */}
+            <div className="cardBody">
+                <h2 className="dinoCardTitle">{dinosaur.name}</h2>
+                {sciName && <p className="dinoCardSub">{sciName}</p>}
+
+                <p className="cardDescription">{dinosaur.description}</p>
+
+                {/* Bottom Vector Icon Metrics Grid */}
+                <div className="statsGrid">
+                    <div className="statItem">
+                        <Ruler className="statIcon" size={20} />
+                        <div>
+                            <span className="statLabel">LENGTH</span>
+                            <span className="statValue">{lengthVal}</span>
+                        </div>
+                    </div>
+
+                    <div className="statItem">
+                        <Weight className="statIcon" size={20} />
+                        <div>
+                            <span className="statLabel">WEIGHT</span>
+                            <span className="statValue">{weightVal}</span>
+                        </div>
+                    </div>
+
+                    <div className="statItem">
+                        <Gauge className="statIcon" size={20} />
+                        <div>
+                            <span className="statLabel">SPEED</span>
+                            <span className="statValue">{speedVal}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </motion.div>
-
     );
-
 }
-
-// backend returns this format
-// {
-//     "_id": "...",
-//     "slug": "trex",
-//     "name": "Tyrannosaurus Rex",
-//     "scientificName": "Tyrannosaurus rex",
-//     "thumbnail": "/uploads/trex.webp",
-//     "era": "Late Cretaceous",
-//     "diet": "Carnivore",
-//     "danger": "Extreme",
-//     "description": "One of the largest predators...",
-//     "length": "12.3 m",
-//     "weight": "8.4 Tons",
-//     "speed": "27 km/h"
-// }
