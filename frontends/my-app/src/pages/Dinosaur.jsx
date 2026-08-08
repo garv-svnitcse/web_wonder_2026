@@ -303,8 +303,27 @@ export default function Dinosaur() {
   const speed = specimen.speed || stats.speed_kmph || "27 km/h";
   const biteForce = specimen.biteForce || (stats.bite_force_psi ? `${stats.bite_force_psi.toLocaleString()} PSI` : "35,000 N");
 
-  // Get documentary video source
-  const documentaryUrl = DOCUMENTARY_VIDEOS[specimen.slug] || "https://www.youtube.com/embed/aYV3DkMvW0E";
+  // Get documentary video source formatted for inline player
+  const rawDocVideo = specimen?.video || specimen?.documentaryUrl || DOCUMENTARY_VIDEOS[specimen?.slug] || "https://www.youtube.com/embed/aYV3DkMvW0E";
+
+  const getEmbedDocUrl = (url) => {
+    if (!url) return "https://www.youtube.com/embed/aYV3DkMvW0E?autoplay=1&rel=0&modestbranding=1&enablejsapi=1";
+    let formatted = url;
+    if (url.includes("youtube.com/watch?v=")) {
+      const id = url.split("watch?v=")[1].split("&")[0];
+      formatted = `https://www.youtube.com/embed/${id}`;
+    } else if (url.includes("youtu.be/")) {
+      const id = url.split("youtu.be/")[1].split("?")[0];
+      formatted = `https://www.youtube.com/embed/${id}`;
+    }
+    if (formatted.includes("youtube.com/embed/")) {
+      const hasParam = formatted.includes("?");
+      return `${formatted}${hasParam ? "&" : "?"}autoplay=1&rel=0&modestbranding=1&enablejsapi=1`;
+    }
+    return formatted;
+  };
+
+  const documentaryUrl = getEmbedDocUrl(rawDocVideo);
 
   return (
     <div
@@ -745,14 +764,23 @@ export default function Dinosaur() {
             </div>
 
             <div className="relative w-full aspect-video rounded-sm overflow-hidden border border-white/10 bg-black">
-              <iframe
-                src={documentaryUrl}
-                title={`${specimen.name} Documentary`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full"
-              />
+              {documentaryUrl.endsWith(".mp4") || documentaryUrl.includes("/videos/") ? (
+                <video
+                  src={documentaryUrl}
+                  controls
+                  autoPlay
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <iframe
+                  src={documentaryUrl}
+                  title={`${specimen.name} Documentary`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              )}
             </div>
           </div>
         </div>

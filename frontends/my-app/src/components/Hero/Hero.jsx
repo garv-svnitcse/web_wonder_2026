@@ -8,6 +8,7 @@ export default function Hero() {
     const heroRef = useRef(null);
 
     const [offset, setOffset] = useState(0);
+    const [introModalOpen, setIntroModalOpen] = useState(false);
 
     useEffect(() => {
 
@@ -234,7 +235,7 @@ export default function Hero() {
                             }}
 
                             className="secondaryHeroButton"
-                            onClick={() => window.open("https://www.youtube.com/watch?v=fFKEedgHd9U", "_blank")}
+                            onClick={() => setIntroModalOpen(true)}
 
                         >
 
@@ -424,6 +425,67 @@ export default function Hero() {
             </div>
 
             <div className="heroBottomFade"></div>
+
+            {introModalOpen && (
+                <div style={{
+                    position: "fixed",
+                    inset: 0,
+                    zIndex: 9999,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    backdropFilter: "blur(12px)",
+                    padding: "20px"
+                }}>
+                    <div style={{
+                        position: "relative",
+                        width: "100%",
+                        maxWidth: "900px",
+                        borderRadius: "16px",
+                        overflow: "hidden",
+                        border: "1px solid rgba(214,161,75,0.4)",
+                        background: "#08110B",
+                        boxShadow: "0 25px 60px rgba(0,0,0,0.9)"
+                    }}>
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            padding: "16px 24px",
+                            borderBottom: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(214,161,75,0.08)"
+                        }}>
+                            <h3 style={{ color: "#D6A14B", fontFamily: "Cinzel, serif", margin: 0, fontSize: "16px", letterSpacing: "2px" }}>
+                                Jurassic Journey Intro Documentary
+                            </h3>
+                            <button
+                                onClick={() => setIntroModalOpen(false)}
+                                style={{
+                                    background: "none",
+                                    border: "none",
+                                    color: "#D6A14B",
+                                    fontSize: "20px",
+                                    cursor: "pointer",
+                                    padding: "4px 8px"
+                                }}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div style={{ position: "relative", width: "100%", paddingTop: "56.25%", background: "#000" }}>
+                            <iframe
+                                src="https://www.youtube.com/embed/fFKEedgHd9U?autoplay=1&rel=0&modestbranding=1&enablejsapi=1"
+                                title="Jurassic Journey Intro Documentary"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </section>
 
