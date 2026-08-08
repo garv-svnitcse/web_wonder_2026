@@ -45,12 +45,19 @@ export default function Research() {
     let active = true;
     async function loadPreview() {
       try {
-        const response = await fetch(`${API_URL}/research/preview?limit=${visibleCount}`);
+        const params = new URLSearchParams();
+        if (visibleCount) params.append("limit", visibleCount);
+        if (search) params.append("search", search);
+        if (status) params.append("status", status);
+        if (era) params.append("era", era);
+        if (sortBy) params.append("sortBy", sortBy);
+
+        const response = await fetch(`${API_URL}/research/preview?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           if (active && Array.isArray(data) && data.length > 0) {
             setResearchData(data);
-          } else {
+          } else if (active) {
             setResearchData(database);
           }
         } else {
@@ -67,12 +74,15 @@ export default function Research() {
     return () => {
       active = false;
     };
-  }, [visibleCount]);
+  }, [visibleCount, search, status, era, sortBy, token]);
 
   const filtered = researchData.filter((item) => {
-    const matchesSearch = item.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch = search
+      ? item.title?.toLowerCase().includes(search.toLowerCase()) ||
+        item.species?.toLowerCase().includes(search.toLowerCase()) ||
+        item.scientist?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        item.description?.toLowerCase().includes(search.toLowerCase())
+      : true;
     const matchesStatus = status
       ? item.status?.toLowerCase() === status.toLowerCase()
       : true;
@@ -82,7 +92,18 @@ export default function Research() {
     return matchesSearch && matchesStatus && matchesEra;
   });
 
-  const visibleItems = filtered.slice(0, visibleCount);
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === "popular") {
+      const viewsA = typeof a.views === "number" ? a.views : parseInt(String(a.views || 0).replace(/[^0-9]/g, "")) || 0;
+      const viewsB = typeof b.views === "number" ? b.views : parseInt(String(b.views || 0).replace(/[^0-9]/g, "")) || 0;
+      return viewsB - viewsA;
+    } else if (sortBy === "discussed") {
+      return (b.comments || 0) - (a.comments || 0);
+    }
+    return 0;
+  });
+
+  const visibleItems = sorted.slice(0, visibleCount);
 
   return (
     <>
