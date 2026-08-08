@@ -2,6 +2,7 @@ import { API_URL } from "../config/api";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 import GlassAuthModal from '../components/GlassAuthModal';
 
 /**
@@ -2931,6 +2932,7 @@ export default function QuizPage() {
                 )}
 
             </div>
+            <Footer />
             {!token && (
                 <GlassAuthModal
                     isOpen={true}

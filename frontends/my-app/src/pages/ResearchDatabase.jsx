@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import DinosaurCard from "../components/DinosaurCard/DinosaurCard";
 import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 import GlassAuthModal from "../components/GlassAuthModal";
 import "../styles/ResearchDatabase.css";
 
@@ -239,6 +240,7 @@ export default function ResearchDatabase() {
                     </p>
                 </motion.div>
             </section>
+            <Footer />
         </div>
     );
 }

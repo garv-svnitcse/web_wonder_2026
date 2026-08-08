@@ -2,6 +2,7 @@ import { API_URL } from "../config/api";
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Compass, Radio, ChevronDown, Lightbulb, Shield, Dna, Hourglass, Flame, Ruler, ArrowUp, Scale, Gauge, Play, Box } from 'lucide-react';
+import Footer from '../components/Footer/Footer';
 import jungleBg from '../assets/prehistoric_jungle_bg.png';
 
 import trexImg from '../assets/Dinosaurs_Images/Tyrannosaurus rex.png';
@@ -1025,6 +1026,7 @@ export default function Dinosaur() {
           border-radius: 2px;
         }
       `}</style>
+      <Footer />
     </div>
   );
 }
