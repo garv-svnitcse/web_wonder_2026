@@ -63,6 +63,7 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
   const strengthColor = strengthColors[strengthIndex];
   const canSubmit = emailIsValid && (isLogin ? password.length > 0 : passwordIsValid) && !loading;
   const triggerAuthGreeting = (type, displayName) => {
+    localStorage.setItem('session_start_time', Date.now().toString());
     const payload = { type, name: displayName || name || (email ? email.split('@')[0] : "Explorer") };
     sessionStorage.setItem("pending_greeting", JSON.stringify(payload));
     window.dispatchEvent(new CustomEvent("auth_greeting_event", { detail: payload }));
@@ -73,6 +74,9 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
       getToken().then((token) => {
         if (token) {
           localStorage.setItem('access_token', token);
+          if (!localStorage.getItem('session_start_time')) {
+            localStorage.setItem('session_start_time', Date.now().toString());
+          }
           onAuthSuccess?.(token);
         }
       });
