@@ -624,27 +624,28 @@ def approve_research(title: str):
     
     # Increment published_studies for the researcher
     researcher_name = research_page.get("researcher")
-    researcher_email = None
+    researcher_email = research_page.get("email")
     if researcher_name:
         res_doc = researcher_detail.find_one({"full_name": researcher_name})
         if res_doc:
-            researcher_email = res_doc.get("email")
+            if not researcher_email:
+                researcher_email = res_doc.get("email")
             
         researcher_detail.update_one(
             {"full_name": researcher_name},
             {"$inc": {"published_studies": 1}}
         )
         
-    if researcher_email:
-        send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
+    send_to = researcher_email if researcher_email else RECEIVER_EMAIL
+    if send_to:
         html_content = f"""
-            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">Research Approved &#10003;</h2>
-                <p style="font-size: 16px;">Dear {researcher_name},</p>
-                <p style="font-size: 16px; line-height: 1.6;">We are pleased to inform you that your research paper titled <strong>"{title}"</strong> has been approved by the administrators.</p>
-                <p style="font-size: 16px; line-height: 1.6;">Your credentials and findings are now registered in the explorer archives, and your published studies count has been updated.</p>
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid rgba(214,161,75,0.3); border-radius: 12px; background: #08110B; color: #ECE4D8;">
+                <h2 style="color: #4C8A4F; border-bottom: 2px solid #4C8A4F; padding-bottom: 12px; font-family: serif;">Research Approved &#10003;</h2>
+                <p style="font-size: 16px;">Dear {researcher_name or 'Researcher'},</p>
+                <p style="font-size: 15px; line-height: 1.6;">We are pleased to inform you that your research paper titled <strong style="color: #D6A14B;">"{title}"</strong> has been approved by the administrators.</p>
+                <p style="font-size: 15px; line-height: 1.6;">Your credentials and findings are now registered in the explorer archives, and your published studies count has been updated.</p>
                 <br/>
-                <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
+                <p style="font-size: 14px; color: #D6A14B;">Best regards,<br/>The JurassiVerse Team</p>
             </div>
         """
         send_email(
@@ -653,7 +654,7 @@ def approve_research(title: str):
             to_email=send_to
         )
             
-    return render_status_card(title, "approved", "Research Approved", "The research paper has been approved successfully. The researcher has been notified, and the paper is now live in the explorer archives.")
+    return render_status_card(title, "approved", "Research Approved", "The research paper has been approved successfully. The researcher has been notified via email, and the paper is live in the explorer archives.")
 
 @router.get("/reject/{title}")
 def reject_research(title: str):
@@ -668,11 +669,12 @@ def reject_research(title: str):
     
     # Find researcher details
     researcher_name = research_page.get("researcher")
-    researcher_email = None
+    researcher_email = research_page.get("email")
     if researcher_name:
         res_doc = researcher_detail.find_one({"full_name": researcher_name})
         if res_doc:
-            researcher_email = res_doc.get("email")
+            if not researcher_email:
+                researcher_email = res_doc.get("email")
             
         if was_approved:
             researcher_detail.update_one(
@@ -680,16 +682,16 @@ def reject_research(title: str):
                 {"$inc": {"published_studies": -1}}
             )
             
-    if researcher_email:
-        send_to = RECEIVER_EMAIL if RECEIVER_EMAIL else researcher_email
+    send_to = researcher_email if researcher_email else RECEIVER_EMAIL
+    if send_to:
         html_content = f"""
-            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                <h2 style="color: #F44336; border-bottom: 2px solid #F44336; padding-bottom: 10px;">Research Declined &#10007;</h2>
-                <p style="font-size: 16px;">Dear {researcher_name},</p>
-                <p style="font-size: 16px; line-height: 1.6;">Thank you for submitting your research paper titled <strong>"{title}"</strong> to the JurassiVerse archives.</p>
-                <p style="font-size: 16px; line-height: 1.6;">Unfortunately, after review, your research submission has been declined at this time. Please feel free to revise and resubmit.</p>
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid rgba(214,161,75,0.3); border-radius: 12px; background: #08110B; color: #ECE4D8;">
+                <h2 style="color: #F44336; border-bottom: 2px solid #F44336; padding-bottom: 12px; font-family: serif;">Research Submission Update &#10007;</h2>
+                <p style="font-size: 16px;">Dear {researcher_name or 'Researcher'},</p>
+                <p style="font-size: 15px; line-height: 1.6;">Thank you for submitting your research paper titled <strong style="color: #D6A14B;">"{title}"</strong> to the JurassiVerse archives.</p>
+                <p style="font-size: 15px; line-height: 1.6;">After review, your submission has been declined at this time. Please feel free to update your findings and resubmit.</p>
                 <br/>
-                <p style="font-size: 14px; color: #777;">Best regards,<br/>The JurassiVerse Team</p>
+                <p style="font-size: 14px; color: #D6A14B;">Best regards,<br/>The JurassiVerse Team</p>
             </div>
         """
         send_email(
