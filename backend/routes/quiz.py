@@ -39,6 +39,8 @@ def dashboard(current_user=Depends(get_current_user)):
         'history': history
     }
 
+import random
+
 @router.post('/start')
 def start_quiz(current_user=Depends(get_current_user)):
     difficulty = current_user.get('level', 'easy')
@@ -48,35 +50,45 @@ def start_quiz(current_user=Depends(get_current_user)):
     
     # Fallback to avoid crashes if database is unseeded
     if quiz_doc is None:
-        return {
-            'quiz_id': 'mock_quiz_id',
-            'title': f'{difficulty.capitalize()} Mesozoic Basics',
-            'difficulty': difficulty,
-            'questions': [
-                {
-                    'question_id': 'q1',
-                    'question': 'Which dinosaur period is the oldest?',
-                    'options': ['Triassic', 'Jurassic', 'Cretaceous', 'Permian']
-                },
-                {
-                    'question_id': 'q2',
-                    'question': 'Which of these dinosaurs was an obligate carnivore?',
-                    'options': ['Triceratops', 'Brachiosaurus', 'Tyrannosaurus Rex', 'Stegosaurus']
-                }
-            ]
-        }
+        raw_questions = [
+            {
+                'question_id': 'q1',
+                'question': 'Which dinosaur period is the oldest?',
+                'options': ['Triassic', 'Jurassic', 'Cretaceous', 'Permian']
+            },
+            {
+                'question_id': 'q2',
+                'question': 'Which of these dinosaurs was an obligate carnivore?',
+                'options': ['Triceratops', 'Brachiosaurus', 'Tyrannosaurus Rex', 'Stegosaurus']
+            }
+        ]
+        title = f'{difficulty.capitalize()} Mesozoic Basics'
+        quiz_id = 'mock_quiz_id'
+    else:
+        raw_questions = quiz_doc.get('questions', [])
+        title = quiz_doc.get('title')
+        quiz_id = str(quiz_doc['_id'])
+
+    # Randomize questions order
+    shuffled_questions = list(raw_questions)
+    random.shuffle(shuffled_questions)
 
     question_final = []
-    for i in quiz_doc.get('questions', []):
+    for i in shuffled_questions:
+        # Randomize options order for each question
+        options = list(i.get('options', []))
+        random.shuffle(options)
+        
         question_final.append({
             'question_id': i.get('question_id'),
             'question': i.get('question'),
-            'options': i.get('options')
+            'options': options
         })
+        
     return {
-        'quiz_id': str(quiz_doc['_id']),
-        'title': quiz_doc.get('title'),
-        'difficulty': quiz_doc.get('difficulty'),
+        'quiz_id': quiz_id,
+        'title': title,
+        'difficulty': difficulty,
         'questions': question_final
     }
 
