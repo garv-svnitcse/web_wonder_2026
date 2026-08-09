@@ -118,8 +118,8 @@ export default function Expedition() {
                             onError={(e) => {
                                 const fallback = card.title === "DINOSAURS" ? "/videos/trex.mp4"
                                     : card.title === "TIMELINE" ? "/videos/timeline.mp4"
-                                    : card.title === "RESEARCH" ? "/videos/research.mp4"
-                                    : "/videos/dna.mp4";
+                                        : card.title === "RESEARCH" ? "/videos/research.mp4"
+                                            : "/videos/dna.mp4";
                                 if (!e.target.src.endsWith(fallback)) {
                                     e.target.src = fallback;
                                 }
