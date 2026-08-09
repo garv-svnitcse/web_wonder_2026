@@ -43,7 +43,7 @@ function getDirectVideoUrl(url, title) {
     if (!url) return "/videos/dna.mp4";
 
     if (title === "TESTIMONIALS" || url.includes("1l6pcx8VaRXXb9ZF2FhAx34ucQZBLJtH2")) {
-        return "/videos/dna.mp4";
+        return "/videos/testimonail.mp4";
     }
     if (title === "DINOSAURS" || url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
         return "/videos/trex.mp4";
