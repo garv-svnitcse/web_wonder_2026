@@ -11,49 +11,64 @@ function SyncClerkToken() {
   const { getToken, isSignedIn, signOut } = useAuth();
 
   useEffect(() => {
-    async function syncToken() {
-      if (isSignedIn) {
-        const ONE_HOUR = 3600 * 1000;
-        const loginTime = localStorage.getItem('session_start_time');
-        const now = Date.now();
-        
-        if (!loginTime) {
-          localStorage.setItem('session_start_time', now.toString());
-        } else if (now - parseInt(loginTime, 10) > ONE_HOUR) {
-          console.warn("Session expired after 1 hour.");
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('session_start_time');
-          try {
-            if (signOut) await signOut();
-          } catch (e) {
-            console.error("SignOut failed:", e);
-          }
-          window.location.href = "/";
-          return;
-        }
+    if (!isSignedIn) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('last_activity_time');
+      return undefined;
+    }
 
-        try {
-          const token = await getToken();
-          if (token) {
-            localStorage.setItem('access_token', token);
-            fetch(`${API_URL}/auth/me`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            }).catch(err => console.warn("Failed to auto-sync user profile:", err));
-          }
-        } catch (err) {
-          console.error("Failed to sync Clerk token:", err);
-        }
-      } else {
+    const ONE_HOUR = 3600 * 1000;
+
+    // Extend 1-hour session window on user activity
+    const updateActivity = () => {
+      localStorage.setItem('last_activity_time', Date.now().toString());
+    };
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    events.forEach((event) => window.addEventListener(event, updateActivity, { passive: true }));
+
+    if (!localStorage.getItem('last_activity_time')) {
+      updateActivity();
+    }
+
+    async function syncToken() {
+      const lastActivity = localStorage.getItem('last_activity_time');
+      const now = Date.now();
+
+      if (lastActivity && now - parseInt(lastActivity, 10) > ONE_HOUR) {
+        console.warn("Session expired after 1 hour of inactivity.");
         localStorage.removeItem('access_token');
-        localStorage.removeItem('session_start_time');
+        localStorage.removeItem('last_activity_time');
+        events.forEach((event) => window.removeEventListener(event, updateActivity));
+        try {
+          if (signOut) await signOut();
+        } catch (e) {
+          console.error("SignOut failed:", e);
+        }
+        window.location.href = "/";
+        return;
+      }
+
+      try {
+        const token = await getToken();
+        if (token) {
+          localStorage.setItem('access_token', token);
+          fetch(`${API_URL}/auth/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }).catch((err) => console.warn("Failed to auto-sync user profile:", err));
+        }
+      } catch (err) {
+        console.error("Failed to sync Clerk token:", err);
       }
     }
-    
+
     syncToken();
-    
-    // Refresh token every 30 seconds to make sure it's valid
     const interval = setInterval(syncToken, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+      events.forEach((event) => window.removeEventListener(event, updateActivity));
+    };
   }, [isSignedIn, getToken, signOut]);
 
   return null;
