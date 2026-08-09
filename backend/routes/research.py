@@ -145,104 +145,113 @@ def get_preview(
     era: Optional[str] = None,
     sortBy: Optional[str] = "latest"
 ):
-    query = {}
-    
-    if status and status.strip():
-        query["status"] = {"$regex": f"^{status.strip()}$", "$options": "i"}
+    try:
+        query = {}
         
-    if era and era.strip():
-        query["era"] = {"$regex": era.strip(), "$options": "i"}
-
-    if search and search.strip():
-        search_term = search.strip()
-        regex_pattern = {"$regex": search_term, "$options": "i"}
-        query["$or"] = [
-            {"title": regex_pattern},
-            {"species": regex_pattern},
-            {"researcher": regex_pattern},
-            {"era": regex_pattern},
-            {"abstract": regex_pattern},
-            {"key_findings": regex_pattern}
-        ]
-
-    research_docs = list(research_collection.find(query))
-    
-    updated_research = []
-    for doc in research_docs:
-        species = doc.get("species", "")
-        researcher_name = doc.get("researcher", "")
-        dino_doc = dinosaur_collection.find_one({"name": species}) or {"image": "/images/fossil.jpg"}
-        dino_image = dino_doc.get("image", "/images/fossil.jpg")
-        res_doc = researcher_detail.find_one({"full_name": researcher_name}) or {"profile_photo": "", "specialization": "Researcher"}
-        researcher_image = res_doc.get("profile_photo", "")
-        designation = res_doc.get("specialization", "Researcher")
-        key_find = doc.get("key_findings")
-        if isinstance(key_find, list) and len(key_find) > 0:
-            key_find = key_find[0]
-        title = doc.get("title", "")
-        doc_status = doc.get("status", "pending")
-        doc_era = doc.get("era", "Unknown")
-           
-        comment_count = comment_collection.count_documents({'research_title': title})
-        last_comment_doc = comment_collection.find_one({'research_title': title}, sort=[('createdAt', -1)])
-        last_comment = None
-        if last_comment_doc:
-            last_comment = {
-                "author": last_comment_doc.get("author", "Explorer"),
-                "text": last_comment_doc.get("text", "")
-            }
+        if status and status.strip():
+            query["status"] = {"$regex": f"^{status.strip()}$", "$options": "i"}
             
-        created_at = doc.get("createdAt")
-        date_str = created_at.strftime("%B %d, %Y") if isinstance(created_at, datetime) else "May 14, 2026"
-        
-        raw_views = doc.get("views", 0)
-        numeric_views = 0
-        if isinstance(raw_views, (int, float)):
-            numeric_views = int(raw_views)
-        elif isinstance(raw_views, str):
-            clean_v = raw_views.lower().replace('k', '000').replace('.', '').replace('m', '000000')
-            try:
-                numeric_views = int(''.join(filter(str.isdigit, clean_v)) or 0)
-            except ValueError:
-                numeric_views = 0
-        
-        updated_research.append({
-            "title": title,
-            "image": dino_image,
-            "species": species,
-            "status": doc_status,
-            "era": doc_era,
-            "date": date_str,
-            "views": raw_views,
-            "numeric_views": numeric_views,
-            "comments": comment_count,
-            "lastComment": last_comment,
-            "scientist": {
-                "name": researcher_name,
-                "role": designation,
-                "avatar": researcher_image
-            },
-            "description": key_find or "",
-            "createdAt": created_at or datetime.min
-        })
+        if era and era.strip():
+            query["era"] = {"$regex": era.strip(), "$options": "i"}
 
-    # Sort based on sortBy parameter
-    if sortBy == "popular":
-        updated_research.sort(key=lambda x: x["numeric_views"], reverse=True)
-    elif sortBy == "discussed":
-        updated_research.sort(key=lambda x: x["comments"], reverse=True)
-    else: # "latest"
-        updated_research.sort(key=lambda x: x["createdAt"] if isinstance(x["createdAt"], datetime) else datetime.min, reverse=True)
+        if search and search.strip():
+            search_term = search.strip()
+            regex_pattern = {"$regex": search_term, "$options": "i"}
+            query["$or"] = [
+                {"title": regex_pattern},
+                {"species": regex_pattern},
+                {"researcher": regex_pattern},
+                {"era": regex_pattern},
+                {"abstract": regex_pattern},
+                {"key_findings": regex_pattern}
+            ]
 
-    # Clean up internal sorting properties
-    for item in updated_research:
-        item.pop("numeric_views", None)
-        item.pop("createdAt", None)
-
-    if limit and limit > 0:
-        updated_research = updated_research[:limit]
+        research_docs = list(research_collection.find(query))
         
-    return updated_research
+        updated_research = []
+        for doc in research_docs:
+            species = doc.get("species", "")
+            researcher_name = doc.get("researcher", "")
+            dino_doc = dinosaur_collection.find_one({"name": species}) or {"image": "/images/fossil.jpg"}
+            dino_image = dino_doc.get("image", "/images/fossil.jpg") if isinstance(dino_doc, dict) else "/images/fossil.jpg"
+            res_doc = researcher_detail.find_one({"full_name": researcher_name}) or {"profile_photo": "", "specialization": "Researcher"}
+            researcher_image = res_doc.get("profile_photo", "") if isinstance(res_doc, dict) else ""
+            designation = res_doc.get("specialization", "Researcher") if isinstance(res_doc, dict) else "Researcher"
+            key_find = doc.get("key_findings")
+            if isinstance(key_find, list) and len(key_find) > 0:
+                key_find = key_find[0]
+            title = doc.get("title", "")
+            doc_status = doc.get("status", "pending")
+            doc_era = doc.get("era", "Unknown")
+               
+            comment_count = comment_collection.count_documents({'research_title': title})
+            last_comment_doc = comment_collection.find_one({'research_title': title}, sort=[('createdAt', -1)])
+            last_comment = None
+            if last_comment_doc and isinstance(last_comment_doc, dict):
+                last_comment = {
+                    "author": last_comment_doc.get("author", "Explorer"),
+                    "text": last_comment_doc.get("text", "")
+                }
+                
+            created_at = doc.get("createdAt")
+            date_str = created_at.strftime("%B %d, %Y") if isinstance(created_at, datetime) else str(created_at or "May 14, 2026")
+            
+            raw_views = doc.get("views", 0)
+            numeric_views = 0
+            if isinstance(raw_views, (int, float)):
+                numeric_views = int(raw_views)
+            elif isinstance(raw_views, str):
+                clean_v = raw_views.lower().replace('k', '000').replace('.', '').replace('m', '000000')
+                try:
+                    numeric_views = int(''.join(filter(str.isdigit, clean_v)) or 0)
+                except ValueError:
+                    numeric_views = 0
+            
+            sort_date = datetime.min
+            if isinstance(created_at, datetime):
+                sort_date = created_at
+
+            updated_research.append({
+                "title": title,
+                "image": dino_image,
+                "species": species,
+                "status": doc_status,
+                "era": doc_era,
+                "date": date_str,
+                "views": raw_views,
+                "numeric_views": numeric_views,
+                "comments": comment_count,
+                "lastComment": last_comment,
+                "scientist": {
+                    "name": researcher_name,
+                    "role": designation,
+                    "avatar": researcher_image
+                },
+                "description": key_find or "",
+                "_sort_date": sort_date
+            })
+
+        # Sort based on sortBy parameter
+        if sortBy == "popular":
+            updated_research.sort(key=lambda x: x["numeric_views"], reverse=True)
+        elif sortBy == "discussed":
+            updated_research.sort(key=lambda x: x["comments"], reverse=True)
+        else: # "latest"
+            updated_research.sort(key=lambda x: x["_sort_date"], reverse=True)
+
+        # Clean up internal sorting properties
+        for item in updated_research:
+            item.pop("numeric_views", None)
+            item.pop("_sort_date", None)
+
+        if limit and limit > 0:
+            updated_research = updated_research[:limit]
+            
+        return updated_research
+
+    except Exception as e:
+        print(f"Error in get_preview: {e}")
+        return []
 
 @router.put("/view")
 def update_view(title : str) :

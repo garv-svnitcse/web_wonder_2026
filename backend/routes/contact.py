@@ -5,7 +5,7 @@ from services.email_service import send_email
 router = APIRouter()
 
 @router.post("/")
-async def contactEmail(contact_data: contact.Contact):
+def contactEmail(contact_data: contact.Contact):
     try: 
         subject_title = contact_data.subject or "Jurassic Journey Explorer Feedback"
         html_content = f"""
@@ -27,4 +27,5 @@ async def contactEmail(contact_data: contact.Contact):
             return {"error": "Failed to send email"}
     
     except Exception as e:
+        print(f"Error processing contact email: {e}")
         return {"error": str(e)}
