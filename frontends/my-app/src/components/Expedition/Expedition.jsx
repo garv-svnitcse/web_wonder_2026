@@ -136,7 +136,7 @@ export default function Expedition() {
                                 if (!e.target.src.endsWith(fallback)) {
                                     e.target.src = fallback;
                                     e.target.load();
-                                    e.target.play().catch(() => {});
+                                    e.target.play().catch(() => { });
                                 }
                             }}
                         />
