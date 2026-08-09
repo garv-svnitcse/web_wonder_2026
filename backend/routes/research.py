@@ -484,14 +484,140 @@ def research_create(
         
     return {"message": "Research and profile submitted successfully"}
 
+def render_status_card(paper_title: str, status_type: str, title_heading: str, message: str):
+    is_success = status_type == "approved"
+    badge_color = "#4C8A4F" if is_success else ("#F44336" if status_type == "rejected" else "#D6A14B")
+    icon_char = "&#10004;" if is_success else ("&#10007;" if status_type == "rejected" else "&#8505;")
+    
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title_heading} | JurassiVerse Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            background: #08110B;
+            background-image: 
+                radial-gradient(circle at 50% 30%, rgba(76, 138, 79, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(214, 161, 75, 0.1) 0%, transparent 50%);
+            color: #ECE4D8;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }}
+        .card {{
+            background: rgba(14, 26, 18, 0.9);
+            border: 1px solid rgba(214, 161, 75, 0.35);
+            border-radius: 20px;
+            padding: 44px 36px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(214, 161, 75, 0.12);
+            backdrop-filter: blur(16px);
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }}
+        @keyframes fadeIn {{
+            from {{ opacity: 0; transform: translateY(24px) scale(0.96); }}
+            to {{ opacity: 1; transform: translateY(0) scale(1); }}
+        }}
+        .icon-badge {{
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            background: rgba(214, 161, 75, 0.08);
+            border: 2px solid {badge_color};
+            color: {badge_color};
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 0 30px {badge_color}40;
+        }}
+        .heading {{
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #D6A14B;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }}
+        .paper-title {{
+            font-size: 16px;
+            font-weight: 500;
+            color: #ECE4D8;
+            background: rgba(214, 161, 75, 0.08);
+            border-left: 3px solid #D6A14B;
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 6px;
+            text-align: left;
+            line-height: 1.5;
+        }}
+        .message {{
+            font-size: 15px;
+            color: rgba(236, 228, 216, 0.85);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }}
+        .btn {{
+            display: inline-block;
+            background: linear-gradient(135deg, #D6A14B 0%, #B58232 100%);
+            color: #08110B;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(214, 161, 75, 0.3);
+        }}
+        .btn:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(214, 161, 75, 0.5);
+        }}
+        .footer-brand {{
+            margin-top: 28px;
+            font-size: 11px;
+            color: rgba(214, 161, 75, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-badge">{icon_char}</div>
+        <h1 class="heading">{title_heading}</h1>
+        <div class="paper-title">"{paper_title}"</div>
+        <p class="message">{message}</p>
+        <a href="/" class="btn">Return To Expedition</a>
+        <div class="footer-brand">&#9830; JurassiVerse Administration &#9830;</div>
+    </div>
+</body>
+</html>"""
+    return HTMLResponse(content=html, status_code=200)
+
 @router.get("/approve/{title}")
 def approve_research(title: str):
     research_page = research_collection.find_one({"title": title})
     if not research_page:
-        raise HTTPException(status_code=404, detail="Research page not found")
+        return render_status_card(title, "not_found", "Research Not Found", "The requested research submission could not be located in our records.")
         
     if research_page.get("status") == "approved":
-        return {"message": "Research has already been approved."}
+        return render_status_card(title, "approved", "Already Approved", "This research paper has already been approved and registered in the archives.")
         
     # Update status to approved
     research_collection.update_one({"title": title}, {"$set": {"status": "approved"}})
@@ -527,13 +653,13 @@ def approve_research(title: str):
             to_email=send_to
         )
             
-    return {"message": "Research approved successfully and researcher notified."}
+    return render_status_card(title, "approved", "Research Approved", "The research paper has been approved successfully. The researcher has been notified, and the paper is now live in the explorer archives.")
 
 @router.get("/reject/{title}")
 def reject_research(title: str):
     research_page = research_collection.find_one({"title": title})
     if not research_page:
-        raise HTTPException(status_code=404, detail="Research page not found")
+        return render_status_card(title, "not_found", "Research Not Found", "The requested research submission could not be located in our records.")
         
     was_approved = research_page.get("status") == "approved"
     
@@ -572,7 +698,7 @@ def reject_research(title: str):
             to_email=send_to
         )
             
-    return {"message": "Research rejected successfully and researcher notified."}
+    return render_status_card(title, "rejected", "Research Declined", "The research paper submission has been declined. The submitter has been notified via email.")
 
 @router.post("/{title}")
 def add_comment(comment : CommentCreate,title : str) :
