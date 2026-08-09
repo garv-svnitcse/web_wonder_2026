@@ -1,37 +1,67 @@
-# 🦖 Jurassic Journey
+# 🦖 JurassiVerse — Prehistoric Mesozoic Experience & Research Hub
 
-Welcome to **Jurassic Journey**, a premium, interactive, and immersive prehistoric expedition web application. This project features a state-of-the-art 3D dinosaur viewer, a searchable prehistoric research database, interactive quizzes with leaderboards, and an elegant, glassmorphic UI styled with smooth scroll effects and premium micro-animations.
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Vite](https://img.shields.io/badge/Vite-8.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Three.js](https://img.shields.io/badge/Three.js-3D%20Viewer-000000?logo=three.js&logoColor=white)](https://threejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](LICENSE)
+
+Welcome to **JurassiVerse**, a state-of-the-art, immersive prehistoric web application and research portal. Experience life millions of years ago through interactive 3D dinosaur visualization, chronological Mesozoic timelines, adaptive trivia quizzes with Gemini AI doubt clearing, and a peer-reviewed research dossier submission engine with admin email verification.
 
 ---
 
 ## 🌟 Key Features
 
-### 💻 Frontend (Vite + React)
-- **Interactive 3D Viewer**: Immersive 3D model visualization using Three.js and custom canvas controls to explore dinosaurs from every angle.
-- **Search & Filter Research Database**: Explore prehistoric giants with a robust search engine, filtering by era (Triassic, Jurassic, Cretaceous), diet (Herbivore, Carnivore), and danger level.
-- **Dinosaur Trivia Quiz**: Test your Mesozoic knowledge! Features dynamic difficulty levels (Easy, Medium, Hard), real-time answer checking, score tracking, and a global leaderboard.
-- **Interactive Timeline**: Travel back in time and browse chronological events from different prehistoric eras.
-- **Premium Custom UI & Scroll Behavior**:
-  - **Auto-Hiding Navbar**: Slides smoothly out of the screen (to the right) on scroll to maximize readability, and re-appears when you scroll to the top.
-  - **Floating Menu Trigger**: A sleek, glassmorphic floating menu button appears when the navbar is hidden, allowing users to restore it with a single click in the middle of a page.
-  - **Responsive Layout**: Fluid UI scaling down perfectly for mobile, tablet, and widescreen viewports without layout shift or overlapping.
-  - **High-Contrast Badges**: Redesigned glassmorphic badges with opaque backdrops and gold/accent borders for maximum text readability over bright background images.
+### 🦕 1. Interactive Dinosaur Database & 3D Viewer
+- **3D Model Inspection**: Render interactive 3D dinosaur models (`.glb`) with Three.js orbit controls, dynamic lighting, and custom canvas interactions.
+- **Prehistoric Filter Engine**: Filter species by era (*Triassic, Jurassic, Cretaceous*), feeding diet (*Carnivore, Herbivore, Omnivore*), and threat level.
+- **Physical Stats & Metrics**: Dynamic calculation and formatting of length (meters), weight (Tons / kg), speed (km/h), and discovery details.
 
-### ⚙️ Backend (FastAPI + MongoDB)
-- **RESTful API**: Fast and modular endpoints managed using FastAPI.
-- **Authentication**: JWT token-based secure user authentication (login/register) and password hashing with Argon2.
-- **Database Seeding & Fallbacks**: Connected to MongoDB to fetch real-time dinosaur profiles, quiz metrics, and timelines, with robust offline mock fallbacks to prevent crashes.
-- **Contact Forms & Mailers**: Custom routes to receive contact requests with integration options for Resend email notifications.
+### 📜 2. Mesozoic Era Timeline
+- **Chronological Era Navigation**: Traverse through ancient geological periods with animated milestone cards and video backgrounds.
+- **Direct Video Streaming**: Stream media assets with dynamic fallback handling (`/videos/trex.mp4`, `/videos/timeline.mp4`, `/videos/research.mp4`, `/videos/testimonial.mp4`).
+
+### 🔬 3. Research Dossier Hub & Admin Verification
+- **Research Paper Submission**: Researchers can submit scientific findings, abstracts, evidence documents, and profile details with Cloudinary file storage.
+- **Automated Email Notifications**: Integrated with **Brevo** and **Resend** API fallback to send email notifications upon submission.
+- **Themed Admin Action Cards**: One-click approval (`GET /research/approve/{title}`) and rejection (`GET /research/reject/{title}`) direct from email links. Admin actions render a glassmorphic `#08110B` dark-themed response page.
+- **Direct Email Feedback**: Approval and rejection status emails are automatically routed directly to the researcher's inbox.
+
+### 🧠 4. Adaptive Quiz Engine & JurassiVerse AI
+- **Dynamic Difficulty**: Adaptive progression across *Easy*, *Medium*, and *Hard* levels using Random Forest Machine Learning prediction.
+- **Randomized Questions & Options**: Every quiz attempt randomizes question sequence and options order to ensure freshness.
+- **JurassiVerse AI Paleontologist**: Embedded **Gemini Flash AI** assistant to answer student and explorer doubts about quiz questions, choices, and paleontology concepts.
+- **Explorer Leaderboard**: Real-time high-score ranking and performance analytics (*accuracy %, total attempts, average score*).
+
+### 🎬 5. Cinema & Video Hub
+- **Documentary Theatre**: Immersive video carousel featuring documentary trailers, sound effects, and full-screen cinema modals.
+
+### 💬 6. Community Forum & Discussion Hub
+- **Explorer Posts & Discussions**: Community threads where paleontology enthusiasts upvote, comment, and share research insights.
+
+### 🔐 7. Auth Portal & 1-Hour Activity Session
+- **Clerk SSO & Email Auth**: Seamless login and signup powered by `@clerk/clerk-react` and `clerk-backend-api` with 2FA/OTP support.
+- **Sliding 1-Hour Activity Window**: Sessions extend by 1 hour on active user interaction (`mousemove`, `keydown`, `click`, `scroll`). Automatically logs out after 60 minutes of total inactivity.
+
+### ⚡ 8. High-Performance Architecture
+- **Bulk Batch Pre-Fetching**: Optimized database queries in MongoDB to eliminate N+1 latency, reducing research page API response times from **~4 seconds down to < 50ms**.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React (v19), Vite, TailwindCSS, Framer Motion, GSAP, Lenis Smooth Scroll, Three.js, React Icons, React Router DOM |
-| **Backend** | Python (v3.14+), FastAPI, Uvicorn, MongoDB (PyMongo), Pydantic, Passlib (Argon2), Python-Jose, Dotenv |
-| **Database** | MongoDB (Local / Atlas) |
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend Framework** | React 19, Vite 8, React Router DOM v7 |
+| **Styling & UI Aesthetics** | Vanilla CSS, Framer Motion, GSAP, Lenis Kinetic Scroll, Lucide Icons, React Icons |
+| **3D Rendering** | Three.js |
+| **Authentication** | Clerk (`@clerk/clerk-react` + `clerk-backend-api`) |
+| **Backend Framework** | Python 3.14+, FastAPI, Uvicorn |
+| **Database** | MongoDB Atlas / Local MongoDB (PyMongo) |
+| **AI Integration** | Google Gemini GenAI SDK (`gemini-flash-latest`) |
+| **File Storage** | Cloudinary API |
+| **Email Services** | Brevo API (Primary) & Resend API (Fallback) |
 
 ---
 
@@ -40,94 +70,143 @@ Welcome to **Jurassic Journey**, a premium, interactive, and immersive prehistor
 ```bash
 web_wonder_2026/
 ├── backend/
-│   ├── core/           # Configuration, security, and token helper settings
-│   ├── db/             # MongoDB database connection instance
-│   ├── routes/         # API Routers (auth, timeline, research, quiz, dinosaur, contact)
-│   ├── schemas/        # Pydantic data schemas for request validation
-│   ├── main.py         # App entrypoint (initializes FastAPI and CORS middleware)
-│   ├── .env.example    # Template for environment configurations
-│   ├── .env            # Local secrets and database URI config (Git ignored)
-│   └── requirements.txt# Backend Python dependencies
+│   ├── core/
+│   │   └── config.py            # Environment variables and CORS configuration
+│   ├── db/
+│   │   └── database.py          # PyMongo database connection
+│   ├── dependencies/
+│   │   └── auth.py              # Clerk authentication dependencies & user sync
+│   ├── routes/
+│   │   ├── admin.py             # Admin metrics endpoints
+│   │   ├── auth.py              # User authentication & profile endpoints
+│   │   ├── community_redit.py   # Community forum posts & comments
+│   │   ├── contact.py           # Explorer feedback & contact email routing
+│   │   ├── dinosaur.py          # Dinosaur catalogue & 3D model proxies
+│   │   ├── quiz.py              # Adaptive quiz, ML scoring, & Gemini AI chat
+│   │   ├── research.py          # Research papers, preview batching, approval HTML
+│   │   └── timeline.py          # Mesozoic era preview & timeline data
+│   ├── schemas/                 # Pydantic schemas for request validation
+│   ├── services/
+│   │   ├── cloudinary_service.py # Cloudinary file uploader
+│   │   ├── email_service.py      # Brevo & Resend email dispatchers
+│   │   └── quiz_ml.py            # Random Forest difficulty predictor
+│   ├── main.py                  # FastAPI app entry point & middleware
+│   └── requirements.txt         # Backend Python dependencies
+│
 └── frontends/
     └── my-app/
-        ├── public/     # Static assets and media files
+        ├── public/
+        │   ├── models/          # 3D GLB dinosaur models
+        │   └── videos/          # Local video background assets
         ├── src/
-        │   ├── assets/     # High-res dinosaur images
-        │   ├── components/ # Reusable UI components (Navbar, Expedition, Featured, Hero)
-        │   ├── pages/      # Route pages (Home, Dinosaur Details, ResearchDatabase, Quiz, 3D Viewer)
-        │   ├── styles/     # Page-specific CSS sheets
-        │   ├── index.css   # Main CSS design system
-        │   └── main.jsx    # React rendering root
-        ├── package.json    # Frontend npm packages
-        └── vite.config.js  # Vite server configurations
+        │   ├── components/      # GlassAuthModal, Navbar, Footer, Hero, Expedition, etc.
+        │   ├── config/          # API URL configuration
+        │   ├── pages/           # Home, Dinosaur, Timeline, Cinema, Research, Quiz, Admin, Contact, About, Terms, Privacy
+        │   ├── styles/          # Vanilla CSS design sheets
+        │   ├── App.jsx          # React Router route registry
+        │   └── main.jsx         # React root & Clerk provider setup
+        ├── package.json         # Frontend npm dependencies
+        └── vite.config.js       # Vite configuration
 ```
 
 ---
 
-## 🚀 Installation & Local Setup
+## ⚙️ Environment Configuration
 
-Make sure you have **Node.js (v20+)**, **npm**, **Python (3.10+)**, and **MongoDB** installed on your system.
+### 1. Backend Configuration (`backend/.env`)
+Create a `.env` file in the `backend/` directory:
 
-### 1. Database Setup
-Ensure MongoDB is running locally on your machine on port `27017`.
-- **macOS (using Homebrew)**:
-  ```bash
-  brew services start mongodb-community
-  ```
-- **Checking Connection**:
-  ```bash
-  nc -zv localhost 27017
-  ```
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/?retryWrites=true&w=majority
+DATABASE_NAME=web_wonder
+SECRET_KEY=your_super_secret_jwt_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
 
-### 2. Backend Installation & Execution
-1. Navigate to the backend folder:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a Python virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-4. Create your `.env` configuration file:
-   Create a file named `.env` in the `backend/` root directory and add the following:
-   ```env
-   MONGO_URI=mongodb://localhost:27017
-   DATABASE_NAME=web_wonder
-   SECRET_KEY=your_generated_jwt_secret_key_here
-   ALGORITHM=HS256
-   ACCESS_TOKEN_EXPIRE_MINUTES=60
-   ```
-5. Run the FastAPI development server:
-   ```bash
-   uvicorn main:app --host 127.0.0.1 --port 5000
-   ```
-   The backend documentation will be accessible at [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/docs).
+# Cloudinary Storage
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
-### 3. Frontend Installation & Execution
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontends/my-app
-   ```
-2. Install npm packages (use `--legacy-peer-deps` due to React 19 package warnings):
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open your browser and navigate to **[http://localhost:3000](http://localhost:3000)**.
+# Email Dispatchers
+RESEND_API_KEY=re_your_resend_api_key
+BREVO_API_KEY=xkeysib-your_brevo_api_key
+RECEIVER_EMAIL=admin@jurassiverse.com
+
+# AI & Clerk Authentication
+GEMINI_API_KEY=AIzaSy_your_gemini_api_key
+CLERK_SECRET_KEY=sk_test_your_clerk_secret_key
+CLERK_JWT_KEY=your_clerk_jwt_key
+
+# CORS Origins
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,https://web-wonder-2026.vercel.app
+```
+
+### 2. Frontend Configuration (`frontends/my-app/.env`)
+Create a `.env` file in `frontends/my-app/`:
+
+```env
+VITE_API_URL=http://localhost:5001
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key
+```
 
 ---
 
-## 🎨 UI Best Practices & Custom Tweaks
+## 🚀 Installation & Local Development
 
-- **Visual Consistency**: Cards are dynamically aligned using fixed-height boundaries for titles, scientific names, and description boxes, preventing visual staggering in the grids.
-- **Contrast Overlays**: Important tags like dinosaur periods and feeding diets use blurred opaque containers behind text to maintain AAA-level accessibility over dynamic image backgrounds.
-- **Scroll Physics**: Smooth kinetic scroll is integrated using Lenis scroll to provide a luxurious scrolling experience.
+### Prerequisites
+- **Node.js**: v20+
+- **Python**: v3.10+
+- **MongoDB**: Local MongoDB instance or MongoDB Atlas cluster
+
+### Step 1: Start the Backend Server
+```bash
+cd backend
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start FastAPI development server
+python main.py
+```
+*The FastAPI backend will be live at `http://localhost:5001` (API Docs at `http://localhost:5001/docs`).*
+
+### Step 2: Start the Frontend Application
+```bash
+cd frontends/my-app
+
+# Install npm packages
+npm install
+
+# Run Vite dev server
+npm run dev
+```
+*The web app will open at `http://localhost:5173`.*
+
+---
+
+## 📡 API Endpoint Overview
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/dinosaurs/preview` | Preview top dinosaur cards |
+| `GET` | `/dinosaurs` | Filter dinosaurs by search, era, diet, or threat |
+| `GET` | `/dinosaurs/{slug}` | Get single dinosaur details & 3D model path |
+| `GET` | `/timeline/preview` | Get summary timeline cards |
+| `GET` | `/research/preview` | Bulk-batched research preview with filters |
+| `POST` | `/research/upload` | Submit research paper & evidence files |
+| `GET` | `/research/approve/{title}` | Approve research paper & return themed status card |
+| `GET` | `/research/reject/{title}` | Reject research paper & return themed status card |
+| `POST` | `/quiz/start` | Start randomized quiz attempt |
+| `POST` | `/quiz/submit` | Submit quiz answers for ML level prediction |
+| `POST` | `/quiz/ai_chat` | Ask doubts to Gemini AI Paleontologist |
+| `POST` | `/contact/` | Submit explorer feedback form & send notification email |
+
+---
+
+## 📄 License
+Distributed under the **MIT License**. See `LICENSE` for more information.
