@@ -167,16 +167,43 @@ def get_preview(
             ]
 
         research_docs = list(research_collection.find(query))
+        if not research_docs:
+            return []
+
+        # Bulk pre-fetch to eliminate N+1 latency
+        dino_map = {}
+        for d in dinosaur_collection.find({}, {"name": 1, "image": 1}):
+            if isinstance(d, dict) and "name" in d:
+                dino_map[d["name"]] = d.get("image", "/images/fossil.jpg")
+
+        res_map = {}
+        for r in researcher_detail.find({}, {"full_name": 1, "profile_photo": 1, "specialization": 1}):
+            if isinstance(r, dict) and "full_name" in r:
+                res_map[r["full_name"]] = r
+
+        comments_by_title = {}
+        latest_comments_by_title = {}
+        all_comments = list(comment_collection.find().sort("createdAt", 1))
+        for c in all_comments:
+            if isinstance(c, dict):
+                r_title = c.get("research_title")
+                if r_title:
+                    comments_by_title[r_title] = comments_by_title.get(r_title, 0) + 1
+                    latest_comments_by_title[r_title] = {
+                        "author": c.get("author", "Explorer"),
+                        "text": c.get("text", "")
+                    }
         
         updated_research = []
         for doc in research_docs:
             species = doc.get("species", "")
             researcher_name = doc.get("researcher", "")
-            dino_doc = dinosaur_collection.find_one({"name": species}) or {"image": "/images/fossil.jpg"}
-            dino_image = dino_doc.get("image", "/images/fossil.jpg") if isinstance(dino_doc, dict) else "/images/fossil.jpg"
-            res_doc = researcher_detail.find_one({"full_name": researcher_name}) or {"profile_photo": "", "specialization": "Researcher"}
+            
+            dino_image = dino_map.get(species, "/images/fossil.jpg")
+            res_doc = res_map.get(researcher_name, {})
             researcher_image = res_doc.get("profile_photo", "") if isinstance(res_doc, dict) else ""
             designation = res_doc.get("specialization", "Researcher") if isinstance(res_doc, dict) else "Researcher"
+            
             key_find = doc.get("key_findings")
             if isinstance(key_find, list) and len(key_find) > 0:
                 key_find = key_find[0]
@@ -184,14 +211,8 @@ def get_preview(
             doc_status = doc.get("status", "pending")
             doc_era = doc.get("era", "Unknown")
                
-            comment_count = comment_collection.count_documents({'research_title': title})
-            last_comment_doc = comment_collection.find_one({'research_title': title}, sort=[('createdAt', -1)])
-            last_comment = None
-            if last_comment_doc and isinstance(last_comment_doc, dict):
-                last_comment = {
-                    "author": last_comment_doc.get("author", "Explorer"),
-                    "text": last_comment_doc.get("text", "")
-                }
+            comment_count = comments_by_title.get(title, 0)
+            last_comment = latest_comments_by_title.get(title, None)
                 
             created_at = doc.get("createdAt")
             date_str = created_at.strftime("%B %d, %Y") if isinstance(created_at, datetime) else str(created_at or "May 14, 2026")
