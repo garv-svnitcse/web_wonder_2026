@@ -39,8 +39,21 @@ const cards = [
     },
 ];
 
-function getDirectVideoUrl(url) {
+function getDirectVideoUrl(url, title) {
     if (!url) return "/videos/dna.mp4";
+
+    if (title === "TESTIMONIALS" || url.includes("1l6pcx8VaRXXb9ZF2FhAx34ucQZBLJtH2")) {
+        return "/videos/dna.mp4";
+    }
+    if (title === "DINOSAURS" || url.includes("1_SZwe3JtLw-RngwDZTGnKYcWsJiLQ90h")) {
+        return "/videos/trex.mp4";
+    }
+    if (title === "TIMELINE" || url.includes("1GVmN9hgUHKk-b7QUEVv4eCg10omSfqm3")) {
+        return "/videos/timeline.mp4";
+    }
+    if (title === "RESEARCH" || url.includes("1dyZl2lBo_1Vmd6GeXf-YDDAEKQ_7ExRr")) {
+        return "/videos/research.mp4";
+    }
 
     let fileId = "";
     if (url.includes("/file/d/")) {
@@ -110,7 +123,7 @@ export default function Expedition() {
 
                         <video
                             className="cardVideo"
-                            src={getDirectVideoUrl(card.video)}
+                            src={getDirectVideoUrl(card.video, card.title)}
                             autoPlay
                             muted
                             loop
@@ -122,6 +135,8 @@ export default function Expedition() {
                                             : "/videos/dna.mp4";
                                 if (!e.target.src.endsWith(fallback)) {
                                     e.target.src = fallback;
+                                    e.target.load();
+                                    e.target.play().catch(() => {});
                                 }
                             }}
                         />
