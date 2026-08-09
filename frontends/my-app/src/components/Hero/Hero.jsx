@@ -3,7 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import "./Hero.css";
 
-export default function Hero() {
+export default function Hero({ onBeginExpedition }) {
 
     const heroRef = useRef(null);
 
@@ -211,6 +211,7 @@ export default function Hero() {
                             }}
 
                             className="primaryHeroButton"
+                            onClick={onBeginExpedition}
 
                         >
 

@@ -445,6 +445,27 @@ export default function GlassAuthModal({ isOpen, onClose, onAuthSuccess }) {
         textAlign: 'center',
         position: 'relative'
       }}>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '20px',
+              background: 'none',
+              border: 'none',
+              color: '#D6A14B',
+              fontSize: '20px',
+              cursor: 'pointer',
+              padding: '4px 8px',
+              outline: 'none',
+              zIndex: 10
+            }}
+          >
+            ✕
+          </button>
+        )}
         <h2 style={{
           fontFamily: 'Cinzel, serif',
           fontSize: '32px',
